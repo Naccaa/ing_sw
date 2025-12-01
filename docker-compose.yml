@@ -1,0 +1,69 @@
+services:
+  db:
+    ports:
+      - 5432:5432
+    image: postgres
+    volumes:
+      - db_data:/var/lib/pgsql/data
+    networks:
+      - server_db_network
+      - adminer_db_network
+    environment:
+      - ${PG_PASSWORD}
+    profiles:
+      - all
+      - dev_all
+  
+  server:
+    ports:
+      - 5000:5000
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    profiles:
+      - all
+    depends_on:
+      - db
+    networks:
+      - server_db_network
+
+  dev_server:
+    ports:
+      - 5000:5000
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    profiles:
+      - dev_all
+    develop:
+      watch:
+      - path: ./server/app
+        action: sync+restart
+        target: /app
+        ignore:
+          - __pycache__/
+          - .git/
+    depends_on:
+      - db
+    networks:
+      - server_db_network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports: 
+      - 8080:8080
+    networks:
+      - adminer_db_network
+    depends_on:
+      - db
+    profiles:
+      - all
+      - dev_all
+networks:
+  server_db_network: {}
+  adminer_db_network: {}
+
+volumes:
+  db_data:
+    name: "postgresdb"
