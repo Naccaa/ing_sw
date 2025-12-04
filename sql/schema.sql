@@ -6,8 +6,8 @@ CREATE TYPE ing_sw.user_roles AS ENUM (
 );
 
 CREATE TYPE ing_sw.user_health AS ENUM (
-  "al sicuro",
-  "in pericolo"
+  'al sicuro',
+  'in pericolo'
 );
 
 CREATE TYPE ing_sw.user_status AS (
@@ -34,11 +34,11 @@ CREATE TABLE ing_sw.Users (
 );
 
 CREATE TYPE ing_sw.emergency_type AS ENUM (
-  "allagamento",
-  "alluvione",
-  "grandinata",
-  "tromba d'aria",
-  "alro"
+  'allagamento',
+  'alluvione',
+  'grandinata',
+  'tromba d''aria',
+  'alro'
 );
 
 CREATE TABLE ing_sw.Emergencies (

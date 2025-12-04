@@ -3,4 +3,7 @@ flask
 flask-cors
 flask-sqlalchemy
 Flask-JWT-Extended
+pyjwt
+sqlalchemy
+psycopg2-binary
 requests
