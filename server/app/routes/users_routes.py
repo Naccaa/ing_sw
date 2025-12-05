@@ -48,6 +48,8 @@ def register_user():
 @users_route.route('/users/<int:userId>', methods=['PATCH'])
 @required_logged_user
 def patch_user(userId):
+    # TODO: check that userId == id of the logged in user
+    
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
@@ -98,6 +100,7 @@ def patch_user(userId):
         user.phoneNumber = phone_number.strip()
 
     try:
+        # forse non serve chiamare .add()
         db.session.add(user)
         db.session.commit()
     except exc.IntegrityError as ie:
@@ -110,3 +113,24 @@ def patch_user(userId):
         return {"error": True, "message": "Server error"}, 500
 
     return {"error": False, "message": "User updated successfully"}, 200
+
+
+# TODO: testare
+@users_route.route('/users/<int:userId>', methods=['DELETE'])
+@required_logged_user
+def delete_user(userId):
+    # TODO: check that userId == id of the logged in user
+
+    user = DBUser.query.get(userId)
+    if not user:
+        return {"error": True, "message": "User not found"}, 404
+
+    try:
+        db.session.delete(user)
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.debug(e)
+        db.session.rollback()
+        return {"error": True, "message": "Server error"}, 500
+
+    return {"error": False, "message": "User deleted successfully"}, 200
