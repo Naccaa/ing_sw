@@ -26,7 +26,7 @@ with app.app_context():
 print(db.metadata.tables.items)
 
 # ROUTES
-from routes.users_route import users_route
+from routes.users_routes import users_route
 version = None
 app.register_blueprint(users_route, url_prefix=version)
 

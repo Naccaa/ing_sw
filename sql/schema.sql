@@ -6,7 +6,7 @@ CREATE TYPE ing_sw.user_status AS ENUM (
   'inDanger'
 );
 
-CREATE TABLE taw_bd.Users (
+CREATE TABLE ing_sw.Users (
   userId serial PRIMARY KEY,
 	caregiverId serial DEFAULT NULL,
   email varchar NOT NULL UNIQUE,

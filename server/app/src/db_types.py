@@ -9,6 +9,7 @@ from enum import Enum
 class Base(DeclarativeBase):
     pass
 
+
 class PasswordInterface():
     salt: Mapped[str]
     hash: Mapped[str]
@@ -25,68 +26,57 @@ class PasswordInterface():
         self.salt = salt.hex()
         self.hash = h.hexdigest()
 
-# da sistemare
-class user_healt(Enum):
-    CITTADINO = 'cittadino',
-    ADMIN = 'admin'
 
 class user_status(Enum):
-    SICURO = 'al sicuro',
-    PERICOLO = 'in prericolo'
+    FINE = 'fine',
+    PENDING = 'pending',
+    IN_DANGE = 'inDanger',
 
-class user_status():
-    healt: user_healt
-    location: (float, float)
-    time: datetime.datetime
-
-    def __init__(self, healt, location, time):
-        self.healt = healt
-        self.location = location
-        self.time = time
-
-    def __repr__(self):
-        return f"user_status(healt={self.healt}, location={self.location}, time={self.time})"
-
-    def to_dict(self):
-        return {
-            'healt': self.healt, 
-            'location': self.location,
-            'time': self.time
-        }
 
 class DBUser(db.Model, PasswordInterface):
     __table__ = db.metadata.tables['Users']
 
+    userId: Mapped[int]
+    caregiverId: Mapped[int]
     email: Mapped[str]
-    caregiver_email: Mapped[str]
-    
-    role: Mapped[str]
     fullname: Mapped[str]
     phone_number: Mapped[str]
     last_status: Mapped[user_status]
+    last_status_time: Mapped[datetime.datetime]
+    last_location: Mapped[(float, float)]
+    last_location_time: Mapped[datetime.datetime]
+    is_admin: Mapped[bool]
 
-    def __init__(self, email, caregiver_email, role, fullname, phone_number, last_status, password):
+    def __init__(self, userId, caregiverId, email, fullname, phone_number, last_status, last_status_time, last_location, last_location_time, is_admin, password):
+        self.userId = userId
+        self.caregiverId = caregiverId
         self.email = email
-        self.caregiver_email = caregiver_email
-        self.role = role
         self.fullname = fullname
         self.phone_number = phone_number
         self.last_status = last_status
+        self.last_status_time = last_status_time
+        self.last_location = last_location
+        self.last_location_time = last_location_time
+        self.is_admin = is_admin
         self.set_password(password)
 
     def __repr__(self):
-        return f"DBUser(email={self.email}, caregiver_email={self.caregiver_email}, role={self.role}, " \
-               f"fullname={self.fullname}, phone_number={self.phone_number}, last_status={self.last_status})" \
-               f"salt={self.salt}, hash={self.hash})"
+        return f"DBUser(userId={self.userId}, caregiverId={self.caregiverId}, " \
+               f"email={self.email}, fullname={self.fullname}, phone_number={self.phone_number}, last_status={self.last_status}, last_status_time={self.last_status_time}, last_location={self.last_location}, last_location_time={self.last_location_time}" \
+               f"is_admin={self.is_admin}, salt={self.salt}, hash={self.hash})"
 
     def to_dict(self):
         return {
+            "userId": self.userId,
+            "caregiverId": self.caregiverId,
             "email": self.email,
-            "caregiver_email": self.caregiver_email,
-            "role": self.role,
             "fullname": self.fullname,
             "phone_number": self.phone_number,
-            "last_status": self.last_status.to_dict() if self.last_status else None
+            "last_status": self.last_status,
+            "last_status_time": self.last_status_time,
+            "last_location": self.last_location,
+            "last_location_time": self.last_location_time,
+            "is_admin": self.is_admin,
             "salt": self.salt,
             "hash": self.hash
         }

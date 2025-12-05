@@ -8,8 +8,7 @@ services:
     networks:
       - server_db_network
       - adminer_db_network
-    environment:
-      - ${PG_PASSWORD}
+    env_file: ./.env
     profiles:
       - all
       - dev_all
