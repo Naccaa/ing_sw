@@ -1,4 +1,6 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import Float
+from sqlalchemy.dialects.postgresql import ARRAY
 from db import db
 import secrets
 import hmac
@@ -34,46 +36,61 @@ class user_status(Enum):
 
 
 class DBUser(db.Model, PasswordInterface):
-    __table__ = db.metadata.tables['Users']
+    __table__ = db.metadata.tables['users']
 
-    userId: Mapped[int]
-    caregiverId: Mapped[int]
+    user_id: Mapped[int]
+    caregiver_id: Mapped[int]
     email: Mapped[str]
     fullname: Mapped[str]
     phone_number: Mapped[str]
-    last_status: Mapped[user_status]
-    last_status_time: Mapped[datetime.datetime]
-    last_location: Mapped[(float, float)]
+    status: Mapped[user_status]
+    status_time: Mapped[datetime.datetime]
+    last_location: Mapped[tuple[float, float]]
     last_location_time: Mapped[datetime.datetime]
     is_admin: Mapped[bool]
-
-    def __init__(self, userId, caregiverId, email, fullname, phone_number, last_status, last_status_time, last_location, last_location_time, is_admin, password):
-        self.userId = userId
-        self.caregiverId = caregiverId
+        
+    def __init__(
+        self,
+        user_id,
+        caregiver_id,
+        email,
+        fullname,
+        phone_number,
+        status,
+        status_time,
+        last_location,
+        last_location_time,
+        is_admin,
+        password
+    ):
+        self.user_id = user_id
+        self.caregiver_id = caregiver_id
         self.email = email
         self.fullname = fullname
         self.phone_number = phone_number
-        self.last_status = last_status
-        self.last_status_time = last_status_time
+        self.status = status
+        self.status_time = status_time
         self.last_location = last_location
         self.last_location_time = last_location_time
         self.is_admin = is_admin
         self.set_password(password)
 
     def __repr__(self):
-        return f"DBUser(userId={self.userId}, caregiverId={self.caregiverId}, " \
-               f"email={self.email}, fullname={self.fullname}, phone_number={self.phone_number}, last_status={self.last_status}, last_status_time={self.last_status_time}, last_location={self.last_location}, last_location_time={self.last_location_time}" \
-               f"is_admin={self.is_admin}, salt={self.salt}, hash={self.hash})"
+        return f"DBUser(user_id={self.user_id}, caregiver_id={self.caregiver_id}, " \
+            f"email={self.email}, fullname={self.fullname}, phone_number={self.phone_number}, " \
+            f"status={self.status}, status_time={self.status_time}, " \
+            f"last_location={self.last_location}, last_location_time={self.last_location_time}, " \
+            f"is_admin={self.is_admin}, salt={self.salt}, hash={self.hash})" 
 
     def to_dict(self):
         return {
-            "userId": self.userId,
-            "caregiverId": self.caregiverId,
+            "user_id": self.user_id,
+            "caregiver_id": self.caregiver_id,
             "email": self.email,
             "fullname": self.fullname,
             "phone_number": self.phone_number,
-            "last_status": self.last_status,
-            "last_status_time": self.last_status_time,
+            "status": self.status,
+            "status_time": self.status_time,
             "last_location": self.last_location,
             "last_location_time": self.last_location_time,
             "is_admin": self.is_admin,
@@ -81,21 +98,22 @@ class DBUser(db.Model, PasswordInterface):
             "hash": self.hash
         }
 
+
 class emergency_type(Enum):
     ALLAGAMENTO = "allagamento"
     ALLUVIONE = "alluvione"
     GRANDINATA = "grandinata"
     TROMBA_DARIA = "tromba d'aria"
-    ALRO = "alro"
+    ALTRO = "altro"
 
 class DBEmergencies(db.Model):
-    __table__ = db.metadata.tables['Emergencies']
+    __table__ = db.metadata.tables['emergencies']
     
     id: Mapped[int]
     emergency_type: Mapped[emergency_type]
     message: Mapped[str]
-    
-    location: Mapped[(float, float)]
+
+    location: Mapped[tuple[float, float]]
     radius: Mapped[float]
     
     start_time: Mapped[datetime.datetime]
@@ -126,7 +144,7 @@ class DBEmergencies(db.Model):
         }
 
 class Guidelines(db.Model):
-    __table__ = db.metadata.tables['Guidelines']
+    __table__ = db.metadata.tables['guidelines']
     
     emergency_type: Mapped[emergency_type]
     message: Mapped[str]

@@ -7,20 +7,20 @@ CREATE TYPE ing_sw.user_status AS ENUM (
 );
 
 CREATE TABLE ing_sw.Users (
-  userId serial PRIMARY KEY,
-	caregiverId int DEFAULT NULL,
+  user_id serial PRIMARY KEY,
+	caregiver_id int DEFAULT NULL,
   email varchar NOT NULL UNIQUE,
-  fullName varchar NOT NULL,
-	phoneNumber varchar NOT NULL,
+  fullname varchar NOT NULL,
+	phone_number varchar NOT NULL,
 	status ing_sw.user_status NOT NULL DEFAULT 'fine',
 	status_time timestamp DEFAULT NULL,
-	lastLocation point DEFAULT NULL,
-	lastLocationTime timestamp DEFAULT NULL,
-  isAdmin boolean NOT NULL DEFAULT FALSE,
+	last_location point DEFAULT NULL,
+	last_location_time timestamp DEFAULT NULL,
+  is_admin boolean NOT NULL DEFAULT FALSE,
   password_salt_hex varchar NOT NULL,
   password_digest_hex varchar NOT NULL,
 
-  FOREIGN KEY (caregiverId) REFERENCES ing_sw.Users (userId)
+  FOREIGN KEY (caregiver_id) REFERENCES ing_sw.Users (user_id)
   ON UPDATE CASCADE
 	ON DELETE SET NULL
 );

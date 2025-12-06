@@ -2,7 +2,7 @@ import datetime
 from flask import Blueprint, current_app, request, jsonify
 from flask_jwt_extended import get_jwt
 from flask_jwt_extended.view_decorators import jwt_required
-from src.db_types import DBUser, user_healt, user_status, user_status
+from src.db_types import DBUser, user_status
  
 from sqlalchemy import exc
 from db import db
@@ -13,35 +13,6 @@ import secrets
 import hashlib
 
 users_route = Blueprint('users_route', __name__)
-
-''' esempio di una route possibile (che non è correlato a questo progetto)
-@users_route.route('/users', methods=['POST'])
-@jwt_required(optional=True)
-def register_user():
-    data = request.get_json()
-
-    # Making sure that only admins can create other admins
-    admin_flag = False
-    auth_data = get_jwt()
-    if auth_data and auth_data.get("isAdmin") == True:
-        admin_flag = data["isadmin"]
-
-    new_user = DBUser(name=data["name"].lstrip().rstrip(), 
-                      surname=data["surname"].lstrip().rstrip(), 
-                      email=normalize(data["email"]), 
-                      password=data["password"], 
-                      isadmin=admin_flag)
-
-    try:
-      db.session.add(new_user)
-      db.session.commit()
-    except exc.IntegrityError:
-      return {"error" : True, "message": "User already exists"}, 400
-    except Exception as e:
-      current_app.logger.debug(e)
-      return {"error" : True, "message": "Server error"}, 500
-    return {"error" : False, "message" : "User created successfully"}, 201
-'''
 
 # TODO: testare
 # TODO: dare la possibilità di aggiungere o aggiornare caregiverId
@@ -81,8 +52,9 @@ def patch_user(userId):
             x = float(parts[0].strip())
             y = float(parts[1].strip())
             # store as PostgreSQL point literal e.g. "(x,y)"
-            user.lastLocation = f"({x},{y})"
-            user.lastLocationTime = now_utc
+            #user.lastLocation = f"({x},{y})"
+            user.last_location = (x,y)
+            user.last_location_time = now_utc
         except ValueError as ve:
             return {"error": True, "message": f"Invalid location: {ve}"}, 400
         except Exception as e:
@@ -94,10 +66,10 @@ def patch_user(userId):
         user.status_time = now_utc
 
     if full_name := request.args.get("fullName"):
-        user.fullName = full_name.strip()
+        user.fullname = full_name.strip()
 
     if phone_number := request.args.get("phoneNumber"):
-        user.phoneNumber = phone_number.strip()
+        user.phone_number = phone_number.strip()
 
     try:
         # forse non serve chiamare .add()
