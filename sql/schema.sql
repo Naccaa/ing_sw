@@ -8,14 +8,14 @@ CREATE TYPE ing_sw.user_status AS ENUM (
 
 CREATE TABLE ing_sw.Users (
   userId serial PRIMARY KEY,
-	caregiverId serial DEFAULT NULL,
+	caregiverId int DEFAULT NULL,
   email varchar NOT NULL UNIQUE,
   fullName varchar NOT NULL,
 	phoneNumber varchar NOT NULL,
 	status ing_sw.user_status NOT NULL DEFAULT 'fine',
-	status_time timestampz DEFAULT NULL,
+	status_time timestamp DEFAULT NULL,
 	lastLocation point DEFAULT NULL,
-	lastLocationTime timestampz DEFAULT NULL,
+	lastLocationTime timestamp DEFAULT NULL,
   isAdmin boolean NOT NULL DEFAULT FALSE,
   password_salt_hex varchar NOT NULL,
   password_digest_hex varchar NOT NULL,
@@ -39,10 +39,10 @@ CREATE TABLE ing_sw.Emergencies (
   message varchar NOT NULL,
   
   location point NOT NULL,
-  radius double NOT NULL,
+  radius real NOT NULL,
 
-  start_time timestampz NOT NULL,
-  end_time timestampz DEFAULT NULL,
+  start_time timestamp NOT NULL,
+  end_time timestamp DEFAULT NULL,
 
   CHECK(end_time IS NULL OR start_time < end_time)
 );
