@@ -8,6 +8,8 @@ Le opzioni disponibili al momento sono due:
 docker compose build --profile {all | dev_all} build
 docker compose build --profile {all | dev_all} up
 
+se poi si preme 'w' si attiva la modalità watch che rilancia il server ad ogni modifica.
+NOTA: è possibile che il server parta prima del DB. Fix: dopo un primo compose up si deve stoppare i container e rifare compose up (così il server partendo riesce a connetersi al db)
 # Come accedere ad aminer
 accedere dal browser a localhost:8080
 selezionare:
