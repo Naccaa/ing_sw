@@ -12,7 +12,43 @@ from src.auth_decorators import required_logged_user
 import secrets
 import hashlib
 
+
+'''
+request body{
+    email: string,
+    fullname: string,
+    phone_number: string,
+    password: string
+}
+'''
 users_route = Blueprint('users_route', __name__)
+@users_route.route('/users', methods=['POST'])
+def add_user():
+    data = request.get_json()
+
+    # valida se tutti i campi sono stati inseriti nella richiesta
+    if 'email' not in data:
+        return {"error": True, "message" : "Request must contain the email of the user"}, 400
+    if 'fullname' not in data:
+        return {"error": True, "message" : "Request must contain the fullname of the user"}, 400
+    if 'phone_number' not in data:
+        return {"error": True, "message" : "Request must contain the phone number of the user"}, 400
+    if 'password' not in data:
+        return {"error": True, "message" : "Request must contain the password of the user"}, 400
+
+    new_user = DBUser(email=data["email"].lower().lstrip().rstrip(),
+                      fullname=data["fullname"].lstrip().rstrip(), 
+                      phone_number=data["phone_number"].lstrip().rstrip(), 
+                      password=data["password"])
+    try:
+      db.session.add(new_user)
+      db.session.commit()
+    except exc.IntegrityError:
+      return {"error" : True, "message": "Email already used"}, 400
+    except Exception as e:
+      current_app.logger.debug(e)
+      return {"error" : True, "message": "Server error"}, 500
+    return {"error" : False, "message" : "User created successfully"}, 201
 
 # TODO: testare
 # TODO: dare la possibilità di aggiungere o aggiornare caregiverId

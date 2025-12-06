@@ -51,19 +51,17 @@ class DBUser(db.Model, PasswordInterface):
         
     def __init__(
         self,
-        user_id,
-        caregiver_id,
+        caregiver_id = None,
         email,
         fullname,
         phone_number,
-        status,
-        status_time,
-        last_location,
-        last_location_time,
-        is_admin,
+        status = user_status.FINE,
+        status_time = None,
+        last_location = None,
+        last_location_time = None,
+        is_admin = False,
         password
     ):
-        self.user_id = user_id
         self.caregiver_id = caregiver_id
         self.email = email
         self.fullname = fullname
@@ -143,7 +141,7 @@ class DBEmergencies(db.Model):
             "end_time": self.end_time
         }
 
-class Guidelines(db.Model):
+class DBGuidelines(db.Model):
     __table__ = db.metadata.tables['guidelines']
     
     emergency_type: Mapped[emergency_type]
