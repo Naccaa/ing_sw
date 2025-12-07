@@ -21,6 +21,7 @@ request body{
     password: string
 }
 '''
+# testata
 users_route = Blueprint('users_route', __name__)
 @users_route.route('/users', methods=['POST'])
 def add_user():
@@ -40,6 +41,7 @@ def add_user():
                       fullname=data["fullname"].lstrip().rstrip(), 
                       phone_number=data["phone_number"].lstrip().rstrip(), 
                       password=data["password"])
+
     try:
       db.session.add(new_user)
       db.session.commit()
@@ -51,12 +53,15 @@ def add_user():
     return {"error" : False, "message" : "User created successfully"}, 201
 
 # TODO: testare
-# TODO: dare la possibilità di aggiungere o aggiornare caregiverId
 @users_route.route('/users/<int:userId>', methods=['PATCH'])
 @required_logged_user
 def patch_user(userId):
-    # TODO: check that userId == id of the logged in user
-    
+    # controlla se l'utente autenticato è lo stesso di userId
+    auth_data = get_jwt()
+    if auth_data.get('sub') != userId:
+        return {'error': True, "message": "Cannot delete another user"}, 403
+
+
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
@@ -88,7 +93,6 @@ def patch_user(userId):
             x = float(parts[0].strip())
             y = float(parts[1].strip())
             # store as PostgreSQL point literal e.g. "(x,y)"
-            #user.lastLocation = f"({x},{y})"
             user.last_location = (x,y)
             user.last_location_time = now_utc
         except ValueError as ve:
@@ -98,18 +102,37 @@ def patch_user(userId):
             return {"error": True, "message": "Failed to set location"}, 500
 
     if status := request.args.get("status"):
+        if status not in [item.value for item in user_status]:
+            return {"error": True, "message": "Invalid state"}, 400
         user.status = status
         user.status_time = now_utc
 
     if full_name := request.args.get("fullName"):
+        if full_name.strip() == '':
+            return {"error": True, "message": "Empty name are not allowed"}, 400
         user.fullname = full_name.strip()
 
     if phone_number := request.args.get("phoneNumber"):
+        if phone_number.strip() == '':
+            return {"error": True, "message": "Empty phone numbers are not allowed"}, 400
         user.phone_number = phone_number.strip()
+    
+    # non controlla se la mail è già usata da un altro utente
+    # in quel caso tanto fallisce il commit
+    if email := request.args.get("email"):
+        if email.strip() == '':
+            return {"error": True, "message": "Empty emails are not allowed"}, 400
+        user.email = email.strip()
+
+    if is_admin := request.args.get("is_admin"):
+        if auth_data.get("is_admin") == False:
+            return {'error': True, "message": "Only admins can change the is_admin field"}, 403
+        user.is_admin = is_admin
+    
+    if caregiver_id := request.args.get("caregiver_id"):
+        user.caregiver_id = caregiver_id
 
     try:
-        # forse non serve chiamare .add()
-        db.session.add(user)
         db.session.commit()
     except exc.IntegrityError as ie:
         current_app.logger.debug(ie)
@@ -123,11 +146,14 @@ def patch_user(userId):
     return {"error": False, "message": "User updated successfully"}, 200
 
 
-# TODO: testare
 @users_route.route('/users/<int:userId>', methods=['DELETE'])
 @required_logged_user
+#testata senza auth
 def delete_user(userId):
-    # TODO: check that userId == id of the logged in user
+    # controlla se l'utente autenticato è lo stesso di userId
+    auth_data = get_jwt()
+    if auth_data.get('sub') != userId:
+        return {'error': True, "message": "Cannot delete another user"}, 403
 
     user = DBUser.query.get(userId)
     if not user:

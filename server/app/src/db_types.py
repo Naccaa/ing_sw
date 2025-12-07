@@ -13,26 +13,25 @@ class Base(DeclarativeBase):
 
 
 class PasswordInterface():
-    salt: Mapped[str]
-    hash: Mapped[str]
+    password_salt_hex: Mapped[str]
+    password_digest_hex: Mapped[str]
 
     def verify_password(self, password):
-        h = hmac.new(bytes.fromhex(self.salt), digestmod="sha512")
+        h = hmac.new(bytes.fromhex(self.password_salt_hex), digestmod="sha512")
         h.update(password.encode('utf-8'))
-        return hmac.compare_digest(self.hash, h.hexdigest())
+        return hmac.compare_digest(self.password_digest_hex, h.hexdigest())
 
     def set_password(self, password):
         salt = secrets.token_bytes(16)
         h = hmac.new(salt, digestmod='sha512')
         h.update(password.encode('utf-8'))
-        self.salt = salt.hex()
-        self.hash = h.hexdigest()
-
+        self.password_salt_hex = salt.hex()
+        self.password_digest_hex = h.hexdigest()
 
 class user_status(Enum):
-    FINE = 'fine',
-    PENDING = 'pending',
-    IN_DANGE = 'inDanger',
+    FINE = 'fine'
+    PENDING = 'pending'
+    IN_DANGE = 'inDanger'
 
 
 class DBUser(db.Model, PasswordInterface):
@@ -51,22 +50,22 @@ class DBUser(db.Model, PasswordInterface):
         
     def __init__(
         self,
-        caregiver_id = None,
         email,
         fullname,
         phone_number,
+        password,
+        caregiver_id = None,
         status = user_status.FINE,
         status_time = None,
         last_location = None,
         last_location_time = None,
-        is_admin = False,
-        password
+        is_admin = False
     ):
         self.caregiver_id = caregiver_id
         self.email = email
         self.fullname = fullname
         self.phone_number = phone_number
-        self.status = status
+        self.status = status.value
         self.status_time = status_time
         self.last_location = last_location
         self.last_location_time = last_location_time
@@ -78,7 +77,7 @@ class DBUser(db.Model, PasswordInterface):
             f"email={self.email}, fullname={self.fullname}, phone_number={self.phone_number}, " \
             f"status={self.status}, status_time={self.status_time}, " \
             f"last_location={self.last_location}, last_location_time={self.last_location_time}, " \
-            f"is_admin={self.is_admin}, salt={self.salt}, hash={self.hash})" 
+            f"is_admin={self.is_admin}, password_salt_hex={self.password_salt_hex}, password_digest_hex={self.password_digest_hex})" 
 
     def to_dict(self):
         return {
@@ -92,8 +91,8 @@ class DBUser(db.Model, PasswordInterface):
             "last_location": self.last_location,
             "last_location_time": self.last_location_time,
             "is_admin": self.is_admin,
-            "salt": self.salt,
-            "hash": self.hash
+            "password_salt_hex": self.password_salt_hex,
+            "password_digest_hex": self.password_digest_hex
         }
 
 
@@ -146,6 +145,10 @@ class DBGuidelines(db.Model):
     
     emergency_type: Mapped[emergency_type]
     message: Mapped[str]
+
+    def __init__(self, emergency_type, message):
+        self.emergency_type = emergency_type
+        self.message = message
 
     def __repr__(self):
         return f"DBGuideline(emergency_type={self.emergency_type}, message={self.message})"
