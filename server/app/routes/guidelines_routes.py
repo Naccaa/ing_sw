@@ -17,7 +17,7 @@ request body{
     message: str
 }
 '''
-@guideline_route.route('/guidelines', method=['POST'])
+@guidelines_route.route('/guidelines', methods=['POST'])
 @required_admin
 def add_guideline():
     data = request.get_json()
@@ -28,7 +28,7 @@ def add_guideline():
     if 'message' not in data:
         return {"error": True, "message" : "Request must contain the message (description of the guideline)"}, 400
 
-    new_guideline = DBGuideline(emergency_type=data["emergency_type"],
+    new_guideline = DBGuidelines(emergency_type=data["emergency_type"],
                                 message=data["message"])
     try:
       db.session.add(new_guideline)
@@ -39,3 +39,46 @@ def add_guideline():
       current_app.logger.debug(e)
       return {"error" : True, "message": "Server error"}, 500
     return {"error" : False, "message" : "Guideline created successfully"}, 201
+
+
+'''
+Ritorna la lista delle guidelines per mostrarle tutte insieme
+all'utente.
+'''
+@guidelines_route.route('/guidelines', methods=['GET'])
+def show_guidelines():
+  try:
+    rows = DBGuidelines.query.all()
+  except Exception as e:
+    current_app.logger.debug(e)
+    return {"error": True, "message": "Server error"}, 500
+
+  return jsonify([
+      {
+          "emergency_type": r.emergency_type,
+          "message": r.message
+      }
+      for r in rows
+  ])
+
+
+
+'''
+Ritorna la guideline specifica per farla leggere all'utente
+quanto viene scelta dall'utente nell'interfaccia che le mostra tutte.
+'''
+@guidelines_route.route('/guideline/<id>', methods=['GET'])
+def show_guideline(id):
+  try:
+    rows = DBGuidelines.query.filter(DBGuidelines.emergency_type == id).all()
+  except Exception as e:
+    current_app.logger.debug(e)
+    return {"error": True, "message": "Server error"}, 500
+
+  return jsonify([
+      {
+          "emergency_type": r.emergency_type,
+          "message": r.message
+      }
+      for r in rows
+  ])

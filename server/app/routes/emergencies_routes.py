@@ -1,13 +1,16 @@
-from flask import request, current_app, jsonify
+from flask import request, current_app, jsonify, Blueprint
 from src.auth_decorators import required_admin
 
 import math
 from sqlalchemy import exc, text
-from src.db_types import DBEmergency, DBGuideline
+from src.db_types import DBEmergencies, DBGuidelines
 from db import db
 
+emergencies_route = Blueprint('emergencies_route', __name__)
+
+
 # TODO: testare
-@route('/emergencies', methods=['GET'])
+@emergencies_route.route('/emergencies', methods=['GET'])
 def get_emergencies():
     """
     Il parametro near è opzionale e serve per filtrare le emergenze che sono vicine al punto. Il frontend passerà la posizione dell'utente come parametro near.
@@ -41,18 +44,18 @@ def get_emergencies():
 
 
     try:
-        q = DBEmergency.query.outerjoin(
-            DBGuideline,
-            DBEmergency.emergency_type == DBGuideline.emergency_type
+        q = DBEmergencies.query.outerjoin(
+            DBGuidelines,
+            DBEmergencies.emergency_type == DBGuidelines.emergency_type
         ).with_entities(
-            DBEmergency.id,
-            DBEmergency.emergency_type,
-            DBEmergency.message,
-            DBEmergency.location,
-            DBEmergency.radius,
-            DBEmergency.start_time,
-            DBEmergency.end_time,
-            DBGuideline.message.label("guideline_message")
+            DBEmergencies.id,
+            DBEmergencies.emergency_type,
+            DBEmergencies.message,
+            DBEmergencies.location,
+            DBEmergencies.radius,
+            DBEmergencies.start_time,
+            DBEmergencies.end_time,
+            DBGuidelines.message.label("guideline_message")
         )
 
         if near_param := request.args.get("near"):
@@ -83,13 +86,13 @@ def get_emergencies():
         } for r in rows]), 200
 
 
-@route('/emergencies', methods=['POST'])
+@emergencies_route.route('/emergencies', methods=['POST'])
 @required_admin
 def post_emergency():
     raise NotImplementedError()
 
 
-@route('/emergencies/<int:id>', methods=['PATCH'])
+@emergencies_route.route('/emergencies/<int:id>', methods=['PATCH'])
 @required_admin
 def patch_emergency(id):
     """
