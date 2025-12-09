@@ -1,6 +1,6 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Float
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import types as pg_types
 from db import db
 import secrets
 import hmac
@@ -44,7 +44,7 @@ class DBUser(db.Model, PasswordInterface):
     phone_number: Mapped[str]
     status: Mapped[user_status]
     status_time: Mapped[datetime.datetime]
-    last_location: Mapped[tuple[float, float]]
+    last_location: Mapped[pg_types.POINT]
     last_location_time: Mapped[datetime.datetime]
     is_admin: Mapped[bool]
         
@@ -110,7 +110,7 @@ class DBEmergencies(db.Model):
     emergency_type: Mapped[emergency_type]
     message: Mapped[str]
 
-    location: Mapped[tuple[float, float]]
+    location: Mapped[pg_types.POINT]
     radius: Mapped[float]
     
     start_time: Mapped[datetime.datetime]

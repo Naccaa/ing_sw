@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "ca2c2f1b-2f05-4e34-8a28-d47733c7973d",
-		"name": "New Collection",
+		"name": "Ing_sw",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "44290915"
 	},
@@ -70,7 +70,12 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"caregiver_id\": 3,\n    \"email\": \"test@test.it\",\n    \"fullname\": \"Fabioo Naccarella\",\n    \"phone_number\": \"987654321\",\n    \"status\": 'inDanger',\n    \"last_location\": \"1,3\",\n    \"is_admin\": true,\n    \"password\": \"pizza\"\n}"
+							"raw": "{\n    \"caregiver_id\": 3,\n    \"email\": \"test3@test.it\",\n    \"fullname\": \"Fabioo Naccarella\",\n    \"phone_number\": \"987654321\",\n    \"status\": \"inDanger\",\n    \"location\": \"1,3\",\n    \"is_admin\": true,\n    \"password\": \"pizza\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "{{baseURL}}/users/:userId",

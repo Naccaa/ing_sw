@@ -52,7 +52,20 @@ def add_user():
       return {"error" : True, "message": "Server error"}, 500
     return {"error" : False, "message" : "User created successfully"}, 201
 
-# TODO: testare
+
+'''
+request body{
+    caregiver_id: int,
+    email: string,
+    fullname: string,
+    phone_number: string,
+    status: string,
+    location: "1,3",
+    is_admin: bool,
+    password: string 
+}
+'''
+# testato
 @users_route.route('/users/<int:userId>', methods=['PATCH'])
 @required_logged_user
 def patch_user(userId):
@@ -60,13 +73,13 @@ def patch_user(userId):
     auth_data = get_jwt()
     if auth_data.get('sub') != userId:
         return {'error': True, "message": "Cannot delete another user"}, 403
-
-
+    
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
 
     request_body = request.get_json(silent=True) or {}
+    
     if password := request_body.get("password"):
         try:
             salt_bytes = secrets.token_bytes(16)
@@ -85,7 +98,7 @@ def patch_user(userId):
 
     now_utc = datetime.datetime.now(datetime.timezone.utc)
 
-    if location := request.args.get("location"):
+    if location := request_body.get("location"):
         try:
             parts = location.split(",")
             if len(parts) != 2:
@@ -93,7 +106,7 @@ def patch_user(userId):
             x = float(parts[0].strip())
             y = float(parts[1].strip())
             # store as PostgreSQL point literal e.g. "(x,y)"
-            user.last_location = (x,y)
+            user.last_location = f"({x},{y})"
             user.last_location_time = now_utc
         except ValueError as ve:
             return {"error": True, "message": f"Invalid location: {ve}"}, 400
@@ -101,35 +114,35 @@ def patch_user(userId):
             current_app.logger.debug(e)
             return {"error": True, "message": "Failed to set location"}, 500
 
-    if status := request.args.get("status"):
+    if status := request_body.get("status"):
         if status not in [item.value for item in user_status]:
             return {"error": True, "message": "Invalid state"}, 400
         user.status = status
         user.status_time = now_utc
 
-    if full_name := request.args.get("fullName"):
+    if full_name := request_body.get("fullname"):
         if full_name.strip() == '':
             return {"error": True, "message": "Empty name are not allowed"}, 400
         user.fullname = full_name.strip()
 
-    if phone_number := request.args.get("phoneNumber"):
+    if phone_number := request_body.get("phone_number"):
         if phone_number.strip() == '':
             return {"error": True, "message": "Empty phone numbers are not allowed"}, 400
         user.phone_number = phone_number.strip()
     
     # non controlla se la mail è già usata da un altro utente
     # in quel caso tanto fallisce il commit
-    if email := request.args.get("email"):
+    if email := request_body.get("email"):
         if email.strip() == '':
             return {"error": True, "message": "Empty emails are not allowed"}, 400
         user.email = email.strip()
 
-    if is_admin := request.args.get("is_admin"):
+    if is_admin := request_body.get("is_admin"):
         if auth_data.get("is_admin") == False:
             return {'error': True, "message": "Only admins can change the is_admin field"}, 403
         user.is_admin = is_admin
     
-    if caregiver_id := request.args.get("caregiver_id"):
+    if caregiver_id := request_body.get("caregiver_id"):
         user.caregiver_id = caregiver_id
 
     try:
