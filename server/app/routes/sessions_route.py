@@ -32,7 +32,7 @@ def create_user_session():
         found_user = db.session.execute(sq.select(DBUser).filter(DBUser.email == email)).scalar_one_or_none()
         if found_user == None:
             return {"error" : True, "message" : "User not found"}, 404
-        id = found_user.user_id
+        id = int(found_user.user_id)
     except:
         return {"error": True, "message" : "Server error"}, 500
 

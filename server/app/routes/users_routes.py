@@ -69,7 +69,7 @@ request body{
 def patch_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
     auth_data = get_jwt()
-    if auth_data.get('sub') != userId:
+    if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot delete another user"}, 403
     
     user = DBUser.query.get(userId)
@@ -163,7 +163,7 @@ def patch_user(userId):
 def delete_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
     auth_data = get_jwt()
-    if auth_data.get('sub') != userId:
+    if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot delete another user"}, 403
 
     user = DBUser.query.get(userId)
