@@ -7,12 +7,12 @@ def required_admin(fn):
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         auth_data = get_jwt()
-        if not auth_data.get("isAdmin", False):
+        if not auth_data.get("is_admin", False):
             return {"error": True, "message": "Admin access required."}, 403
         return fn(*args, **kwargs)
     return wrapper
 
-
+'''
 def required_logged_user(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
@@ -22,3 +22,4 @@ def required_logged_user(fn):
             return {"error": True, "message": "User access required."}, 403
         return fn(*args, **kwargs)
     return wrapper
+'''

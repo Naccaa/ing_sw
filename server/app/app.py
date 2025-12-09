@@ -29,10 +29,13 @@ print(db.metadata.tables.items)
 from routes.users_routes import users_route
 from routes.guidelines_routes import guidelines_route
 from routes.emergencies_routes import emergencies_route
+from routes.sessions_route import sessions_route
+
 version = None
 app.register_blueprint(users_route, url_prefix=version)
 app.register_blueprint(guidelines_route, url_prefix=version)
 app.register_blueprint(emergencies_route, url_prefix=version)
+app.register_blueprint(sessions_route, url_prefix=version)
 
 print(app.url_map)
 
@@ -41,6 +44,10 @@ def home():
     return jsonify({
         "version": "1.0",
         "endpoints": [
+            "POST /sessions",
+            "POST /users",
+            "DELETE /users/id",
+            "PATCH /users/id"
         ]
     })
 

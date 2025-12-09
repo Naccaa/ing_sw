@@ -7,8 +7,6 @@ from src.db_types import DBUser, user_status
 from sqlalchemy import exc
 from db import db
 
-from src.auth_decorators import required_logged_user
-
 import secrets
 import hashlib
 
@@ -67,7 +65,7 @@ request body{
 '''
 # testato
 @users_route.route('/users/<int:userId>', methods=['PATCH'])
-@required_logged_user
+@jwt_required()
 def patch_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
     auth_data = get_jwt()
@@ -160,7 +158,7 @@ def patch_user(userId):
 
 
 @users_route.route('/users/<int:userId>', methods=['DELETE'])
-@required_logged_user
+@jwt_required()
 #testata senza auth
 def delete_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
