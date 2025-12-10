@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="@drawable/bg_gradient">
+
+    <!-- Card Login -->
+    <LinearLayout
+        android:id="@+id/loginCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:background="@drawable/bg_glass"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:padding="26dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Titolo dentro la card -->
+        <TextView
+            android:id="@+id/appTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.04"
+            android:text="Login"
+            android:textColor="#2F4BA0"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+             />
+
+        <!-- EMAIL LABEL -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:letterSpacing="0.02"
+            android:text="Email"
+            android:textColor="#2F4BA0"
+            android:textSize="15sp" />
+
+        <!-- EMAIL INPUT -->
+        <EditText
+            android:id="@+id/emailInput"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:background="@drawable/bg_input"
+            android:hint="Inserisci email"
+            android:inputType="textEmailAddress"
+            android:padding="14dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#99FFFFFF" />
+
+        <!-- PASSWORD LABEL -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="6dp"
+            android:letterSpacing="0.02"
+            android:text="Password"
+            android:textColor="#2F4BA0"
+            android:textSize="15sp" />
+
+        <!-- PASSWORD INPUT -->
+        <EditText
+            android:id="@+id/passwordInput"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:background="@drawable/bg_input"
+            android:hint="Inserisci password"
+            android:inputType="textPassword"
+            android:padding="14dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#99FFFFFF" />
+
+        <!-- Password dimenticata -->
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Password dimenticata?"
+            android:textColor="#2F4BA0"
+            android:textSize="13sp" />
+
+        <!-- LOGIN BUTTON -->
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_button"
+            android:text="Accedi"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp" />
+
+    </LinearLayout>
+
+    <!-- Link registrazione -->
+    <TextView
+        android:id="@+id/registerLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Non hai un account? Registrati"
+        android:textSize="15sp"
+        android:textColor="#2F4BA0"
+        android:alpha="0.9"
+        app:layout_constraintTop_toBottomOf="@id/loginCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="28dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

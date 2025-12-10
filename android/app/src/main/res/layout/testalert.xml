@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/glass_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- FRECCIA DI NAVIGAZIONE -->
+        <LinearLayout
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:padding="6dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_back_arrow"
+                app:tint="#2F4BA0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="Indietro"
+                android:textColor="#2F4BA0"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Titolo pagina -->
+        <TextView
+            android:id="@+id/alertTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="10dp"
+            android:text="Dettagli Allerta Acqua Alta"
+            android:textColor="#2F4BA0"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <!-- CARD PRINCIPALE -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/alertCard"
+            android:layout_width="370dp"
+            android:layout_height="514dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="9dp"
+                android:paddingTop="9dp"
+                android:paddingEnd="9dp">
+
+                <!-- HEADER ICONA + TITOLO -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_flood"
+                        app:tint="#2F4BA0" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:text="Allerta Acqua Alta Venezia"
+                        android:textColor="#2F4BA0"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- DIVIDER -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#33FFFFFF" />
+
+                <!-- SCROLL DELLA CARD -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="440dp">
+
+                    <!-- CONTENUTO INTERNO -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="9dp"
+                        android:paddingEnd="9dp">
+
+                        <!-- Sezione 1 -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:text="Livello Allerta:"
+                            android:textColor="#2F4BA0"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/alertLevel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Allerta ROSSA – Marea prevista: 145 cm"
+                            android:textSize="14sp"
+                            android:textColor="#B00020" />
+
+                        <TextView
+                            android:id="@+id/alertDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="Aggiornamento: 29/11/2025 – 12:45"
+                            android:textSize="14sp" />
+
+                        <!-- Sezione 2 -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:text="Zone a rischio:"
+                            android:textColor="#2F4BA0"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/alertZones"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Piazza San Marco\n• Rialto\n• Dorsoduro\n• Fondamenta Nuove\n• Zona Arsenale"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="10dp" />
+
+                        <!-- Sezione 3 -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:text="Raccomandazioni:"
+                            android:textColor="#2F4BA0"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/alertTips"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Evitare zone lagunari e calli allagate.\n• Utilizzare passerelle dove disponibili.\n• Limitare gli spostamenti non essenziali.\n• Proteggere oggetti ed elettrodomestici a livello terra.\n• Indossare stivali e mantelle impermeabili.\n• Seguire gli aggiornamenti della Protezione Civile."
+                            android:textSize="14sp"
+                            android:layout_marginBottom="10dp" />
+
+                    </LinearLayout>
+                </ScrollView>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</FrameLayout>
