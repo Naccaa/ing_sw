@@ -23,8 +23,8 @@ def add_guideline():
     data = request.get_json()
 
     # valida se tutti i campi sono stati inseriti nella richiesta
-    if 'emergency_type' not in data or data['emergency_type'] not in [item.value for item in emergecy_types]:
-        return {"error": True, "message" : f"Request must contain one of the following emergency type: {[item.value for item in emergecy_types]}"}, 400
+    if 'emergency_type' not in data or data['emergency_type'] not in [item.value for item in emergency_type]:
+        return {"error": True, "message" : f"Request must contain one of the following emergency type: {[item.value for item in emergency_type]}"}, 400
     if 'message' not in data:
         return {"error": True, "message" : "Request must contain the message (description of the guideline)"}, 400
 

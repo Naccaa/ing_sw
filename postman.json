@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "ca2c2f1b-2f05-4e34-8a28-d47733c7973d",
+		"_postman_id": "fc1d8b5f-f511-4412-bfa5-bb08e18b61f6",
 		"name": "Ing_sw",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "44290915"
+		"_exporter_id": "44533055",
+		"_collection_link": "https://alessandro-5807119.postman.co/workspace/Alessandro's-Workspace~dd5c9824-e5b0-4b92-8148-cfb3d02a4290/collection/44533055-fc1d8b5f-f511-4412-bfa5-bb08e18b61f6?action=share&source=collection_link&creator=44533055"
 	},
 	"item": [
 		{
@@ -91,6 +92,183 @@
 									"key": "userId",
 									"value": "3"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sessions",
+			"item": [
+				{
+					"name": "create user session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"test@test.it\",\r\n    \"password\" : \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/sessions",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "emergencies",
+			"item": [
+				{
+					"name": "get emergencies",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/emergencies",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"emergencies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post emergencies",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/emergencies",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"emergencies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch emergency",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/emergencies/emergency_id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"emergencies",
+								"emergency_id"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "guidelines",
+			"item": [
+				{
+					"name": "add guideline",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTM3NjkyMCwianRpIjoiMmFkOTJmZjgtNDUwNC00MTZiLTk4MGUtNTkyNTAzN2IyYTRmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjIiLCJuYmYiOjE3NjUzNzY5MjAsImNzcmYiOiIyNmFiMDhkNi05ZTVmLTRjOWMtOWZlMy0wMDI0MzYyOWEzYjMiLCJleHAiOjE3NjUzODA1MjAsImlzX2FkbWluIjp0cnVlfQ.rQZop_Ukmtk08wz__OEbiWVY0_HKnJonClF4n5IpWAg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"emergency_type\" : \"grandinata\",\r\n    \"message\" : \"grandinata in corso!!!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/guidelines",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"guidelines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all guidelines",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get guideline",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"test@test.it\",\r\n    \"password\" : \"password\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/guideline/alluvione",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"guideline",
+								"alluvione"
 							]
 						}
 					},
