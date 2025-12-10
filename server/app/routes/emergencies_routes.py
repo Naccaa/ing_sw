@@ -160,7 +160,7 @@ def patch_emergency(id):
         emergency.message = data["message"]
 
     if 'location' in data:
-        if not len(data['location']) != 2 or not all(isinstance(v, (int, float)) for v in data["location"]):
+        if len(data['location']) != 2 or not all(isinstance(v, (int, float)) for v in data["location"]):
             return {"error": True, "message" : "Location must be expressed as an array of two numbers as follows: (x, y)"}, 400
         emergency.location = f"({data['location'][0]}, {data['location'][1]})"
 
