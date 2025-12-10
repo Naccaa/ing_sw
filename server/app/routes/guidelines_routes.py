@@ -67,8 +67,10 @@ def show_guidelines():
 Ritorna la guideline specifica per farla leggere all'utente
 quanto viene scelta dall'utente nell'interfaccia che le mostra tutte.
 '''
-@guidelines_route.route('/guideline/<id>', methods=['GET'])
+@guidelines_route.route('/guidelines/<id>', methods=['GET'])
 def show_guideline(id):
+  if id not in [item.value for item in emergency_type]:
+    return {"error": True, "message" : f"Request must contain one of the following emergency type: {[item.value for item in emergency_type]}"}, 400
   try:
     rows = DBGuidelines.query.filter(DBGuidelines.emergency_type == id).all()
   except Exception as e:
