@@ -160,11 +160,26 @@
 				{
 					"name": "post emergencies",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTM3ODM1MiwianRpIjoiYjkyNjFhY2EtNjFlNS00NmJlLTliOTQtMmQ3MzRjNzI1OGYyIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjIiLCJuYmYiOjE3NjUzNzgzNTIsImNzcmYiOiI4NzA3ODUzZi0wOWU4LTQ4MWYtODU1Zi1mMWQxYTk3NTA3MGQiLCJleHAiOjE3NjUzODE5NTIsImlzX2FkbWluIjp0cnVlfQ.YJlKSdw1jYOg2JPuyx1AEUDOsWx-5w0mzeldX5YYz1Q",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\r\n    \"emergency_type\": \"grandinata\",\r\n    \"message\": \"emergenza di test\",\r\n    \"location\": [1,3],\r\n    \"radius\": 5.0,\r\n    \"start_time\": \"2025-12-10T14:30:00Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "{{baseURL}}/emergencies",

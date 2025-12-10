@@ -116,8 +116,7 @@ class DBEmergencies(db.Model):
     start_time: Mapped[datetime.datetime]
     end_time: Mapped[datetime.datetime]
     
-    def __init__(self, id, emergency_type, message, location, radius, start_time, end_time):
-        self.id = id
+    def __init__(self, emergency_type, message, location, radius, start_time, end_time):
         self.emergency_type = emergency_type
         self.message = message
         self.location = location
