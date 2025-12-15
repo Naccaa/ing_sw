@@ -7,6 +7,11 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from db import db
+import firebase_admin
+from firebase_admin import credentials
+
+# cred = credentials.Certificate("ing-sw-636e2-firebase-adminsdk-fbsvc-82501b5887.json")
+# firebase_admin.initialize_app(cred)
 
 load_dotenv()
 app = Flask(__name__)

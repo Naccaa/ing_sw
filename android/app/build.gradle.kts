@@ -1,5 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
+    // firebase
+    // il tutorial di firebase direbbe di aggiungere questa riga ma l'ho tolta perché mi dava un errore
+    // id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -46,4 +50,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    // firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
 }
