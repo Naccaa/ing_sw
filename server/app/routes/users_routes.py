@@ -51,14 +51,13 @@ def add_user():
     return {"error" : False, "message" : "User created successfully"}, 201
 
 @users_route.route('/users/<int:userId>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
-    '''
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot get information of another user"}, 403
-    '''
+    
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
@@ -185,7 +184,6 @@ def patch_user(userId):
 
 @users_route.route('/users/<int:userId>', methods=['DELETE'])
 @jwt_required()
-#testata senza auth
 def delete_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
     auth_data = get_jwt()
@@ -207,14 +205,13 @@ def delete_user(userId):
     return {"error": False, "message": "User deleted successfully"}, 200
 
 @users_route.route('/users/<int:userId>/caregivers', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_caregivers(userId):
     # controlla se l'utente autenticato è lo stesso di userId
-    '''
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot get information about another user"}, 403
-    '''
+    
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
@@ -244,14 +241,13 @@ request body{
 }
 '''
 @users_route.route('/users/<int:userId>/caregivers', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def add_caregiver(userId):
     # controlla se l'utente autenticato è lo stesso di userId
-    '''
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot get information about another user"}, 403
-    '''
+   
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
@@ -286,14 +282,13 @@ request body{
 }
 '''
 @users_route.route('/users/<int:userId>/caregivers/<int:caregiverId>', methods=['PATCH'])
-#@jwt_required()
+@jwt_required()
 def patch_caregiver(userId):
     # controlla se l'utente autenticato è lo stesso di userId
-    '''
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot get information about another user"}, 403
-    '''
+    
     caregiver = DBCaregivers.query.filter(DBCaregivers.caregiver_id == caregiverId, DBCaregivers.user_id == userId).first()
     
     if not caregiver:
@@ -314,14 +309,13 @@ def patch_caregiver(userId):
     return {"error" : False, "message" : "Caregiver updated successfully"}, 201
 
 @users_route.route('/users/<int:userId>/caregivers/<int:caregiverId>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_caregiver(userId):
     # controlla se l'utente autenticato è lo stesso di userId
-    '''
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot delete another user"}, 403
-    '''
+
     caregiver = DBCaregivers.query.filter(DBCaregivers.caregiver_id == caregiverId, DBCaregivers.user_id == userId).first()
     
     if not caregiver:

@@ -32,6 +32,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import com.auth0.android.jwt.JWT;
 
 
 public class LoginFragment extends Fragment {
@@ -97,6 +98,14 @@ public class LoginFragment extends Fragment {
                             requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
                                     .edit()
                                     .putString("session_token", token)
+                                    .apply();
+
+                            // Salvataggio dell'user_id dell'utente autenticato (evita di doverlo ricavare ogni volta dal JWT)
+                            JWT jwt = new JWT(token);  // Decode il JWT
+                            String user_id = jwt.getClaim("sub").asString();
+                            requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
+                                    .edit()
+                                    .putString("user_id", user_id)
                                     .apply();
 
                             // Reindirizza l'utente alla "home" dell'applicazione

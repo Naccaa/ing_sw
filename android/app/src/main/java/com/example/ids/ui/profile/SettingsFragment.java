@@ -1,5 +1,8 @@
 package com.example.ids.ui.profile;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,12 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.ids.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.ids.databinding.FragmentSettingsBinding;
 
@@ -24,14 +31,34 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.ids.constants.Constants;
 
 public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
+
+    private TextView userFullname;
+    private TextView userPhone;
+    private TextView userEmail;
+    private Button btnModificaProfilo;
+
+    // Caregiver profile views
+    private TextView caregiverFullname;
+    private TextView caregiverPhone;
+    private TextView caregiverEmail;
+    private Button btnModificaCaregiver;
+
+    // Other buttons
+    private Button btnEliminaProfilo;
+    private Button btnLogout;
+
+    private String jwt;
+    private String user_id;
+
+    private OkHttpClient client;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,28 +76,58 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // User profile views
-        TextView userFullname = binding.userFullname;
-        TextView userPhone = binding.userPhone;
-        TextView userEmail = binding.userEmail;
-        Button btnModificaProfilo = binding.btnModificaProfilo;
+        userFullname = binding.userFullname;
+        userPhone = binding.userPhone;
+        userEmail = binding.userEmail;
+        btnModificaProfilo = binding.btnModificaProfilo;
 
         // Caregiver profile views
-        TextView caregiverFullname = binding.caregiverFullname;
-        TextView caregiverPhone = binding.caregiverPhone;
-        TextView caregiverEmail = binding.caregiverEmail;
-        Button btnModificaCaregiver = binding.btnModificaCaregiver;
+        caregiverFullname = binding.caregiverFullname;
+        caregiverPhone = binding.caregiverPhone;
+        caregiverEmail = binding.caregiverEmail;
+        btnModificaCaregiver = binding.btnModificaCaregiver;
 
         // Other buttons
-        Button btnEliminaProfilo = binding.btnEliminaProfilo;
-        Button btnLogout = binding.btnLogout;
+        btnEliminaProfilo = binding.btnEliminaProfilo;
+        btnLogout = binding.btnLogout;
 
+        // Retrieve authentication token from shared preferences
+        jwt = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("session_token", null);
+        user_id = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("user_id", null);
 
-        int user_id = 1;
+        Log.d("Session token", jwt);
+        Log.d("User id", user_id);
+
         // Client obj used to make requests
-        OkHttpClient client = new OkHttpClient();
+        client = new OkHttpClient();
+
+        // Update UI showing user and caregiver info
+        ShowUserInfo(view);
+
+        // Set up click listeners
+        btnModificaProfilo.setOnClickListener(v -> {
+        });
+
+        btnModificaCaregiver.setOnClickListener(v -> {
+        });
+
+        btnEliminaProfilo.setOnClickListener(this::DeleteUser);
+
+        btnLogout.setOnClickListener( v -> Logout(v, null));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    private void ShowUserInfo(View view){
+
         // Get the user information
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:5000/users/"+user_id)
+                .url(Constants.BASE_URL+"/users/"+user_id)
+                .header("Authorization", "Bearer " + jwt)
                 .build();
 
         // Asynchronous request
@@ -94,11 +151,9 @@ public class SettingsFragment extends Fragment {
                     String response_body_str = response.body().string();
                     Log.d("Response str", response_body_str);
 
-                    // Use Gson to parse JSON into a Map
-                    Gson gson = new Gson();
+                    // Use JSONObject to parse the response string into a JSON
                     try {
-                        Map<String, Object> response_data = gson.fromJson(response_body_str, new TypeToken<Map<String, Object>>(){}.getType());
-
+                        JSONObject response_data = new JSONObject(response_body_str);
                         final String fullname = (String) response_data.get("fullname");
                         final String phone_number = (String) response_data.get("phone_number");
                         final String email = (String) response_data.get("email");
@@ -126,11 +181,11 @@ public class SettingsFragment extends Fragment {
                                     Log.e("Error", "Email is null or not a valid String");
                             }
                         });
-
-                    } catch (JsonSyntaxException e) {
-                        Log.e("Gson Error", "Failed to parse JSON: " + e.getMessage());
+                    } catch (JSONException e) {
+                        Snackbar.make(view, "Application error, please reopen the application", Snackbar.LENGTH_LONG).show();
+                        throw new RuntimeException(e);
                     }
-                } else {
+               } else {
                     // Log an error response code
                     Log.e("Error", "Request failed with code " + response.code());
 
@@ -145,44 +200,76 @@ public class SettingsFragment extends Fragment {
                 }
             }
         });
-
-        // Set up click listeners
-        btnModificaProfilo.setOnClickListener(v -> {
-        });
-
-        btnModificaCaregiver.setOnClickListener(v -> {
-        });
-
-        btnEliminaProfilo.setOnClickListener(v -> {
-            Snackbar.make(view, "Profilo eliminato", Snackbar.LENGTH_LONG).show();
-
-            /*
-            Request request = new Request.Builder()
-            .url("https://jsonplaceholder.typicode.com/posts/1")  // URL for the resource to delete
-            .delete()  // DELETE request
-            .build();
-
-            try (Response response = client.newCall(request).execute()) {
-                if (response.isSuccessful()) {
-                    Log.d("Response", "Delete successful!");
-                } else {
-                    Log.e("Error", "Delete failed with code " + response.code());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            */
-        });
-
-        btnLogout.setOnClickListener(v -> {
-            Snackbar.make(view, "Log out", Snackbar.LENGTH_LONG).show();
-            // Add your logic for logout here
-        });
     }
+    private void DeleteUser(View view){
+        Request request = new Request.Builder()
+        .url(Constants.BASE_URL+"/users/"+user_id)
+        .delete()
+        .header("Authorization", "Bearer " + jwt)
+        .build();
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+        // Asynchronous request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("Error", "Request failed", e);
+                // Update the UI to show an error message
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(view, "Error connecting to server", Snackbar.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // Check if the response is successful
+                if (response.isSuccessful()) {
+                    String response_body_str = response.body().string();
+                    Log.d("Response str", response_body_str);
+                } else {
+                    // Log an error response code
+                    Log.e("Error", "Request failed with code " + response.code());
+
+                    // Update the UI to show an error message
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            userFullname.setText("Error deleting user.");
+                            Snackbar.make(view, "Error deleting user.", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        });
+
+        // After deleting the user, logout
+        Logout(view, "Profilo eliminato");
+    }
+    private void Logout(View view, String message){
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Remove session_token and user_id
+        editor.remove("session_token");
+        editor.remove("user_id");
+
+        // Set local variables to null
+        user_id = jwt = null;
+
+        // Apply the changes
+        editor.apply();
+
+        // Redirect user to the login page
+        NavController navController = Navigation.findNavController(getView());
+        navController.navigate(R.id.navigation_login);
+
+        // if message is null, set it to "Logout effettuato"
+        // otherwise, use the provided message
+        // used to print "Profilo eliminato" if this function was called from DeleteUser
+        if(message == null)
+            message = "Logout effettuato";
+        Snackbar.make(view,message, Snackbar.LENGTH_LONG).show();
     }
 }
