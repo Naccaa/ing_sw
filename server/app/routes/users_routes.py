@@ -305,7 +305,7 @@ def patch_caregiver(userId):
     if 'phone_number' in data:
         caregiver.phone_number = data["phone_number"].lstrip().rstrip()
     if 'alias' in data:
-        caregiver.alias = data["alias"].lstrip().rstrip(),
+        caregiver.alias = data["alias"].lstrip().rstrip()
     try:
         db.session.commit()
     except Exception as e:
