@@ -50,6 +50,54 @@ def add_user():
       return {"error" : True, "message": "Server error"}, 500
     return {"error" : False, "message" : "User created successfully"}, 201
 
+@users_route.route('/users/<int:userId>', methods=['GET'])
+@jwt_required()
+def get_user(userId):
+    # controlla se l'utente autenticato è lo stesso di userId
+    auth_data = get_jwt()
+    if int(auth_data.get('sub')) != userId:
+        return {'error': True, "message": "Cannot get information of another user"}, 403
+    user = DBUser.query.get(userId)
+    if not user:
+        return {"error": True, "message": "User not found"}, 404
+    response_data = {
+        "user_id": user.user_id,
+        "caregiver_id": user.caregiver_id,
+        "email": user.email,
+        "fullname": user.fullname,
+        "phone_number": user.phone_number,
+        "status": user.status,
+        "status_time": user.status_time,
+        "last_location": user.last_location,
+        "last_location_time": user.last_location_time,
+        "is_admin": user.is_admin
+    }
+    return {"error": False, "message": response_data}, 200
+
+@users_route.route('/users/<int:userId>/caregiver', methods=['GET'])
+@jwt_required()
+def get_caregiver(userId):
+    # controlla se l'utente autenticato è lo stesso di userId
+    auth_data = get_jwt()
+    if int(auth_data.get('sub')) != userId:
+        return {'error': True, "message": "Cannot get information about another user"}, 403
+    user = DBUser.query.get(userId)
+    if not user:
+        return {"error": True, "message": "User not found"}, 404
+    if user.caregiver_id == None:
+        response_data = {}
+    else:
+        caregiver = DBUser.query.get(userId)
+        response_data = {
+            "user_id": caregiver.user_id,
+            "caregiver_id": caregiver.caregiver_id,
+            "email": caregiver.email,
+            "fullname": caregiver.fullname,
+            "phone_number": caregiver.phone_number
+        }
+    return {"error": False, "message": response_data}, 200
+
+
 
 '''
 request body{
@@ -70,7 +118,7 @@ def patch_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
-        return {'error': True, "message": "Cannot delete another user"}, 403
+        return {'error': True, "message": "Cannot change information about another user"}, 403
     
     user = DBUser.query.get(userId)
     if not user:

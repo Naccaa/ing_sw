@@ -1,12 +1,94 @@
 {
 	"info": {
-		"_postman_id": "fc1d8b5f-f511-4412-bfa5-bb08e18b61f6",
+		"_postman_id": "ca2c2f1b-2f05-4e34-8a28-d47733c7973d",
 		"name": "Ing_sw",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "44533055",
-		"_collection_link": "https://alessandro-5807119.postman.co/workspace/Alessandro's-Workspace~dd5c9824-e5b0-4b92-8148-cfb3d02a4290/collection/44533055-fc1d8b5f-f511-4412-bfa5-bb08e18b61f6?action=share&source=collection_link&creator=44533055"
+		"_exporter_id": "44290915"
 	},
 	"item": [
+		{
+			"name": "guidelines",
+			"item": [
+				{
+					"name": "create guidelines",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTM3ODIwMSwianRpIjoiZWVhNWIzN2MtMjMxMi00YjkyLWI5OGYtZGY5ZmE2YzdjN2UwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjMiLCJuYmYiOjE3NjUzNzgyMDEsImNzcmYiOiIxMmQ2NzE4My0wMmZjLTQyNzgtOTliOC0yMjJkMWNkYTZiZDYiLCJleHAiOjE3NjUzODE4MDEsImlzX2FkbWluIjp0cnVlfQ.ZyHcQM4MboxXuXye1P7wNCO7kzE-eSlxDQoL5PeQctM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emergency_type\": \"allagamento\",\n    \"message\": \"ti conviene imparare a nuotare\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/guidelines",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"guidelines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get guidelines",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTM3ODIwMSwianRpIjoiZWVhNWIzN2MtMjMxMi00YjkyLWI5OGYtZGY5ZmE2YzdjN2UwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjMiLCJuYmYiOjE3NjUzNzgyMDEsImNzcmYiOiIxMmQ2NzE4My0wMmZjLTQyNzgtOTliOC0yMjJkMWNkYTZiZDYiLCJleHAiOjE3NjUzODE4MDEsImlzX2FkbWluIjp0cnVlfQ.ZyHcQM4MboxXuXye1P7wNCO7kzE-eSlxDQoL5PeQctM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/guidelines",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"guidelines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get guideline by type",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "users",
 			"item": [
@@ -17,7 +99,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test.it\",\n    \"fullname\": \"Fabio Naccarella\",\n    \"phone_number\": \"123456789\",\n    \"password\": \"password\"\n}",
+							"raw": "{\n    \"email\": \"admin2@admin.it\",\n    \"fullname\": \"Fabio Naccarella\",\n    \"phone_number\": \"123456789\",\n    \"password\": \"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -37,13 +119,28 @@
 					"response": []
 				},
 				{
-					"name": "delete user",
+					"name": "patch user",
 					"request": {
-						"method": "DELETE",
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTMwNjY4NiwianRpIjoiZDdmNWJmMTctZWFlMy00MTQwLTg0YTktNDNhNmNkNmMxOTFkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjIiLCJuYmYiOjE3NjUzMDY2ODYsImNzcmYiOiJlZjcwZjNjNS00MjE5LTRkZTMtYjk2Mi05NjQ5MGYxYTNhY2EiLCJleHAiOjE3NjUzMTAyODYsImlzX2FkbWluIjpmYWxzZX0.5AQFHrA1ews4eyfoFlx0HymKmQjQVNqTNsq0NpjdmOw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "\n"
+							"raw": "{\n    \"caregiver_id\": 2,\n    \"email\": \"test@test.it\",\n    \"fullname\": \"Fabio Naccarella\",\n    \"phone_number\": \"987654321\",\n    \"status\": \"inDanger\",\n    \"location\": \"1,3\",\n    \"is_admin\": true,\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "{{baseURL}}/users/:userId",
@@ -65,19 +162,55 @@
 					"response": []
 				},
 				{
-					"name": "patch user",
+					"name": "delete user",
 					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"caregiver_id\": 3,\n    \"email\": \"test3@test.it\",\n    \"fullname\": \"Fabioo Naccarella\",\n    \"phone_number\": \"987654321\",\n    \"status\": \"inDanger\",\n    \"location\": \"1,3\",\n    \"is_admin\": true,\n    \"password\": \"pizza\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTMwNjA4NywianRpIjoiNjlmODBmNTMtYjkwZC00ZjkzLTk3ODYtNDc0ZTQyZDdkYjE4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3NjUzMDYwODcsImNzcmYiOiI5MjdhNWZhNi0xNDkzLTQ0ODEtYTc1NS1lMmU5N2NlNGMyYWIiLCJleHAiOjE3NjUzMDk2ODcsImlzX2FkbWluIjpmYWxzZX0.kMjC5daRTVJcvM80JK9nwCZ7kfhPCEs5Teu3i8fJojQ",
+									"type": "string"
 								}
-							}
+							]
 						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/users/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTg5MDgyOCwianRpIjoiMzUzMDVlODUtMWU5Yy00Y2Q0LTk5YmQtYWVhYzM3ZjMxODg0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3NjU4OTA4MjgsImNzcmYiOiJjYmU3MjgzYS1hMTUyLTRjMzUtYjE2Yy01MjI4YmI3Y2VjN2YiLCJleHAiOjE3NjU4OTQ0MjgsImlzX2FkbWluIjpmYWxzZX0.mdXH_KUqJjOGCutFusWB6GRirQs_5IRY94ELdoqaRCY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
 						"url": {
 							"raw": "{{baseURL}}/users/:userId",
 							"host": [
@@ -90,126 +223,43 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "3"
+									"value": "1"
 								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "sessions",
-			"item": [
-				{
-					"name": "create user session",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\" : \"test@test.it\",\r\n    \"password\" : \"password\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/sessions",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"sessions"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "emergencies",
-			"item": [
-				{
-					"name": "get emergencies",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseURL}}/emergencies",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"emergencies"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "post emergencies",
+					"name": "get caregiver",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTM3ODM1MiwianRpIjoiYjkyNjFhY2EtNjFlNS00NmJlLTliOTQtMmQ3MzRjNzI1OGYyIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjIiLCJuYmYiOjE3NjUzNzgzNTIsImNzcmYiOiI4NzA3ODUzZi0wOWU4LTQ4MWYtODU1Zi1mMWQxYTk3NTA3MGQiLCJleHAiOjE3NjUzODE5NTIsImlzX2FkbWluIjp0cnVlfQ.YJlKSdw1jYOg2JPuyx1AEUDOsWx-5w0mzeldX5YYz1Q",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTg5MDgyOCwianRpIjoiMzUzMDVlODUtMWU5Yy00Y2Q0LTk5YmQtYWVhYzM3ZjMxODg0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3NjU4OTA4MjgsImNzcmYiOiJjYmU3MjgzYS1hMTUyLTRjMzUtYjE2Yy01MjI4YmI3Y2VjN2YiLCJleHAiOjE3NjU4OTQ0MjgsImlzX2FkbWluIjpmYWxzZX0.mdXH_KUqJjOGCutFusWB6GRirQs_5IRY94ELdoqaRCY",
 									"type": "string"
 								}
 							]
 						},
-						"method": "POST",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"emergency_type\": \"grandinata\",\r\n    \"message\": \"emergenza di test\",\r\n    \"location\": [1,3],\r\n    \"radius\": 5.0,\r\n    \"start_time\": \"2025-12-10T14:30:00Z\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						"url": {
+							"raw": "{{baseURL}}/users/:userId/caregiver",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								":userId",
+								"caregiver"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
 								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/emergencies",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"emergencies"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "patch emergency",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseURL}}/emergencies/emergency_id",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"emergencies",
-								"emergency_id"
 							]
 						}
 					},
@@ -218,78 +268,30 @@
 			]
 		},
 		{
-			"name": "guidelines",
-			"item": [
-				{
-					"name": "add guideline",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NTM3NjkyMCwianRpIjoiMmFkOTJmZjgtNDUwNC00MTZiLTk4MGUtNTkyNTAzN2IyYTRmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjIiLCJuYmYiOjE3NjUzNzY5MjAsImNzcmYiOiIyNmFiMDhkNi05ZTVmLTRjOWMtOWZlMy0wMDI0MzYyOWEzYjMiLCJleHAiOjE3NjUzODA1MjAsImlzX2FkbWluIjp0cnVlfQ.rQZop_Ukmtk08wz__OEbiWVY0_HKnJonClF4n5IpWAg",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"emergency_type\" : \"grandinata\",\r\n    \"message\" : \"grandinata in corso!!!\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/guidelines",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"guidelines"
-							]
+			"name": "create session",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin@admin.it\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					},
-					"response": []
+					}
 				},
-				{
-					"name": "get all guidelines",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "get guideline",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\" : \"test@test.it\",\r\n    \"password\" : \"password\"\r\n}"
-						},
-						"url": {
-							"raw": "{{baseURL}}/guideline/alluvione",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"guideline",
-								"alluvione"
-							]
-						}
-					},
-					"response": []
+				"url": {
+					"raw": "{{baseURL}}/sessions",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"sessions"
+					]
 				}
-			]
+			},
+			"response": []
 		}
 	],
 	"variable": [
