@@ -41,14 +41,13 @@ print(app.url_map)
 
 @app.route('/')
 def home():
+    endpoints = []
+    for rule in app.url_map.iter_rules():
+        for method in list(rule.methods):
+            endpoints.append(method + " " + rule.rule)
     return jsonify({
         "version": "1.0",
-        "endpoints": [
-            "POST /sessions",
-            "POST /users",
-            "DELETE /users/id",
-            "PATCH /users/id"
-        ]
+        "endpoints": endpoints
     })
 
 
