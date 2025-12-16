@@ -31,6 +31,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -95,14 +96,13 @@ public class SettingsFragment extends Fragment {
         jwt = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("session_token", null);
         user_id = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("user_id", null);
 
-        Log.d("Session token", jwt);
-        Log.d("User id", user_id);
-
         // Client obj used to make requests
         client = new OkHttpClient();
 
-        // Update UI showing user and caregiver info
+        // Update UI showing user info
         ShowUserInfo(view);
+        // Update UI showing caregiver info
+        ShowCaregiversInfo(view);
 
         // Set up click listeners
         btnModificaProfilo.setOnClickListener(v -> {
@@ -195,6 +195,95 @@ public class SettingsFragment extends Fragment {
                         public void run() {
                             userFullname.setText("Error loading user data.");
                             Snackbar.make(view, "Error loading user data.", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void ShowCaregiversInfo(View view){
+        // Get the user information
+        Request request = new Request.Builder()
+                .url(Constants.BASE_URL+"/users/"+user_id+"/caregivers")
+                .header("Authorization", "Bearer " + jwt)
+                .build();
+
+        // Asynchronous request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("Error", "Request failed", e);
+                // Update the UI to show an error message
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(view, "Error connecting to server", Snackbar.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // Check if the response is successful
+                if (response.isSuccessful()) {
+                    String response_body_str = response.body().string();
+                    Log.d("Response str", response_body_str);
+
+                    // Use JSONArray to parse the response string into a JSON
+                    try {
+                        JSONArray response_data = new JSONArray(response_body_str);
+                        if(response_data.length() == 0){
+                            Log.d("No caregivers", "No caregivers found");
+                        }
+                        else {
+                            for (int i = 0; i < response_data.length(); i++) {
+                                JSONObject caregiver = response_data.getJSONObject(i);
+                                final String fullname = (String) caregiver.get("fullname");
+                                final String phone_number = (String) caregiver.get("phone_number");
+                                final String email = (String) caregiver.get("email");
+                                /*
+                                // Update UI with user info
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (fullname != null) {
+                                            Log.d("User fullname", fullname);
+                                            userFullname.append(fullname);
+                                        } else
+                                            Log.e("Error", "Fullname is null or not a valid String");
+
+                                        if (phone_number != null) {
+                                            Log.d("User phone number", phone_number);
+                                            userPhone.append(phone_number);
+                                        } else
+                                            Log.e("Error", "Phone number is null or not a valid String");
+
+                                        if (email != null) {
+                                            Log.d("User email", email);
+                                            userEmail.append(email);
+                                        } else
+                                            Log.e("Error", "Email is null or not a valid String");
+                                    }
+                                });
+                                */
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        Snackbar.make(view, "Application error, please reopen the application", Snackbar.LENGTH_LONG).show();
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    // Log an error response code
+                    Log.e("Error", "Request failed with code " + response.code());
+
+                    // Update the UI to show an error message
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            userFullname.setText("Error loading caregivers data.");
+                            Snackbar.make(view, "Error loading caregivers data.", Snackbar.LENGTH_LONG).show();
                         }
                     });
                 }
