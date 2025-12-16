@@ -16,8 +16,8 @@
         android:label="Guide"
         tools:layout="@layout/fragment_guide" />
     <fragment
-        android:id="@+id/navigation_profile"
-        android:name="com.example.ids.ui.profile.ProfileFragment"
-        android:label="Profile"
+        android:id="@+id/navigation_settings"
+        android:name="com.example.ids.ui.profile.SettingsFragment"
+        android:label="Profilo"
         tools:layout="@layout/fragment_settings" />
 </navigation>

@@ -51,12 +51,14 @@ def add_user():
     return {"error" : False, "message" : "User created successfully"}, 201
 
 @users_route.route('/users/<int:userId>', methods=['GET'])
-@jwt_required()
+#@jwt_required()
 def get_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
+    '''
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot get information of another user"}, 403
+    '''
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
@@ -72,15 +74,17 @@ def get_user(userId):
         "last_location_time": user.last_location_time,
         "is_admin": user.is_admin
     }
-    return {"error": False, "message": response_data}, 200
+    return response_data, 200
 
 @users_route.route('/users/<int:userId>/caregiver', methods=['GET'])
-@jwt_required()
+#@jwt_required()
 def get_caregiver(userId):
     # controlla se l'utente autenticato è lo stesso di userId
+    '''
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot get information about another user"}, 403
+    '''
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
@@ -95,7 +99,7 @@ def get_caregiver(userId):
             "fullname": caregiver.fullname,
             "phone_number": caregiver.phone_number
         }
-    return {"error": False, "message": response_data}, 200
+    return response_data, 200
 
 
 
