@@ -18,8 +18,7 @@
         android:orientation="vertical"
         android:padding="26dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <!-- Titolo dentro la card -->
         <TextView
@@ -49,12 +48,15 @@
         <EditText
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci email"
             android:inputType="textEmailAddress"
-            android:padding="14dp"
-            android:textColor="#FFFFFF"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="#000000"
             android:textColorHint="#99FFFFFF" />
 
         <!-- PASSWORD LABEL -->
@@ -72,12 +74,15 @@
         <EditText
             android:id="@+id/passwordInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci password"
             android:inputType="textPassword"
-            android:padding="14dp"
-            android:textColor="#FFFFFF"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="#000000"
             android:textColorHint="#99FFFFFF" />
 
         <!-- Password dimenticata -->
