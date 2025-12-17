@@ -28,23 +28,26 @@ def check_auth_token(caregiver_id, auth_token):
 def generate_auth_token():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
 
-def send_auth_email(caregiver_email, auth_token):
+def send_auth_email(caregiver_email, auth_token, user_id, alias, phone_number, user_fullname, user_email, user_phone):
     source = getenv('SENDER_MAIL')
     password = getenv('MAIL_PASSWORD')
 
-    url = "http://example.com/authenticate?auth_token="+auth_token  # Replace with actual URL
-
+    url = f"http://localhost:5000/authenticate/{user_id}/{auth_token}"  # Replace with actual URL   
     msg = EmailMessage()
     msg['Subject'] = "Caregiver Authentication Code"
     msg['From'] = source
     msg['To'] = caregiver_email
 
     msg.set_content(f"""
-    Hello, 
-    Your authentication code is: {auth_token}
-    Please use this code to authenticate your caregiver account.
-    You can authenticate by visiting the following link: {url}
-    This code will expire in 24 hours.
+    Hello {alias}, 
+    You have been registered as a caregiver by this user:
+    - user full name: {user_fullname}
+    - user email: {user_email}
+    - user phone number: {user_phone}
+    Your phone number: {phone_number}
+    You can authenticate as a caregiver by visiting the following link: {url}
+    This link will expire in 24 hours.
+    If you do not wish to be a caregiver or your informations are wrong, please ignore this email.
     """)
     try:
         with smtplib.SMTP('smtp.gmail.com', 587) as server:

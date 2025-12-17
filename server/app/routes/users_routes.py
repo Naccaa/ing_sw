@@ -270,11 +270,9 @@ def add_caregiver(userId):
                                      authenticated=False, auth_code=auth_token, 
                                      date_added=datetime.now(timezone.utc))
         
-        #send_auth_email(new_caregiver.email, auth_token)
-
         try:
             db.session.add(new_caregiver)
-            send_auth_email(new_caregiver.email, auth_token)
+            send_auth_email(new_caregiver.email, auth_token, userId, new_caregiver.alias, new_caregiver.phone_number, user.fullname, user.email, user.phone_number)
             db.session.commit()
         except Exception as e:
             current_app.logger.debug(e)
@@ -337,3 +335,9 @@ def delete_caregiver(userId):
         return {"error": True, "message": "Server error"}, 500
 
     return {"error": False, "message": "Caregiver deleted successfully"}, 200
+
+
+@users_route.route('/authenticate/<int:caregiver_id>/<string:auth_token>', methods=['GET'])
+def authenticate_caregiver(caregiver_id, auth_token):
+    result, status_code = check_auth_token(caregiver_id, auth_token)
+    return jsonify(result), status_code
