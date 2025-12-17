@@ -1,8 +1,9 @@
-import datetime
+from datetime import datetime, timezone
 from flask import Blueprint, current_app, request, jsonify
 from flask_jwt_extended import get_jwt
 from flask_jwt_extended.view_decorators import jwt_required
 from src.db_types import DBUser, DBCaregivers, user_status
+from src.auth_caregivers import *
  
 from sqlalchemy import exc
 from db import db
@@ -260,14 +261,20 @@ def add_caregiver(userId):
         if 'alias' not in data:
             return {"error": True, "message" : "Request must contain the alias of the caregiver"}, 400
        
+        auth_token = generate_auth_token()
+
         new_caregiver = DBCaregivers(email=data["email"].lower().lstrip().rstrip(),
                                      phone_number=data["phone_number"].lstrip().rstrip(),
                                      alias=data["alias"].lstrip().rstrip(),
                                      user_id=userId,
-                                     authenticated=False)
+                                     authenticated=False, auth_code=auth_token, 
+                                     date_added=datetime.now(timezone.utc))
         
+        #send_auth_email(new_caregiver.email, auth_token)
+
         try:
             db.session.add(new_caregiver)
+            send_auth_email(new_caregiver.email, auth_token)
             db.session.commit()
         except Exception as e:
             current_app.logger.debug(e)

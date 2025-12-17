@@ -60,8 +60,11 @@ CREATE TABLE ing_sw.Caregivers (
   alias varchar NOT NULL,
   user_id integer NOT NULL,
   authenticated boolean NOT NULL DEFAULT FALSE, 
+  auth_code varchar NOT NULL,
+  date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY (user_id) REFERENCES ing_sw.Users (user_id)
   ON UPDATE CASCADE
 	ON DELETE SET NULL
 );
+

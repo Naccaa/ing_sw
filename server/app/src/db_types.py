@@ -174,19 +174,24 @@ class DBCaregivers(db.Model):
         phone_number,
         alias,
         user_id, 
-        authenticated
+        authenticated,
+        auth_code,
+        date_added
     ):
         self.email=email
         self.phone_number=phone_number
         self.alias=alias
         self.user_id=user_id
         self.authenticated=False
+        self.auth_code=auth_code
+        self.date_added=date_added
 
     def __repr__(self):
         return {
             f"DBCaregivers(caregiver_id={self.caregiver_id}, " \
             f"email={self.email}, phone_number={self.phone_number}, " \
-            f"alias={self.alias}, user_id={self.user_id}, authenticated={self.authenticated})"
+            f"alias={self.alias}, user_id={self.user_id}, authenticated={self.authenticated}, " \
+            f"auth_code={self.auth_code}, date_added={self.date_added})"
         }
     
     def to_dict(self):
@@ -196,5 +201,7 @@ class DBCaregivers(db.Model):
             "phone_number": self.phone_number,
             "alias": self.alias,
             "user_id": self.user_id,
-            "authenticated": self.authenticated
+            "authenticated": self.authenticated,
+            "auth_code": self.auth_code,
+            "date_added": self.date_added
         }
