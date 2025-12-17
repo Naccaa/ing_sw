@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ... inside MainActivity.java ...
-
     private void checkNotificationPermission() {
         // Check if the device is on Android 13 (API 33) or higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -84,12 +84,11 @@ public class MainActivity extends AppCompatActivity {
             postNotification();
         }
     }
-    // ... inside MainActivity.java ...
 
     private void showPermissionRationaleDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Notification Permission Needed")
-                .setMessage("This app needs permission to send you alerts about potential intrusions. Please grant the notification permission.")
+                .setMessage("This app needs permission to send you alerts about potential climate emergencies. Please grant the notification permission.")
                 .setPositiveButton("Continue", (dialog, which) -> {
                     // User agrees, launch the system permission request
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
@@ -100,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .show();
     }
-    // ... inside MainActivity.java ...
 
     private void postNotification() {
         var CHANNEL_ID = "0";
@@ -122,8 +120,6 @@ public class MainActivity extends AppCompatActivity {
         NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, builder.build());
         Log.d("Notification", "Notification posted successfully.");
     }
-
-// ... don't forget the createNotificationChannel method from the previous answer ...
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,16 +144,15 @@ public class MainActivity extends AppCompatActivity {
         var CHANNEL_ID = "0";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("textTitle")
-                .setContentText("textContent")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+                .setContentTitle("Title")
+                .setContentText("Content")
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(this, 0,
+                        new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE));
 
-        // Source - https://stackoverflow.com/a
-// Posted by Rax, modified by community. See post 'Timeline' for change history
-// Retrieved 2025-12-14, License - CC BY-SA 4.0
 
-        Log.d("test", "This is a test");
+        // Log.d("test", "This is a test");
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -172,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
 
             return;
         }
-        Log.d("test", "This is a test 2");
 
         var NOTIFICATION_ID = 0;
         NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, builder.build());
