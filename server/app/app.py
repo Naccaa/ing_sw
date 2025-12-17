@@ -30,12 +30,14 @@ from routes.users_routes import users_route
 from routes.guidelines_routes import guidelines_route
 from routes.emergencies_routes import emergencies_route
 from routes.sessions_route import sessions_route
+from routes.reset_password import reset_bp
 
 version = None
 app.register_blueprint(users_route, url_prefix=version)
 app.register_blueprint(guidelines_route, url_prefix=version)
 app.register_blueprint(emergencies_route, url_prefix=version)
 app.register_blueprint(sessions_route, url_prefix=version)
+app.register_blueprint(reset_bp, url_prefix=version)
 
 print(app.url_map)
 

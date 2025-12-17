@@ -13,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import org.json.JSONException;
@@ -38,6 +40,7 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(
+
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
@@ -46,12 +49,18 @@ public class LoginFragment extends Fragment {
         EditText email = view.findViewById(R.id.emailInput);
         EditText password = view.findViewById(R.id.passwordInput);
         Button btnLogin = view.findViewById(R.id.loginButton);
+        TextView forgotPassword = view.findViewById(R.id.forgotPassword);
 
         btnLogin.setOnClickListener(v -> {
             String e = email.getText().toString();
             String p = password.getText().toString();
 
             login(e, p);
+        });
+
+        forgotPassword.setOnClickListener(v -> {
+            Log.d("LOGIN", "Password dimenticata cliccata");
+            forgotPass();
         });
 
         return view;
@@ -100,8 +109,14 @@ public class LoginFragment extends Fragment {
                                     .apply();
 
                             // Reindirizza l'utente alla "home" dell'applicazione
-                            NavController navController = Navigation.findNavController(getView());
-                            navController.navigate(R.id.navigation_alert);
+                            NavController navController = Navigation.findNavController(requireView());
+
+                            // Rimuove la schermata del login, per evitare di tornarci alla pressione del tasto "back"
+                            NavOptions navOptions = new NavOptions.Builder()
+                                    .setPopUpTo(R.id.navigation_login, true)
+                                    .build();
+
+                            navController.navigate(R.id.navigation_alert, null, navOptions);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -116,5 +131,10 @@ public class LoginFragment extends Fragment {
                 });
             }
         });
+    }
+
+    private void forgotPass() {
+        NavController navController = Navigation.findNavController(requireView());
+        navController.navigate(R.id.navigation_forgotPassword);
     }
 }

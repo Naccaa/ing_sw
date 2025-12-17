@@ -1,5 +1,8 @@
 package com.example.ids.ui.profile;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.ids.constants.Constants;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -64,13 +69,16 @@ public class SettingsFragment extends Fragment {
         Button btnEliminaProfilo = binding.btnEliminaProfilo;
         Button btnLogout = binding.btnLogout;
 
+        SharedPreferences prefs = requireActivity()
+                .getSharedPreferences("app_prefs", MODE_PRIVATE);
 
         int user_id = 1;
         // Client obj used to make requests
         OkHttpClient client = new OkHttpClient();
         // Get the user information
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:5000/users/"+user_id)
+                .url(Constants.BASE_URL + "/users/"+user_id)
+                .addHeader("Authorization", "Bearer " + prefs.getString("session_token", null))
                 .build();
 
         // Asynchronous request

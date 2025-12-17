@@ -51,3 +51,11 @@ CREATE TABLE ing_sw.Guidelines (
   emergency_type ing_sw.emergency_type PRIMARY KEY,
   message varchar NOT NULL
 );
+
+CREATE TABLE ing_sw.password_reset_tokens (
+    token varchar(64) PRIMARY KEY,
+    user_id int NOT NULL REFERENCES ing_sw.Users(user_id),
+    expires_at timestamp NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    used boolean DEFAULT FALSE
+);

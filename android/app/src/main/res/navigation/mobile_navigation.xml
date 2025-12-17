@@ -25,4 +25,9 @@
         android:name="com.example.ids.ui.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/navigation_forgotPassword"
+        android:name="com.example.ids.ui.login.ForgotPasswordFragment"
+        android:label="Forgot Password"
+        tools:layout="@layout/fragment_forgot_password" />
 </navigation>

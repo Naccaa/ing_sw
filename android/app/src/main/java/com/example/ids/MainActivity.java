@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_alert, R.id.navigation_guide, R.id.navigation_profile)
+                R.id.navigation_alert, R.id.navigation_guide, R.id.navigation_settings)
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Nascondi BottomNavigationView sul LoginFragment
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_login) {
+            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword) {
                 binding.navView.setVisibility(View.GONE);
             } else {
                 binding.navView.setVisibility(View.VISIBLE);

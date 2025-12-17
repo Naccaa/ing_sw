@@ -131,20 +131,7 @@ def patch_user(userId):
     request_body = request.get_json(silent=True) or {}
     
     if password := request_body.get("password"):
-        try:
-            salt_bytes = secrets.token_bytes(16)
-            salt_hex = salt_bytes.hex()
-            digest_hex = hashlib.pbkdf2_hmac(
-                "sha256",
-                password.encode("utf-8"),
-                salt_bytes,
-                100000
-            ).hex()
-            user.password_salt_hex = salt_hex
-            user.password_digest_hex = digest_hex
-        except Exception as e:
-            current_app.logger.debug(e)
-            return {"error": True, "message": "Failed to set password"}, 500
+        user.set_password(password) # Per cambiare password si usa il metodo implementato in DBUser
 
     now_utc = datetime.datetime.now(datetime.timezone.utc)
 

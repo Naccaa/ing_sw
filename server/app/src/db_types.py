@@ -157,3 +157,31 @@ class DBGuidelines(db.Model):
             "emergency_type": self.emergency_type,
             "message": self.message,
         }
+
+class DBPasswordResetTokens(db.Model):
+    __table__ = db.metadata.tables['password_reset_tokens']
+    
+    token: Mapped[str]
+    user_id: Mapped[int]
+    expires_at: Mapped[datetime.datetime]
+    created_at: Mapped[datetime.datetime]
+    used: Mapped[bool]
+
+    def __init__(self, token, user_id, expires_at, created_at, used):
+        self.token = token
+        self.user_id = user_id
+        self.expires_at = expires_at
+        self.created_at = created_at
+        self.used = used 
+
+    def __repr__(self):
+        return f"DBPasswordResetTokens(token={self.token}, user_id={self.user_id}, expires_at={self.expires_at}, created_at={self.created_at}, used={self.used})"
+
+    def to_dict(self):
+        return {
+            "token": self.token,
+            "user_id": self.user_id,
+            "expires_at": self.expires_at,
+            "created_at": self.created_at,
+            "used": self.used
+        }
