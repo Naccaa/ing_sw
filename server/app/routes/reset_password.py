@@ -46,7 +46,7 @@ def reset_password():
         # Controllo se il token è ancora valido (potrebbe essere usato oppure scaduto)
         if found_token.used == True:
             return {"error" : True, "message" : "Token not valid."}, 400
-        if found_token.expires_at > datetime.now():
+        if found_token.expires_at < datetime.now():
             return {"error" : True, "message" : "Token not valid."}, 400
 
         # Aggiorno la password
@@ -96,7 +96,7 @@ def forgot_password():
 
     # Aggiungo il token al database
     current_timestamp = datetime.now()
-    new_token = DBPasswordResetTokens(token, id, current_timestamp, current_timestamp + timedelta(minutes=10), False)
+    new_token = DBPasswordResetTokens(token, id, current_timestamp + timedelta(minutes=10), current_timestamp, False)
 
     try:
       db.session.add(new_token)
