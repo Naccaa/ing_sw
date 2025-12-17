@@ -16,7 +16,7 @@ selezionare:
 System: PostgreSQL
 Server: db
 Username: postgres
-Password: iHateThisProject (al momento questa è la password salvata nel .env XD)
+Password: aVerySecurePassword!TustMe (se non funziona controllare il file .env)
 Database: postgres
 
 una volta che si ha effettuato l'accesso è possibile selezionare lo schema ing_sw

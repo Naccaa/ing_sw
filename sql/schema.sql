@@ -62,6 +62,9 @@ CREATE TABLE ing_sw.Caregivers (
   authenticated boolean NOT NULL DEFAULT FALSE, 
   auth_code varchar NOT NULL,
   date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	-- there can only one entry that associates a user to a caregiver
+	UNIQUE(user_id, email, phone_number),
 
   FOREIGN KEY (user_id) REFERENCES ing_sw.Users (user_id)
   ON UPDATE CASCADE

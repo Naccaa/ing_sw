@@ -272,8 +272,9 @@ def add_caregiver(userId):
         
         try:
             db.session.add(new_caregiver)
-            send_auth_email(new_caregiver.email, auth_token, userId, new_caregiver.alias, new_caregiver.phone_number, user.fullname, user.email, user.phone_number)
             db.session.commit()
+            # after the commit the new_caregiver.caregiver_id gets updated, so it can be used to send the auth mail
+            send_auth_email(new_caregiver.email, auth_token, new_caregiver.caregiver_id, new_caregiver.alias, new_caregiver.phone_number, user.fullname, user.email, user.phone_number)
         except Exception as e:
             current_app.logger.debug(e)
             return {"error" : True, "message": "Server error"}, 500
@@ -288,7 +289,7 @@ request body{
 '''
 @users_route.route('/users/<int:userId>/caregivers/<int:caregiverId>', methods=['PATCH'])
 @jwt_required()
-def patch_caregiver(userId):
+def patch_caregiver(userId, caregiverId):
     # controlla se l'utente autenticato è lo stesso di userId
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
@@ -315,7 +316,7 @@ def patch_caregiver(userId):
 
 @users_route.route('/users/<int:userId>/caregivers/<int:caregiverId>', methods=['DELETE'])
 @jwt_required()
-def delete_caregiver(userId):
+def delete_caregiver(userId, caregiverId):
     # controlla se l'utente autenticato è lo stesso di userId
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:

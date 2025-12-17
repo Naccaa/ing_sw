@@ -28,11 +28,11 @@ def check_auth_token(caregiver_id, auth_token):
 def generate_auth_token():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=32))
 
-def send_auth_email(caregiver_email, auth_token, user_id, alias, phone_number, user_fullname, user_email, user_phone):
+def send_auth_email(caregiver_email, auth_token, caregiver_id, alias, phone_number, user_fullname, user_email, user_phone):
     source = getenv('SENDER_MAIL')
     password = getenv('MAIL_PASSWORD')
 
-    url = f"http://localhost:5000/authenticate/{user_id}/{auth_token}"  # Replace with actual URL   
+    url = f"http://localhost:5000/authenticate/{caregiver_id}/{auth_token}"  # Replace with actual URL   
     msg = EmailMessage()
     msg['Subject'] = "Caregiver Authentication Code"
     msg['From'] = source
