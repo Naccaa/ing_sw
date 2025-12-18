@@ -15,6 +15,7 @@
     <string name="delete_user_str">ELIMINA PROFILO</string>
     <string name="delete_caregiver_str">ELIMINA CAREGIVER</string>
     <string name="add_caregiver_str">AGGIUNGI CAREGIVER</string>
+    <string name="add_admin_str">AGGIUNGI AMMINISTRATORE</string>
     <string name="no_caregiver_assigned_str">Non hai nessun caregiver associato</string>
     <string name="caregiver_not_authenticated_str">In attesa della conferma del caregiver.</string>
     <string name="logout_str">LOGOUT</string>

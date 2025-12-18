@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_navigation_login"
             app:destination="@id/navigation_login" />
+        <action
+            android:id="@+id/action_navigation_profile_to_add_admin"
+            app:destination="@id/add_admin" />
     </fragment>
     <fragment
         android:id="@+id/navigation_login"
@@ -51,6 +54,15 @@
         tools:layout="@layout/add_caregiver" >
         <action
             android:id="@+id/action_add_caregiver_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/add_admin"
+        android:name="com.example.ids.ui.profile.AddAdmin"
+        android:label="Aggiungi un admin"
+        tools:layout="@layout/add_admin" >
+        <action
+            android:id="@+id/action_add_admin_to_navigation_profile"
             app:destination="@id/navigation_profile" />
     </fragment>
 </navigation>

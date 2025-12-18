@@ -54,13 +54,17 @@ public class ProfileFragment extends Fragment {
     private TextView noCaregiverText;
     private Button btnAggiungiCaregiver;
 
+
+    // Admin profile view
+    private Button btnAggiungiAdmin;
+
     // Other buttons
     private Button btnEliminaProfilo;
     private Button btnLogout;
 
     private String jwt;
     private String user_id;
-
+    private Boolean is_admin;
     private OkHttpClient client;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -89,6 +93,9 @@ public class ProfileFragment extends Fragment {
         noCaregiverText = view.findViewById(R.id.noCaregiverText);
         btnAggiungiCaregiver = view.findViewById(R.id.btnAggiungiCaregiver);
 
+        // Admin profile views
+        btnAggiungiAdmin = view.findViewById(R.id.btnAggiungiAdmin);
+
         // Other buttons
         btnEliminaProfilo = binding.btnEliminaProfilo;
         btnLogout = binding.btnLogout;
@@ -96,14 +103,25 @@ public class ProfileFragment extends Fragment {
         // Retrieve authentication token from shared preferences
         jwt = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("session_token", null);
         user_id = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("user_id", null);
+        is_admin = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getBoolean("is_admin", false);
+
+
 
         // Client obj used to make requests
         client = new OkHttpClient();
 
         // Update UI showing user info
         ShowUserInfo(view);
-        // Update UI showing caregiver info
-        ShowCaregiversInfo(view);
+        // Update UI showing caregiver info or admin buttons
+        if (is_admin){
+            caregiverContainer.setVisibility(View.GONE);
+            noCaregiverText.setVisibility(View.GONE);
+            btnAggiungiCaregiver.setVisibility(View.GONE);
+
+            btnAggiungiAdmin.setVisibility(View.VISIBLE);
+        }
+        else
+            ShowCaregiversInfo(view);
 
 
 
@@ -117,14 +135,18 @@ public class ProfileFragment extends Fragment {
         });
 
         btnAggiungiCaregiver.setOnClickListener(v -> {
-           Log.d("Navigation", "Button clicked, navigating to Add Caregiver");
             // Redirect user to the add caregiver page
             getActivity().runOnUiThread(() -> {
-                Log.d("Navigation", "Navigating to Add Caregiver");
-                //NavController navController = NavHostFragment.findNavController(UpdateProfileFragment.this);
-         
                 NavController navController = Navigation.findNavController(getView());
                 navController.navigate(R.id.action_navigation_profile_to_add_caregiver);
+            });
+        });
+
+        btnAggiungiAdmin.setOnClickListener(v -> {
+            // Redirect user to the add admin page
+            getActivity().runOnUiThread(() -> {
+                NavController navController = Navigation.findNavController(getView());
+                navController.navigate(R.id.action_navigation_profile_to_add_admin);
             });
         });
 
@@ -448,12 +470,14 @@ public class ProfileFragment extends Fragment {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        // Remove session_token and user_id
+        // Remove session_token, user_id, is_admin
         editor.remove("session_token");
         editor.remove("user_id");
+        editor.remove("is_admin");
 
         // Set local variables to null
         user_id = jwt = null;
+        is_admin = false;
 
         // Apply the changes
         editor.apply();

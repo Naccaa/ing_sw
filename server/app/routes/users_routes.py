@@ -18,11 +18,14 @@ request body{
     fullname: string,
     phone_number: string,
     password: string
+
+    is_admin: bool # only if an admin sends the request
 }
 '''
 # testata
 users_route = Blueprint('users_route', __name__)
 @users_route.route('/users', methods=['POST'])
+@jwt_required(optional=True)
 def add_user():
     data = request.get_json()
 
@@ -40,6 +43,10 @@ def add_user():
                       fullname=data["fullname"].lstrip().rstrip(), 
                       phone_number=data["phone_number"].lstrip().rstrip(), 
                       password=data["password"])
+
+    auth_data = get_jwt()
+    if "is_admin" in auth_data and auth_data["is_admin"]:
+        new_user.is_admin = data["is_admin"]
 
     try:
       db.session.add(new_user)

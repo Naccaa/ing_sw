@@ -107,7 +107,12 @@ public class LoginFragment extends Fragment {
                                     .edit()
                                     .putString("user_id", user_id)
                                     .apply();
-
+                            // Salvataggio del ruolo dell'utente (evita di doverlo ricavare ogni volta dal JWT)
+                            boolean is_admin = jwt.getClaim("is_admin").asBoolean();
+                            requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
+                                    .edit()
+                                    .putBoolean("is_admin", is_admin)
+                                    .apply();
                             // Reindirizza l'utente alla "home" dell'applicazione
                             NavController navController = Navigation.findNavController(getView());
                             navController.navigate(R.id.navigation_alert);

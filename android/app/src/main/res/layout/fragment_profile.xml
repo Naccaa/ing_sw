@@ -130,6 +130,22 @@
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
+            <!-- Pulsante per aggiungere un nuovo admin -->
+            <Button
+                android:id="@+id/btnAggiungiAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_button"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="@string/add_admin_str"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
             <!-- DELETE USER BUTTON -->
             <Button
                 android:id="@+id/btnEliminaProfilo"

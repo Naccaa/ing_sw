@@ -17,7 +17,7 @@ import androidx.navigation.Navigation;
 
 import com.example.ids.R;
 import com.example.ids.constants.Constants;
-import com.example.ids.databinding.AddCaregiverBinding;
+import com.example.ids.databinding.AddAdminBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.validator.routines.EmailValidator;
@@ -34,9 +34,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class AddCaregiver extends Fragment {
+public class AddAdmin extends Fragment {
 
-    private AddCaregiverBinding binding;
+    private AddAdminBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -44,7 +44,7 @@ public class AddCaregiver extends Fragment {
         SettingsViewModel settingsViewModel =
                 new ViewModelProvider(this).get(SettingsViewModel.class);
 
-        binding = AddCaregiverBinding.inflate(inflater, container, false);
+        binding = AddAdminBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         return root;
@@ -58,44 +58,58 @@ public class AddCaregiver extends Fragment {
         binding.backButton.setOnClickListener(this::redirectUserToProfile);
 
         // Confirm Button Logic
-        binding.confirmButton.setOnClickListener(v -> {
+        binding.addButton.setOnClickListener(v -> {
             try {
-                updateProfile(v);
+                addAdmin(v);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void updateProfile(View view) throws JSONException {
+    private void addAdmin(View view) throws JSONException {
         // Retrieve values from Input fields
         String name = binding.nameInput.getText().toString().trim();
+        String surname = binding.surnameInput.getText().toString().trim();
         String email = binding.emailInput.getText().toString().trim();
         String phone = binding.phoneInput.getText().toString();
+        String password = binding.passwordInput.getText().toString().trim();
+        String confirmPassword = binding.confirmPasswordInput.getText().toString().trim();
 
         String errorMessage = null;
 
         JSONObject body = new JSONObject();
 
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty())
-            errorMessage = "Non hai inserito tutti i dati richiesti.";
-        else {
-            body.put("alias", name);
+        body.put("is_admin", true);
 
-            EmailValidator emailValidator = EmailValidator.getInstance();
-            if (!emailValidator.isValid(email))
-                errorMessage = "Email non valida.";
-            else
-                body.put("email", email);
+        if (name.isEmpty() && surname.isEmpty() && email.isEmpty() && phone.isEmpty() && password.isEmpty() && confirmPassword.isEmpty())
+            errorMessage = "Non hai inserito alcun dato.";
 
-            /* Phone Validator not working
-            if (!phone.isEmpty() && phone.matches("^\\+?\\d(?:[\\d\\s]*\\d)?$"))
-                errorMessage = "Un numero può contenere solo numeri, spazi e un solo + per il prefisso.";
-            else*/
+
+        if (name.isEmpty() && !surname.isEmpty() || !name.isEmpty() && surname.isEmpty())
+            errorMessage = "Devi inserire sia il tuo nome che il tuo cognome.";
+        else if (!name.isEmpty())
+            body.put("fullname", name + " " + surname);
+
+
+        EmailValidator emailValidator = EmailValidator.getInstance();
+        if (!email.isEmpty() && !emailValidator.isValid(email))
+            errorMessage = "Email non valida.";
+        else if (!email.isEmpty())
+            body.put("email", email);
+
+
+        /* Phone Validator not working
+        if (!phone.isEmpty() && phone.matches("^\\+?\\d(?:[\\d\\s]*\\d)?$"))
+            errorMessage = "Un numero può contenere solo numeri, spazi e un solo + per il prefisso.";
+        else*/
+        if (!phone.isEmpty())
             body.put("phone_number", phone);
 
-        }
-
+        if (!password.equals(confirmPassword))
+            errorMessage = "Le password non coincidono.";
+        else if (!password.isEmpty())
+            body.put("password", password);
         if (errorMessage != null) {
             String finalErrorMessage = errorMessage;
             getActivity().runOnUiThread(new Runnable() {
@@ -104,22 +118,19 @@ public class AddCaregiver extends Fragment {
                     Snackbar.make(view, finalErrorMessage, Snackbar.LENGTH_LONG).show();
                 }
             });
-        }
-        else {
+        } else {
             String jwt = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("session_token", null);
-            String user_id = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("user_id", null);
 
             String body_str = body.toString();
             Log.d("Patch body", body_str);
 
             Request request = new Request.Builder()
-                    .url(Constants.BASE_URL + "/users/" + user_id + "/caregivers")
+                    .url(Constants.BASE_URL + "/users")
                     .post(RequestBody.create(body_str, MediaType.get("application/json; charset=utf-8")))
                     .header("Authorization", "Bearer " + jwt)
                     .build();
 
             Log.d("Request", request.toString());
-
             // Asynchronous request
             OkHttpClient client = new OkHttpClient();
 
@@ -146,7 +157,7 @@ public class AddCaregiver extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Snackbar.make(view, "Caregiver aggiunto con successo. Una mail di conferma verrà inviata al caregiver.", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(view, "Admin aggiunto con successo.", Snackbar.LENGTH_LONG).show();
                             }
                         });
 
@@ -159,7 +170,7 @@ public class AddCaregiver extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Snackbar.make(view, "Error adding caregiver.", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(view, "Error adding admin.", Snackbar.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -172,7 +183,7 @@ public class AddCaregiver extends Fragment {
     private void redirectUserToProfile(View v){
         getActivity().runOnUiThread(() -> {
             NavController navController = Navigation.findNavController(getView());
-            navController.navigate(R.id.action_add_caregiver_to_navigation_profile);
+            navController.navigate(R.id.action_add_admin_to_navigation_profile);
         });
     }
 }
