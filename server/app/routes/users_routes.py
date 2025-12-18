@@ -64,7 +64,6 @@ def get_user(userId):
         return {"error": True, "message": "User not found"}, 404
     response_data = {
         "user_id": user.user_id,
-        #"caregiver_id": user.caregiver_id,
         "email": user.email,
         "fullname": user.fullname,
         "phone_number": user.phone_number,
@@ -80,7 +79,6 @@ def get_user(userId):
 
 '''
 request body{
-    // caregiver_id: int,
     email: string,
     fullname: string,
     phone_number: string,
@@ -121,7 +119,7 @@ def patch_user(userId):
             current_app.logger.debug(e)
             return {"error": True, "message": "Failed to set password"}, 500
 
-    now_utc = datetime.datetime.now(datetime.timezone.utc)
+    now_utc = datetime.now(timezone.utc)
 
     if location := request_body.get("location"):
         try:

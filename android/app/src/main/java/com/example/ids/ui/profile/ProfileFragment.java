@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ids.R;
+import com.example.ids.databinding.FragmentProfileBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -23,12 +24,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.example.ids.databinding.FragmentSettingsBinding;
+import com.example.ids.databinding.FragmentProfileBinding;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,9 +40,9 @@ import org.json.JSONObject;
 
 import com.example.ids.constants.Constants;
 
-public class SettingsFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
-    private FragmentSettingsBinding binding;
+    private FragmentProfileBinding binding;
 
     private TextView userFullname;
     private TextView userPhone;
@@ -70,7 +68,7 @@ public class SettingsFragment extends Fragment {
         SettingsViewModel settingsViewModel =
                 new ViewModelProvider(this).get(SettingsViewModel.class);
 
-        binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         return root;
@@ -111,9 +109,23 @@ public class SettingsFragment extends Fragment {
 
         // Set up click listeners
         btnModificaProfilo.setOnClickListener(v -> {
+            // Redirect user to the update profile page
+            getActivity().runOnUiThread(() -> {
+                NavController navController = Navigation.findNavController(getView());
+                navController.navigate(R.id.action_navigation_profile_to_update_profile);
+            });
         });
 
         btnAggiungiCaregiver.setOnClickListener(v -> {
+           Log.d("Navigation", "Button clicked, navigating to Add Caregiver");
+            // Redirect user to the add caregiver page
+            getActivity().runOnUiThread(() -> {
+                Log.d("Navigation", "Navigating to Add Caregiver");
+                //NavController navController = NavHostFragment.findNavController(UpdateProfileFragment.this);
+         
+                NavController navController = Navigation.findNavController(getView());
+                navController.navigate(R.id.action_navigation_profile_to_add_caregiver);
+            });
         });
 
         btnEliminaProfilo.setOnClickListener(this::DeleteUserCallback);
@@ -184,7 +196,6 @@ public class SettingsFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            userFullname.setText("Error loading user data.");
                             Snackbar.make(view, "Error loading user data.", Snackbar.LENGTH_LONG).show();
                         }
                     });
@@ -298,7 +309,6 @@ public class SettingsFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            userFullname.setText("Error loading caregivers data.");
                             Snackbar.make(view, "Error loading caregivers data.", Snackbar.LENGTH_LONG).show();
                         }
                     });
@@ -354,7 +364,6 @@ public class SettingsFragment extends Fragment {
 
                                         // Update the UI to show an error message
 
-                                        userFullname.setText("Error deleting caregiver.");
                                         Snackbar.make(view, "Error deleting caregiver.", Snackbar.LENGTH_LONG).show();
                                     }
                                 }
@@ -409,7 +418,6 @@ public class SettingsFragment extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    userFullname.setText("Error deleting user.");
                                     Snackbar.make(view, "Error deleting user.", Snackbar.LENGTH_LONG).show();
                                 }
                             });
@@ -461,7 +469,7 @@ public class SettingsFragment extends Fragment {
         getActivity().runOnUiThread(() -> {
             // Redirect user to the login page
             NavController navController = Navigation.findNavController(getView());
-            navController.navigate(R.id.navigation_login);
+            navController.navigate(R.id.action_navigation_profile_to_navigation_login);
         });
     }
 }

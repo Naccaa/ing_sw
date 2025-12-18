@@ -16,13 +16,41 @@
         android:label="Guide"
         tools:layout="@layout/fragment_guide" />
     <fragment
-        android:id="@+id/navigation_settings"
-        android:name="com.example.ids.ui.profile.SettingsFragment"
+        android:id="@+id/navigation_profile"
+        android:name="com.example.ids.ui.profile.ProfileFragment"
         android:label="Profilo"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_add_caregiver"
+            app:destination="@id/add_caregiver" />
+        <action
+            android:id="@+id/action_navigation_profile_to_update_profile"
+            app:destination="@id/update_profile" />
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_login"
+            app:destination="@id/navigation_login" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.example.ids.ui.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/update_profile"
+        android:name="com.example.ids.ui.profile.UpdateProfile"
+        android:label="Aggiorna il profilo"
+        tools:layout="@layout/update_profile" >
+        <action
+            android:id="@+id/action_update_profile_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/add_caregiver"
+        android:name="com.example.ids.ui.profile.AddCaregiver"
+        android:label="Aggiungi un caregiver"
+        tools:layout="@layout/add_caregiver" >
+        <action
+            android:id="@+id/action_add_caregiver_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
 </navigation>

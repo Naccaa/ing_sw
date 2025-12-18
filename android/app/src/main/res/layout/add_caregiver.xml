@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="@drawable/bg_gradient">
+
+    <LinearLayout
+        android:id="@+id/signupCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_glass"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:padding="26dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Torna indietro"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="#2F4BA0" />
+
+        <TextView
+            android:id="@+id/instructions"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:alpha="0.9"
+            android:text="Verrà inviata una mail al caregiver che dovrà accettare questo incarico per diventare un caregiver attivo."
+            android:textColor="#2F4BA0"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signupCard" />
+
+        <!-- NOME -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:letterSpacing="0.02"
+            android:text="Nome"
+            android:textColor="#2F4BA0"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/nameInput"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:background="@drawable/bg_input"
+            android:hint="Inserisci nome"
+            android:inputType="textPersonName"
+            android:padding="14dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#99FFFFFF" />
+
+        <!-- COGNOME -->
+
+        <!-- EMAIL -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="4dp"
+            android:letterSpacing="0.02"
+            android:text="Email"
+            android:textColor="#2F4BA0"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/emailInput"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:background="@drawable/bg_input"
+            android:hint="Inserisci email"
+            android:inputType="textEmailAddress"
+            android:padding="14dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#99FFFFFF" />
+
+        <!-- TELEFONO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="4dp"
+            android:letterSpacing="0.02"
+            android:text="Telefono"
+            android:textColor="#2F4BA0"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/phoneInput"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:background="@drawable/bg_input"
+            android:hint="Inserisci numero di telefono"
+            android:inputType="phone"
+            android:padding="14dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#99FFFFFF" />
+
+        <!-- CONFIRM BUTTON -->
+        <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_button"
+            android:text="Conferma"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
