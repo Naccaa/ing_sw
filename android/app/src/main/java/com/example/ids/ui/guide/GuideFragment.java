@@ -1,4 +1,4 @@
-package com.example.ids.ui.guidelines;
+package com.example.ids.ui.guide;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -110,9 +110,9 @@ public class GuideFragment extends Fragment {
         int density = (int) getResources().getDisplayMetrics().density;
         MaterialCardView card = new MaterialCardView(requireContext());
 
-        card.setRadius(20*density);// qua density worka, idk 
+        card.setRadius(20*density);
         card.setCardElevation(8f);
-        int ldp = (int) (370 * getResources().getDisplayMetrics().density); // piccolo problema con density, viene applicata a ldp in modo diverso, quindi ho fatto direttamente il calcolo
+        int ldp = (int) (370 * getResources().getDisplayMetrics().density); 
 
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 ldp,
