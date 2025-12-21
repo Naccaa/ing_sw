@@ -50,6 +50,7 @@ public class LoginFragment extends Fragment {
         EditText password = view.findViewById(R.id.passwordInput);
         Button btnLogin = view.findViewById(R.id.loginButton);
         TextView forgotPassword = view.findViewById(R.id.forgotPassword);
+        TextView registerLink = view.findViewById(R.id.registerLink);
 
         btnLogin.setOnClickListener(v -> {
             String e = email.getText().toString();
@@ -61,6 +62,11 @@ public class LoginFragment extends Fragment {
         forgotPassword.setOnClickListener(v -> {
             Log.d("LOGIN", "Password dimenticata cliccata");
             forgotPass();
+        });
+
+        registerLink.setOnClickListener(v -> {
+            Log.d("LOGIN", "Reindirizzamento verso pagina di registrazione...");
+            registerLink();
         });
 
         return view;
@@ -136,5 +142,10 @@ public class LoginFragment extends Fragment {
     private void forgotPass() {
         NavController navController = Navigation.findNavController(requireView());
         navController.navigate(R.id.navigation_forgotPassword);
+    }
+
+    private void registerLink() {
+        NavController navController = Navigation.findNavController(requireView());
+        navController.navigate(R.id.navigation_registration);
     }
 }

@@ -39,7 +39,7 @@ public class ForgotPasswordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Pagina per il recupero della password
-        View view = inflater.inflate(R.layout.forgot, container, false);
+        View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
 
         EditText email = view.findViewById(R.id.emailInput);
         Button btnRecover = view.findViewById(R.id.recoverButton);

@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_guide,
                 R.id.navigation_settings,
                 R.id.navigation_login,
-                R.id.navigation_forgotPassword
+                R.id.navigation_forgotPassword,
+                R.id.navigation_registration
                 ).build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Nascondi BottomNavigationView sul LoginFragment
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword) {
+            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword || destination.getId() == R.id.navigation_registration) {
                 binding.navView.setVisibility(View.GONE);
             } else {
                 binding.navView.setVisibility(View.VISIBLE);
