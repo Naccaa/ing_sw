@@ -1,4 +1,12 @@
 # ing_sw
+## Stato avanzamento
+Funzionalità completate 
+- Implementata la struttura di navigazione con BottomNavigationView e NavController.
+- Realizzato il sistema di login con verifica delle credenziali lato server.
+- Implementata l’autenticazione tramite JWT, con memorizzazione del token lato client.
+- Implementata la funzionalità di recupero password, con invio della richiesta al backend e gestione della risposta.
+- Visualizzazione delle guide per tutti gli utenti.
+- Visualizzazione profilo utente.
 
 ## Come avviare il progetto
 Le opzioni disponibili al momento sono due:
