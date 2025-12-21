@@ -5,6 +5,7 @@ Funzionalità completate
 - Realizzato il sistema di login con verifica delle credenziali lato server.
 - Implementata l’autenticazione tramite JWT, con memorizzazione del token lato client.
 - Implementata la funzionalità di recupero password, con invio della richiesta al backend e gestione della risposta.
+- Implementazione richiesta delle guide al backend, salvataggio guide locale per consultazione off line. 
 - Visualizzazione delle guide per tutti gli utenti.
 - Visualizzazione profilo utente.
 
