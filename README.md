@@ -11,6 +11,7 @@ Funzionalità completate
 - Gestione dei caregiver da parte degli utenti, compreso invio di mail di conferma al possibile nuovo caregiver.
 - Creazione, visualizzazione e modifica profili amministratori.
 
+Momentaneamente il progetto sta venendo sviluppato su tre git branches differenti per lavorare su feature diverse. Il main branch non è quindi al momento completo, ma tutte le feature elencate sono divise tra i branch a seconda delle loro dipendenze.
 ## Come avviare il progetto
 Le opzioni disponibili al momento sono due:
 - all: dbms(e db) + server + adminer
