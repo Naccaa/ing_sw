@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     // firebase
-    // il tutorial di firebase direbbe di aggiungere questa riga ma l'ho tolta perché mi dava un errore
-    // id("com.android.application")
     id("com.google.gms.google-services")
 }
 
@@ -47,6 +45,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

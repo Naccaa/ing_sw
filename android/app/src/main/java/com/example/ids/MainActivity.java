@@ -1,5 +1,7 @@
 package com.example.ids;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -10,22 +12,27 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.ids.databinding.ActivityMainBinding;
-
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -35,8 +42,13 @@ public class MainActivity extends AppCompatActivity {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
 
     private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-                && shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        ) {
+            return;
+        }
+
+        if( shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
             new AlertDialog.Builder(this)
                 .setTitle("Autorizzazione Notifiche Necessaria")
                 .setMessage("Quest'app necessita il permesso di inviarti notifiche riguardanti le emergenze climatiche in corso.")
@@ -46,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                     dialog.dismiss();
                 })
                 .show();
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 
@@ -88,6 +102,24 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        
+        FirebaseMessaging.getInstance().getToken()
+            .addOnCompleteListener(new OnCompleteListener<String>() {
+                @Override
+                public void onComplete(@NonNull Task<String> task) {
+                  if (!task.isSuccessful()) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                    return;
+                  }
+
+                  String token = task.getResult();
+
+                  Log.d(TAG, token);
+                  Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                  // TODO: PATCH /users/:userId con token
+                }
+            });
+    
         requestNotificationPermission();
         var channelId = "0";
         createNotificationChannel(channelId);

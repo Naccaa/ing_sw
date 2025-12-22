@@ -17,6 +17,7 @@ CREATE TABLE ing_sw.Users (
 	last_location point DEFAULT NULL,
 	last_location_time timestamp DEFAULT NULL,
   is_admin boolean NOT NULL DEFAULT FALSE,
+  firebase_token varchar,
   password_salt_hex varchar NOT NULL,
   password_digest_hex varchar NOT NULL,
 
