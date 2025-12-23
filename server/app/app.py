@@ -15,7 +15,7 @@ try:
     cred = credentials.Certificate("firebase-adminsdk.json")
     firebase_admin.initialize_app(cred)
 except Exception as e:
-    print(f'[Error] Firebase: {e}')
+    print(f'[Error] Firebase: {e}', flush=True)
 
 load_dotenv()
 app = Flask(__name__)
@@ -31,6 +31,20 @@ CORS(app)
 
 with app.app_context():
     db.reflect()
+
+    # test notifiche 
+    from src.db_types import DBUser
+    from src.notifications import send
+
+    try:
+        for user in DBUser.query.all():
+            send(
+                token=user.firebase_token,
+                title="Test Notifica",
+                body="Questa è una notifica di test inviata all'avvio del server."
+            )
+    except Exception as e:
+        print(f'[Error] Firebase: {e}', flush=True)
 
 print(db.metadata.tables.items)
 

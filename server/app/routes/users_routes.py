@@ -35,20 +35,32 @@ def add_user():
     if 'password' not in data:
         return {"error": True, "message" : "Request must contain the password of the user"}, 400
 
-    new_user = DBUser(email=data["email"].lower().lstrip().rstrip(),
+    user = DBUser(email=data["email"].lower().lstrip().rstrip(),
                       fullname=data["fullname"].lstrip().rstrip(), 
                       phone_number=data["phone_number"].lstrip().rstrip(), 
                       password=data["password"])
 
     try:
-      db.session.add(new_user)
+      db.session.add(user)
       db.session.commit()
+      response_data = {
+        "user_id": user.user_id,
+        "caregiver_id": user.caregiver_id,
+        "email": user.email,
+        "fullname": user.fullname,
+        "phone_number": user.phone_number,
+        "status": user.status,
+        "status_time": user.status_time,
+        "last_location": user.last_location,
+        "last_location_time": user.last_location_time,
+        "is_admin": user.is_admin
+        }
+      return {"error" : False, "message" : "User created successfully", "data": response_data }, 201
     except exc.IntegrityError:
       return {"error" : True, "message": "Email already used"}, 400
     except Exception as e:
       current_app.logger.debug(e)
       return {"error" : True, "message": "Server error"}, 500
-    return {"error" : False, "message" : "User created successfully"}, 201
 
 @users_route.route('/users/<int:userId>', methods=['GET'])
 #@jwt_required()
@@ -181,6 +193,9 @@ def patch_user(userId):
     
     if caregiver_id := request_body.get("caregiver_id"):
         user.caregiver_id = caregiver_id
+
+    if firebase_token := request_body.get("firebase_token"):
+        user.firebase_token = firebase_token
 
     try:
         db.session.commit()

@@ -3,15 +3,17 @@ from firebase_admin.exceptions import FirebaseError
 from typing import Optional, Dict
 
 def send(
-    registration_token: str,
+    token: str,
     title: str,
     body: str,
     data_payload: Optional[Dict[str, str]] = None
 ):
     """
+    # le notifiche non vengono visualizzate se l'app è aperta
+
     Sends an FCM notification to a single device using its registration token.
 
-    :param registration_token: The unique FCM token of the target device.
+    :param token: The unique FCM token of the target device.
     :param title: The title of the notification (displayed in the system tray).
     :param body: The body/content of the notification.
     :param data_payload: Optional dictionary of custom key-value data to send to the app.
@@ -25,7 +27,7 @@ def send(
                 title=title,
                 body=body),
             data=data_payload,
-            token=registration_token,
+            token=token
         ))
         
         # Success response is the message ID

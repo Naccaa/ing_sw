@@ -47,6 +47,8 @@ class DBUser(db.Model, PasswordInterface):
     last_location: Mapped[pg_types.POINT]
     last_location_time: Mapped[datetime.datetime]
     is_admin: Mapped[bool]
+    # può essere NULL
+    firebase_token: Mapped[str]
         
     def __init__(
         self,
@@ -59,7 +61,8 @@ class DBUser(db.Model, PasswordInterface):
         status_time = None,
         last_location = None,
         last_location_time = None,
-        is_admin = False
+        is_admin = False,
+        firebase_token = None
     ):
         self.caregiver_id = caregiver_id
         self.email = email
@@ -70,6 +73,7 @@ class DBUser(db.Model, PasswordInterface):
         self.last_location = last_location
         self.last_location_time = last_location_time
         self.is_admin = is_admin
+        self.firebase_token = firebase_token
         self.set_password(password)
 
     def __repr__(self):
@@ -77,7 +81,8 @@ class DBUser(db.Model, PasswordInterface):
             f"email={self.email}, fullname={self.fullname}, phone_number={self.phone_number}, " \
             f"status={self.status}, status_time={self.status_time}, " \
             f"last_location={self.last_location}, last_location_time={self.last_location_time}, " \
-            f"is_admin={self.is_admin}, password_salt_hex={self.password_salt_hex}, password_digest_hex={self.password_digest_hex})" 
+            f"is_admin={self.is_admin}, firebase_token={self.firebase_token}, "\
+            f"password_salt_hex={self.password_salt_hex}, password_digest_hex={self.password_digest_hex})" 
 
     def to_dict(self):
         return {
@@ -91,6 +96,7 @@ class DBUser(db.Model, PasswordInterface):
             "last_location": self.last_location,
             "last_location_time": self.last_location_time,
             "is_admin": self.is_admin,
+            "firebase_token": self.firebase_token,
             "password_salt_hex": self.password_salt_hex,
             "password_digest_hex": self.password_digest_hex
         }

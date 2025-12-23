@@ -48,6 +48,7 @@ services:
     networks:
       - server_db_network
 
+# 'http://[::]:8080/?pgsql=db&username=postgres&db=postgres&ns=ing_sw'
   adminer:
     image: adminer
     restart: always
