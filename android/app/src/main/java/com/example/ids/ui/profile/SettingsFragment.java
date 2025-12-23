@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.ids.R;
 import com.example.ids.constants.Constants;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -18,6 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 import com.example.ids.databinding.FragmentSettingsBinding;
 
@@ -184,8 +188,15 @@ public class SettingsFragment extends Fragment {
 
         btnLogout.setOnClickListener(v -> {
             Snackbar.make(view, "Log out", Snackbar.LENGTH_LONG).show();
-            // Add your logic for logout here
+            prefs.edit().remove("session_token").apply();
+
+            NavController navController = Navigation.findNavController(requireView());
+            NavOptions navOptions = new NavOptions.Builder()
+                    .setPopUpTo(R.id.mobile_navigation, true)
+                    .build();
+            navController.navigate(R.id.navigation_login, null, navOptions);
         });
+
     }
 
     @Override
