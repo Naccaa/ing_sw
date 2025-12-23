@@ -15,6 +15,7 @@ import android.view.View;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.ids.constants.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,6 +37,19 @@ import com.example.ids.databinding.ActivityMainBinding;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.example.ids.ui.login.LoginFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
@@ -51,14 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
         if( shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
             new AlertDialog.Builder(this)
-                .setTitle("Autorizzazione Notifiche Necessaria")
-                .setMessage("Quest'app necessita il permesso di inviarti notifiche riguardanti le emergenze climatiche in corso.")
-                .setNegativeButton("NO GRAZIE", (dialog, which) -> dialog.dismiss())
-                .setPositiveButton("OK", (dialog, which) -> {
-                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-                    dialog.dismiss();
-                })
-                .show();
+                    .setTitle("Autorizzazione Notifiche Necessaria")
+                    .setMessage("Quest'app necessita il permesso di inviarti notifiche riguardanti le emergenze climatiche in corso.")
+                    .setNegativeButton("NO GRAZIE", (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                        dialog.dismiss();
+                    })
+                    .show();
         } else {
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
@@ -102,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_login,
                 R.id.navigation_forgotPassword,
                 R.id.navigation_registration
-                ).build();
+        ).build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -116,25 +130,73 @@ public class MainActivity extends AppCompatActivity {
                 binding.navView.setVisibility(View.VISIBLE);
             }
         });
-        
+
 
         FirebaseMessaging.getInstance().getToken()
             .addOnCompleteListener(new OnCompleteListener<String>() {
                 @Override
                 public void onComplete(@NonNull Task<String> task) {
-                  if (!task.isSuccessful()) {
-                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                    return;
-                  }
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
 
-                  String token = task.getResult();
+                    String token = task.getResult();
 
-                  Log.d(TAG, token);
-                  Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-                  // TODO: PATCH /users/:userId con token
+                    Log.d(TAG, token);
+                    Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                    final var userId = getSharedPreferences("app_prefs", MODE_PRIVATE)
+                        .getString("user_id", "1");
+
+                    if (userId.isEmpty()) {
+                        return;
+                    }
+
+                    OkHttpClient client = new OkHttpClient();
+
+                    MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("firebase_token", token);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
+                    RequestBody body = RequestBody.create(
+                            jsonObject.toString(),
+                            JSON
+                    );
+
+                    Request request = new Request.Builder()
+                            .url(Constants.BASE_URL + "/users/" + userId) // per testare uso l'IP locale della macchina che hosta il backend
+                            .patch(body)
+                            .header("Authorization", 
+                                    "Bearer " + getSharedPreferences("app_prefs", MODE_PRIVATE).getString("session_token", null))
+                            .build();
+
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                                Log.e("Registration", "Errore di rete", e);
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                Log.d(TAG, "Firebase token inviato.");
+
+                            }
+
+                            Log.d(TAG, response.toString());
+
+                        }
+                    });
                 }
             });
-    
+
+
         requestNotificationPermission();
         var channelId = "0";
         createNotificationChannel(channelId);
