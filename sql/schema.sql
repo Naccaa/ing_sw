@@ -68,6 +68,6 @@ CREATE TABLE ing_sw.Caregivers (
 
   FOREIGN KEY (user_id) REFERENCES ing_sw.Users (user_id)
   ON UPDATE CASCADE
-	ON DELETE SET NULL
+	ON DELETE CASCADE
 );
 

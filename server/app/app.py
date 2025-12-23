@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from db import db
+from auto_cleaner.auto_cleaner_setup import auto_cleaner_setup
 
 load_dotenv()
 app = Flask(__name__)
@@ -52,4 +53,5 @@ def home():
 
 
 if __name__ == "__main__":
+    auto_cleaner_setup()
     app.run()
