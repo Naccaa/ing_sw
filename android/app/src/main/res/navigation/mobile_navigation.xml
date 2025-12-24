@@ -65,4 +65,14 @@
             android:id="@+id/action_add_admin_to_navigation_profile"
             app:destination="@id/navigation_profile" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_forgotPassword"
+        android:name="com.example.ids.ui.login.ForgotPasswordFragment"
+        android:label="Forgot Password"
+        tools:layout="@layout/fragment_forgot_password" />
+    <fragment
+        android:id="@+id/navigation_registration"
+        android:name="com.example.ids.ui.registration.RegistrationFragment"
+        android:label="Registration"
+        tools:layout="@layout/signup" />
 </navigation>

@@ -8,6 +8,15 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from db import db
 from auto_cleaner.auto_cleaner_setup import auto_cleaner_setup
+import firebase_admin
+from firebase_admin import credentials
+
+try:
+    # Get .json file from https://console.firebase.google.com/u/0/project/ing-sw-636e2/settings/serviceaccounts/adminsdk
+    cred = credentials.Certificate("firebase-adminsdk.json")
+    firebase_admin.initialize_app(cred)
+except Exception as e:
+    print(f'[Error] Firebase: {e}', flush=True)
 
 load_dotenv()
 app = Flask(__name__)
@@ -24,6 +33,20 @@ CORS(app)
 with app.app_context():
     db.reflect()
 
+    # test notifiche 
+    from src.db_types import DBUser
+    from src.notifications import send
+
+    try:
+        for user in DBUser.query.all():
+            send(
+                token=user.firebase_token,
+                title="Test Notifica",
+                body="Questa è una notifica di test inviata all'avvio del server."
+            )
+    except Exception as e:
+        print(f'[Error] Firebase: {e}', flush=True)
+
 print(db.metadata.tables.items)
 
 # ROUTES
@@ -31,12 +54,14 @@ from routes.users_routes import users_route
 from routes.guidelines_routes import guidelines_route
 from routes.emergencies_routes import emergencies_route
 from routes.sessions_route import sessions_route
+from routes.reset_password import reset_bp
 
 version = None
 app.register_blueprint(users_route, url_prefix=version)
 app.register_blueprint(guidelines_route, url_prefix=version)
 app.register_blueprint(emergencies_route, url_prefix=version)
 app.register_blueprint(sessions_route, url_prefix=version)
+app.register_blueprint(reset_bp, url_prefix=version)
 
 print(app.url_map)
 

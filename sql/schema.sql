@@ -17,6 +17,7 @@ CREATE TABLE ing_sw.Users (
 	last_location point DEFAULT NULL,
 	last_location_time timestamp DEFAULT NULL,
   is_admin boolean NOT NULL DEFAULT FALSE,
+  firebase_token varchar,
   password_salt_hex varchar NOT NULL,
   password_digest_hex varchar NOT NULL
 
@@ -71,3 +72,10 @@ CREATE TABLE ing_sw.Caregivers (
 	ON DELETE CASCADE
 );
 
+CREATE TABLE ing_sw.password_reset_tokens (
+    token varchar(64) PRIMARY KEY,
+    user_id int NOT NULL REFERENCES ing_sw.Users(user_id),
+    expires_at timestamp NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    used boolean DEFAULT FALSE
+);
