@@ -19,7 +19,7 @@ print(f"Old emergencies successfully deleted: {emergency_cleaned}")
 
 # delete caregiver requests with expired tokens
 caregivers_cleaned = []
-for caregiver in db.session.execute(db.select(DBCaregivers).where(DBCaregivers.authenticated == False, DBCaregivers.date_added < now_utc + timedelta(days=1))).scalars().all():
+for caregiver in db.session.execute(db.select(DBCaregivers).where(DBCaregivers.authenticated == False, DBCaregivers.date_added + timedelta(days=1) < now_utc)).scalars().all():
     try:
         db.session.delete(caregiver)
         db.session.commit()
