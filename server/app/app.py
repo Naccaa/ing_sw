@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from db import db
+from auto_cleaner.auto_cleaner_setup import auto_cleaner_setup
 import firebase_admin
 from firebase_admin import credentials
 
@@ -66,16 +67,16 @@ print(app.url_map)
 
 @app.route('/')
 def home():
+    endpoints = []
+    for rule in app.url_map.iter_rules():
+        for method in list(rule.methods):
+            endpoints.append(method + " " + rule.rule)
     return jsonify({
         "version": "1.0",
-        "endpoints": [
-            "POST /sessions",
-            "POST /users",
-            "DELETE /users/id",
-            "PATCH /users/id"
-        ]
+        "endpoints": endpoints
     })
 
 
 if __name__ == "__main__":
+    auto_cleaner_setup()
     app.run()
