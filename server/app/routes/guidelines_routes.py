@@ -45,51 +45,22 @@ def add_guideline():
 Ritorna la lista delle guidelines per mostrarle tutte insieme
 all'utente.
 '''
-'''
-@guidelines_route.route('/guidelines', methods=['GET'])
-def show_guidelines():
-  try:
-    rows = DBGuidelines.query.all()
-  except Exception as e:
-    current_app.logger.debug(e)
-    return {"error": True, "message": "Server error"}, 500
 
-  return jsonify([
-      {
-          "emergency_type": r.emergency_type,
-          "message": r.message
-      }
-      for r in rows
-  ])
-'''
 @guidelines_route.route('/guidelines', methods=['GET'])
 def show_guidelines():
     try:
-        # Guide fittizie con messaggi più lunghi
-        fake_guides = [
-            {
-                "emergency_type": "Allagamento",
-                "message": "In caso di allagamento, evita di camminare o guidare in acque allagate. Mantieni oggetti importanti e documenti in posti elevati. Segui le indicazioni delle autorità locali e resta aggiornato sulle previsioni."
-            },
-            {
-                "emergency_type": "Alluvione",
-                "message": "Durante un'alluvione, cerca rifugio in zone elevate e sicure. Non attraversare mai corsi d'acqua in piena a piedi o in auto. Tieni pronto un kit di emergenza con cibo, acqua, medicine e torce."
-            },
-            {
-                "emergency_type": "Grandinata",
-                "message": "Se è prevista grandinata, rimani al coperto e proteggi veicoli e finestre. Evita di uscire all'aperto fino a quando il fenomeno non termina, poiché i chicchi di grandine possono provocare gravi danni."
-            },
-            {
-                "emergency_type": "Tromba d'aria",
-                "message": "Durante una tromba d'aria, trova subito un riparo sicuro lontano da finestre e oggetti che potrebbero volare. Se sei all'aperto, cerca rifugio in un edificio robusto o in un vano interrato."
-            }
-        ]
-
-        return jsonify(fake_guides)
-
+      rows = DBGuidelines.query.all()
     except Exception as e:
-        current_app.logger.debug(e)
-        return {"error": True, "message": "Server error"}, 500
+      current_app.logger.debug(e)
+      return {"error": True, "message": "Server error"}, 500
+
+    return jsonify([
+        {
+            "emergency_type": r.emergency_type,
+            "message": r.message
+        }
+        for r in rows
+    ])
 
 
 '''
@@ -98,18 +69,64 @@ quanto viene scelta dall'utente nell'interfaccia che le mostra tutte.
 '''
 @guidelines_route.route('/guidelines/<id>', methods=['GET'])
 def show_guideline(id):
-  if id not in [item.value for item in emergency_type]:
-    return {"error": True, "message" : f"Request must contain one of the following emergency type: {[item.value for item in emergency_type]}"}, 400
-  try:
-    rows = DBGuidelines.query.filter(DBGuidelines.emergency_type == id).all()
-  except Exception as e:
-    current_app.logger.debug(e)
-    return {"error": True, "message": "Server error"}, 500
+    if id not in [item.value for item in emergency_type]:
+      return {"error": True, "message" : f"Request must contain one of the following emergency type: {[item.value for item in emergency_type]}"}, 400
+    try:
+      rows = DBGuidelines.query.filter(DBGuidelines.emergency_type == id).all()
+    except Exception as e:
+      current_app.logger.debug(e)
+      return {"error": True, "message": "Server error"}, 500
 
-  return jsonify([
-      {
-          "emergency_type": r.emergency_type,
-          "message": r.message
-      }
-      for r in rows
-  ])
+    return jsonify([
+        {
+            "emergency_type": r.emergency_type,
+            "message": r.message
+        }
+        for r in rows
+    ])
+
+@guidelines_route.route('/guidelines/<id>', methods=['PUT'])
+@required_admin
+def update_guideline(id):
+      try:
+          data = request.get_json()
+          print("Received JSON:", data)
+
+          if not data or 'message' not in data:
+              return {"error": True, "message": "Missing message"}, 400
+
+          guideline = DBGuidelines.query.filter_by(emergency_type=id).first()
+          print("Found guideline:", guideline)
+
+          if not guideline:
+              return {"error": True, "message": "Guideline not found"}, 404
+
+          guideline.message = data['message']
+          db.session.commit()
+
+          return {"error": False, "message": "Guideline updated successfully"}, 200
+
+      except Exception as e:
+          current_app.logger.exception("Error updating guideline")
+          return {"error": True, "message": "Server error"}, 500
+    
+
+@guidelines_route.route('/guidelines/<string:etype>', methods=['DELETE'])
+@required_admin
+def delete_guideline(etype):
+    if etype not in [item.value for item in emergency_type]:
+        return {
+            "error": True,
+            "message": f"Emergency type must be one of: {[item.value for item in emergency_type]}"
+        }, 400
+    try:
+        guideline = DBGuidelines.query.filter_by(emergency_type=etype).first()
+        if not guideline:
+            return {"error": True, "message": "Guideline not found"}, 404
+        db.session.delete(guideline)
+        db.session.commit()
+        return {"error": False, "message": "Guideline deleted"}, 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.debug(e)
+        return {"error": True, "message": "Server error"}, 500

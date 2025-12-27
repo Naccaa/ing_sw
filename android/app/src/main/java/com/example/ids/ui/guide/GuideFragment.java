@@ -35,14 +35,20 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+
+
+
 
 public class GuideFragment extends Fragment {
 
     private FragmentGuideBinding binding;
     private OkHttpClient client;
+    private String jwtToken = "";
 
-    private boolean isAdmin = true;
+
+    private boolean isAdmin = false;
 
     @Override
     public View onCreateView(
@@ -50,7 +56,11 @@ public class GuideFragment extends Fragment {
             ViewGroup container,
             Bundle savedInstanceState
     ) {
+
         binding = FragmentGuideBinding.inflate(inflater, container, false);
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
+        isAdmin = prefs.getBoolean("is_admin", false);
 
         if (isAdmin) {
             binding.addGuideButton.setVisibility(View.VISIBLE);
@@ -58,6 +68,7 @@ public class GuideFragment extends Fragment {
                 showGuideDialog(null, null, null, null);
             });
         }
+        jwtToken = prefs.getString("session_token", "");
         client = new OkHttpClient.Builder()
                 .connectTimeout(300, TimeUnit.MILLISECONDS)
                 .readTimeout(300, TimeUnit.MILLISECONDS)
@@ -110,12 +121,12 @@ public class GuideFragment extends Fragment {
             if (titleTv != null && contentTv != null) {
                 titleTv.setText(type.toUpperCase());
                 contentTv.setText(message);
-                // TODO: PUT API
+                updateGuide(type.toLowerCase(), message);
             }
             // Crea guida
             else {
                 createGuideCard(type, message);
-                // TODO: POST API
+                postNewGuide(type, message);
             }
 
             dialog.dismiss();
@@ -154,6 +165,12 @@ public class GuideFragment extends Fragment {
                 saveGuidelinesLocally(resp);
                 showGuidelines(resp);
 
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
+                        binding.guidelinesContainer.removeAllViews();
+                        showGuidelines(resp);
+                    });
+                }
 
             }
         });
@@ -329,7 +346,12 @@ public class GuideFragment extends Fragment {
             deleteBtn.setTextColor(getResources().getColor(R.color.title_color, null));
             deleteBtn.setPadding(20,0,20,0);
             deleteBtn.setOnClickListener(v -> {
-                // TODO: chiamata DELETE al server
+                new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Conferma")
+                        .setMessage("Vuoi eliminare questa guida?")
+                        .setPositiveButton("Sì", (dialog, which) -> deleteGuide(emergencyType))
+                        .setNegativeButton("No", null)
+                        .show();
             });
 
             adminButtons.addView(editBtn);
@@ -343,6 +365,114 @@ public class GuideFragment extends Fragment {
 
         // Aggiungi card al layout principale
         binding.guidelinesContainer.addView(card);
+    }
+
+    private void postNewGuide(String type, String message) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("emergency_type", type);
+            json.put("message", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        RequestBody body = RequestBody.create(
+                json.toString(),
+                okhttp3.MediaType.parse("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url("http://10.0.2.2:5000/guidelines")
+                .addHeader("Authorization", "Bearer " + jwtToken)
+                .post(body)
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("GUIDES", "POST failed", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("GUIDES", "Guideline created");
+                    fetchGuidelines(); // aggiorna UI
+                } else {
+                    Log.e("GUIDES", "POST error: " + response.code());
+                }
+            }
+        });
+    }
+
+
+    private void updateGuide(String type, String message) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("message", message); // non cambiare type
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        RequestBody body = RequestBody.create(
+                json.toString(),
+                okhttp3.MediaType.parse("application/json; charset=utf-8")
+        );
+        Log.d("GUIDES", "PUT body: " + json.toString());
+
+        Request request = new Request.Builder()
+                .url("http://10.0.2.2:5000/guidelines/" + type)
+                .addHeader("Authorization", "Bearer " + jwtToken)
+                .put(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("GUIDES", "PUT failed", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("GUIDES", "Guideline updated");
+                    requireActivity().runOnUiThread(() -> {
+                        // Aggiorna UI live
+                        fetchGuidelines();
+                    });
+                } else {
+                    Log.e("GUIDES", "PUT error: " + response.code());
+                }
+            }
+        });
+    }
+
+    private void deleteGuide(String type) {
+        Request request = new Request.Builder()
+                .url("http://10.0.2.2:5000/guidelines/" + type)
+                .addHeader("Authorization", "Bearer " + jwtToken)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("GUIDES", "DELETE failed", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("GUIDES", "Guideline deleted");
+                    requireActivity().runOnUiThread(() -> fetchGuidelines());
+                } else {
+                    Log.e("GUIDES", "DELETE error: " + response.code());
+                }
+            }
+        });
     }
 
 
