@@ -53,7 +53,6 @@ def add_user():
       db.session.commit()
       response_data = {
         "user_id": user.user_id,
-        "caregiver_id": user.caregiver_id,
         "email": user.email,
         "fullname": user.fullname,
         "phone_number": user.phone_number,
