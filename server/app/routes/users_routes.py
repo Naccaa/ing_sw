@@ -1,8 +1,9 @@
-import datetime
+from datetime import datetime, timezone
 from flask import Blueprint, current_app, request, jsonify
 from flask_jwt_extended import get_jwt
 from flask_jwt_extended.view_decorators import jwt_required
-from src.db_types import DBUser, user_status
+from src.db_types import DBUser, DBCaregivers, user_status
+from src.auth_caregivers import *
  
 from sqlalchemy import exc
 from db import db
@@ -17,11 +18,14 @@ request body{
     fullname: string,
     phone_number: string,
     password: string
+
+    is_admin: bool # only if an admin sends the request
 }
 '''
 # testata
 users_route = Blueprint('users_route', __name__)
 @users_route.route('/users', methods=['POST'])
+@jwt_required(optional=True)
 def add_user():
     data = request.get_json()
 
@@ -39,6 +43,10 @@ def add_user():
                       fullname=data["fullname"].lstrip().rstrip(), 
                       phone_number=data["phone_number"].lstrip().rstrip(), 
                       password=data["password"])
+
+    auth_data = get_jwt()
+    if "is_admin" in auth_data and auth_data["is_admin"]:
+        new_user.is_admin = data["is_admin"]
 
     try:
       db.session.add(user)
@@ -63,20 +71,18 @@ def add_user():
       return {"error" : True, "message": "Server error"}, 500
 
 @users_route.route('/users/<int:userId>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
-    '''
     auth_data = get_jwt()
     if int(auth_data.get('sub')) != userId:
         return {'error': True, "message": "Cannot get information of another user"}, 403
-    '''
+    
     user = DBUser.query.get(userId)
     if not user:
         return {"error": True, "message": "User not found"}, 404
     response_data = {
         "user_id": user.user_id,
-        "caregiver_id": user.caregiver_id,
         "email": user.email,
         "fullname": user.fullname,
         "phone_number": user.phone_number,
@@ -88,36 +94,10 @@ def get_user(userId):
     }
     return response_data, 200
 
-@users_route.route('/users/<int:userId>/caregiver', methods=['GET'])
-#@jwt_required()
-def get_caregiver(userId):
-    # controlla se l'utente autenticato è lo stesso di userId
-    '''
-    auth_data = get_jwt()
-    if int(auth_data.get('sub')) != userId:
-        return {'error': True, "message": "Cannot get information about another user"}, 403
-    '''
-    user = DBUser.query.get(userId)
-    if not user:
-        return {"error": True, "message": "User not found"}, 404
-    if user.caregiver_id == None:
-        response_data = {}
-    else:
-        caregiver = DBUser.query.get(userId)
-        response_data = {
-            "user_id": caregiver.user_id,
-            "caregiver_id": caregiver.caregiver_id,
-            "email": caregiver.email,
-            "fullname": caregiver.fullname,
-            "phone_number": caregiver.phone_number
-        }
-    return response_data, 200
-
-
+       
 
 '''
 request body{
-    caregiver_id: int,
     email: string,
     fullname: string,
     phone_number: string,
@@ -145,7 +125,7 @@ def patch_user(userId):
     if password := request_body.get("password"):
         user.set_password(password) # Per cambiare password si usa il metodo implementato in DBUser
 
-    now_utc = datetime.datetime.now(datetime.timezone.utc)
+    now_utc = datetime.now(timezone.utc)
 
     if location := request_body.get("location"):
         try:
@@ -191,8 +171,8 @@ def patch_user(userId):
             return {'error': True, "message": "Only admins can change the is_admin field"}, 403
         user.is_admin = is_admin
     
-    if caregiver_id := request_body.get("caregiver_id"):
-        user.caregiver_id = caregiver_id
+    #if caregiver_id := request_body.get("caregiver_id"):
+    #    user.caregiver_id = caregiver_id
 
     if firebase_token := request_body.get("firebase_token"):
         user.firebase_token = firebase_token
@@ -210,10 +190,8 @@ def patch_user(userId):
 
     return {"error": False, "message": "User updated successfully"}, 200
 
-
 @users_route.route('/users/<int:userId>', methods=['DELETE'])
 @jwt_required()
-#testata senza auth
 def delete_user(userId):
     # controlla se l'utente autenticato è lo stesso di userId
     auth_data = get_jwt()
@@ -233,3 +211,141 @@ def delete_user(userId):
         return {"error": True, "message": "Server error"}, 500
 
     return {"error": False, "message": "User deleted successfully"}, 200
+
+@users_route.route('/users/<int:userId>/caregivers', methods=['GET'])
+@jwt_required()
+def get_caregivers(userId):
+    # controlla se l'utente autenticato è lo stesso di userId
+    auth_data = get_jwt()
+    if int(auth_data.get('sub')) != userId:
+        return {'error': True, "message": "Cannot get information about another user"}, 403
+    
+    user = DBUser.query.get(userId)
+    if not user:
+        return {"error": True, "message": "User not found"}, 404
+    #if user.caregiver_id == None:
+    #    response_data = {}
+    else:
+        caregivers = DBCaregivers.query.filter(DBCaregivers.user_id==userId).all()
+        response_data = jsonify([
+            {
+                "caregiver_id": c.caregiver_id,
+                "email": c.email,
+                "phone_number": c.phone_number,
+                "alias": c.alias,
+                "user_id": c.user_id,
+                "authenticated": c.authenticated
+            }
+            for c in caregivers
+        ])
+    return response_data, 200
+
+
+'''
+request body{
+    email: string,
+    alias: string,
+    phone_number: string,
+}
+'''
+@users_route.route('/users/<int:userId>/caregivers', methods=['POST'])
+@jwt_required()
+def add_caregiver(userId):
+    # controlla se l'utente autenticato è lo stesso di userId
+    auth_data = get_jwt()
+    if int(auth_data.get('sub')) != userId:
+        return {'error': True, "message": "Cannot get information about another user"}, 403
+   
+    user = DBUser.query.get(userId)
+    if not user:
+        return {"error": True, "message": "User not found"}, 404
+    else:
+        data = request.get_json()
+        if 'email' not in data:
+            return {"error": True, "message" : "Request must contain the email of the caregiver"}, 400
+        if 'phone_number' not in data:
+            return {"error": True, "message" : "Request must contain the phone number of the caregiver"}, 400
+        if 'alias' not in data:
+            return {"error": True, "message" : "Request must contain the alias of the caregiver"}, 400
+       
+        auth_token = generate_auth_token()
+
+        new_caregiver = DBCaregivers(email=data["email"].lower().lstrip().rstrip(),
+                                     phone_number=data["phone_number"].lstrip().rstrip(),
+                                     alias=data["alias"].lstrip().rstrip(),
+                                     user_id=userId,
+                                     authenticated=False, auth_code=auth_token, 
+                                     date_added=datetime.now(timezone.utc))
+        
+        try:
+            db.session.add(new_caregiver)
+            db.session.commit()
+            # after the commit the new_caregiver.caregiver_id gets updated, so it can be used to send the auth mail
+            send_auth_email(new_caregiver.email, auth_token, new_caregiver.caregiver_id, new_caregiver.alias, new_caregiver.phone_number, user.fullname, user.email, user.phone_number)
+        except Exception as e:
+            current_app.logger.debug(e)
+            return {"error" : True, "message": "Server error"}, 500
+        return {"error" : False, "message" : "Caregiver created successfully"}, 201
+ 
+'''
+request body{
+    email: string,
+    alias: string,
+    phone_number: string,
+}
+'''
+@users_route.route('/users/<int:userId>/caregivers/<int:caregiverId>', methods=['PATCH'])
+@jwt_required()
+def patch_caregiver(userId, caregiverId):
+    # controlla se l'utente autenticato è lo stesso di userId
+    auth_data = get_jwt()
+    if int(auth_data.get('sub')) != userId:
+        return {'error': True, "message": "Cannot get information about another user"}, 403
+    
+    caregiver = DBCaregivers.query.filter(DBCaregivers.caregiver_id == caregiverId, DBCaregivers.user_id == userId).first()
+    
+    if not caregiver:
+        return {"error": True, "message": "Caregiver not found"}, 404
+    
+    data = request.get_json()
+    if 'email' in data:
+        caregiver.email = data["email"].lower().lstrip().rstrip()
+    if 'phone_number' in data:
+        caregiver.phone_number = data["phone_number"].lstrip().rstrip()
+    if 'alias' in data:
+        caregiver.alias = data["alias"].lstrip().rstrip()
+    try:
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.debug(e)
+        return {"error" : True, "message": "Server error"}, 500
+    return {"error" : False, "message" : "Caregiver updated successfully"}, 201
+
+@users_route.route('/users/<int:userId>/caregivers/<int:caregiverId>', methods=['DELETE'])
+@jwt_required()
+def delete_caregiver(userId, caregiverId):
+    # controlla se l'utente autenticato è lo stesso di userId
+    auth_data = get_jwt()
+    if int(auth_data.get('sub')) != userId:
+        return {'error': True, "message": "Cannot delete another user"}, 403
+
+    caregiver = DBCaregivers.query.filter(DBCaregivers.caregiver_id == caregiverId, DBCaregivers.user_id == userId).first()
+    
+    if not caregiver:
+        return {"error": True, "message": "Caregiver not found"}, 404
+
+    try:
+        db.session.delete(caregiver)
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.debug(e)
+        db.session.rollback()
+        return {"error": True, "message": "Server error"}, 500
+
+    return {"error": False, "message": "Caregiver deleted successfully"}, 200
+
+
+@users_route.route('/authenticate/<int:caregiver_id>/<string:auth_token>', methods=['GET'])
+def authenticate_caregiver(caregiver_id, auth_token):
+    result, status_code = check_auth_token(caregiver_id, auth_token)
+    return jsonify(result), status_code

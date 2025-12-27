@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import com.example.ids.R;
 import com.example.ids.constants.Constants;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.util.Log;
@@ -34,6 +35,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import com.auth0.android.jwt.JWT;
 
 
 public class LoginFragment extends Fragment {
@@ -46,6 +48,20 @@ public class LoginFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
+        String existingToken = prefs.getString("session_token", null);
+        if (existingToken != null && !existingToken.isEmpty()) {
+            // Postpone navigation to avoid crash
+            view.post(() -> {
+                NavController navController = Navigation.findNavController(view);
+                navController.navigate(R.id.navigation_alert);
+            });
+            return view;
+        }
+
+
+
+
         EditText email = view.findViewById(R.id.emailInput);
         EditText password = view.findViewById(R.id.passwordInput);
         Button btnLogin = view.findViewById(R.id.loginButton);
@@ -55,7 +71,10 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(v -> {
             String e = email.getText().toString();
             String p = password.getText().toString();
-
+            if (e.isEmpty() || p.isEmpty()) {
+                Toast.makeText(requireContext(), "Inserisci email e password", Toast.LENGTH_SHORT).show();
+                return;
+            }
             login(e, p);
         });
 
@@ -68,6 +87,9 @@ public class LoginFragment extends Fragment {
             Log.d("LOGIN", "Reindirizzamento verso pagina di registrazione...");
             registerLink();
         });
+
+
+
 
         return view;
     }
@@ -114,15 +136,27 @@ public class LoginFragment extends Fragment {
                                     .putString("session_token", token)
                                     .apply();
 
+                            // Salvataggio dell'user_id dell'utente autenticato (evita di doverlo ricavare ogni volta dal JWT)
+                            JWT jwt = new JWT(token);  // Decode il JWT
+                            String user_id = jwt.getClaim("sub").asString();
+                            requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
+                                    .edit()
+                                    .putString("user_id", user_id)
+                                    .apply();
+                            // Salvataggio del ruolo dell'utente (evita di doverlo ricavare ogni volta dal JWT)
+                            boolean is_admin = jwt.getClaim("is_admin").asBoolean();
+                            requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
+                                    .edit()
+                                    .putBoolean("is_admin", is_admin)
+                                    .apply();
                             // Reindirizza l'utente alla "home" dell'applicazione
-                            NavController navController = Navigation.findNavController(requireView());
-
-                            // Rimuove la schermata del login, per evitare di tornarci alla pressione del tasto "back"
-                            NavOptions navOptions = new NavOptions.Builder()
-                                    .setPopUpTo(R.id.navigation_login, true)
-                                    .build();
-
-                            navController.navigate(R.id.navigation_alert, null, navOptions);
+                            requireActivity().runOnUiThread(() -> {
+                                NavController navController = Navigation.findNavController(requireView());
+                                NavOptions navOptions = new NavOptions.Builder()
+                                        .setPopUpTo(R.id.navigation_login, true)
+                                        .build();
+                                navController.navigate(R.id.navigation_alert, null, navOptions);
+                            });
 
                         } catch (JSONException e) {
                             e.printStackTrace();

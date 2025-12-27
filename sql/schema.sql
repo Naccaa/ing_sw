@@ -8,7 +8,7 @@ CREATE TYPE ing_sw.user_status AS ENUM (
 
 CREATE TABLE ing_sw.Users (
   user_id serial PRIMARY KEY,
-	caregiver_id int DEFAULT NULL,
+	-- caregiver_id int DEFAULT NULL,
   email varchar NOT NULL UNIQUE,
   fullname varchar NOT NULL,
 	phone_number varchar NOT NULL,
@@ -19,11 +19,11 @@ CREATE TABLE ing_sw.Users (
   is_admin boolean NOT NULL DEFAULT FALSE,
   firebase_token varchar,
   password_salt_hex varchar NOT NULL,
-  password_digest_hex varchar NOT NULL,
+  password_digest_hex varchar NOT NULL
 
-  FOREIGN KEY (caregiver_id) REFERENCES ing_sw.Users (user_id)
-  ON UPDATE CASCADE
-	ON DELETE SET NULL
+  -- FOREIGN KEY (caregiver_id) REFERENCES ing_sw.Users (user_id)
+  -- ON UPDATE CASCADE
+	-- ON DELETE SET NULL
 );
 
 CREATE TYPE ing_sw.emergency_type AS ENUM (
@@ -51,6 +51,25 @@ CREATE TABLE ing_sw.Emergencies (
 CREATE TABLE ing_sw.Guidelines (
   emergency_type ing_sw.emergency_type PRIMARY KEY,
   message varchar NOT NULL
+);
+
+-- Table containing all the caregivers
+CREATE TABLE ing_sw.Caregivers (
+  caregiver_id serial PRIMARY KEY,
+  email varchar NOT NULL,
+  phone_number varchar NOT NULL,
+  alias varchar NOT NULL,
+  user_id integer NOT NULL,
+  authenticated boolean NOT NULL DEFAULT FALSE, 
+  auth_code varchar NOT NULL,
+  date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	-- there can only one entry that associates a user to a caregiver
+	UNIQUE(user_id, email, phone_number),
+
+  FOREIGN KEY (user_id) REFERENCES ing_sw.Users (user_id)
+  ON UPDATE CASCADE
+	ON DELETE CASCADE
 );
 
 CREATE TABLE ing_sw.password_reset_tokens (

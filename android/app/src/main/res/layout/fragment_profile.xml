@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/glass_bg"
+    android:fillViewport="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="112dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <!-- CARD PROFILO UTENTE -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="370dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <!-- Testi Profilo -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_info"
+                            android:textColor="#2F4BA0"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/userFullname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_fullname"
+                            android:textColor="#333"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/userPhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_phone_number_str"
+                            android:textColor="#333"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/userEmail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_email_str"
+                            android:textColor="#333"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <!-- Pulsante Modifica -->
+                    <Button
+                        android:id="@+id/btnModificaProfilo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/bg_button"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:paddingLeft="18dp"
+                        android:paddingRight="18dp"
+                        android:text="@string/modify_str"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD PROFILO CAREGIVER -->
+            <!-- Questo LinearLayout conterrà le card dei caregiver aggiunte programmaticamente -->
+            <LinearLayout
+                android:id="@+id/caregiverContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Testo da mostrare quando non ci sono caregiver -->
+            <TextView
+                android:id="@+id/noCaregiverText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:text="@string/no_caregiver_assigned_str"
+                android:textColor="@color/material_grey_600"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <!-- Pulsante per aggiungere un nuovo caregiver -->
+            <Button
+                android:id="@+id/btnAggiungiCaregiver"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_button"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="@string/add_caregiver_str"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+            <!-- Pulsante per aggiungere un nuovo admin -->
+            <Button
+                android:id="@+id/btnAggiungiAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_button"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="@string/add_admin_str"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
+            <!-- DELETE USER BUTTON -->
+            <Button
+                android:id="@+id/btnEliminaProfilo"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_button"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="@string/delete_user_str"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+            <!-- LOGOUT BUTTON -->
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_button"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="@string/logout_str"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

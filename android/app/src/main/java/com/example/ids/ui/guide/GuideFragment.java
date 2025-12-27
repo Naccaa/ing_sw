@@ -1,5 +1,9 @@
 package com.example.ids.ui.guide;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -9,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -20,7 +26,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,6 +42,8 @@ public class GuideFragment extends Fragment {
     private FragmentGuideBinding binding;
     private OkHttpClient client;
 
+    private boolean isAdmin = true;
+
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater,
@@ -40,14 +51,81 @@ public class GuideFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentGuideBinding.inflate(inflater, container, false);
-        client = new OkHttpClient();
+
+        if (isAdmin) {
+            binding.addGuideButton.setVisibility(View.VISIBLE);
+            binding.addGuideButton.setOnClickListener(v -> {
+                showGuideDialog(null, null, null, null);
+            });
+        }
+        client = new OkHttpClient.Builder()
+                .connectTimeout(300, TimeUnit.MILLISECONDS)
+                .readTimeout(300, TimeUnit.MILLISECONDS)
+                .build();
 
         fetchGuidelines();
-
         return binding.getRoot();
     }
 
+    private void showGuideDialog(
+            String initialType,
+            String initialMessage,
+            TextView titleTv,
+            TextView contentTv
+    ) {
+        View dialogView = requireActivity()
+                .getLayoutInflater()
+                .inflate(R.layout.dialog_add_guide, null);
 
+        androidx.appcompat.app.AlertDialog dialog =
+                new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setView(dialogView)
+                        .create();
+
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_card);
+
+        android.widget.EditText inputType = dialogView.findViewById(R.id.inputType);
+        android.widget.EditText inputMessage = dialogView.findViewById(R.id.inputMessage);
+        android.widget.Button btnCreate = dialogView.findViewById(R.id.btnCreateGuide);
+        android.widget.Button btnCancel = dialogView.findViewById(R.id.btnCancelGuide);
+
+        if (initialType != null) inputType.setText(initialType);
+        if (initialMessage != null) inputMessage.setText(initialMessage);
+
+        btnCreate.setText(initialType == null ? "Crea" : "Salva");
+
+        btnCreate.setOnClickListener(v -> {
+            String type = inputType.getText().toString().trim();
+            String message = inputMessage.getText().toString().trim();
+
+            if (type.isEmpty() || message.isEmpty()) {
+                Toast.makeText(requireContext(),
+                        "Compila tutti i campi",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Modifica guida
+            if (titleTv != null && contentTv != null) {
+                titleTv.setText(type.toUpperCase());
+                contentTv.setText(message);
+                // TODO: PUT API
+            }
+            // Crea guida
+            else {
+                createGuideCard(type, message);
+                // TODO: POST API
+            }
+
+            dialog.dismiss();
+        });
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+    }
+
+
+    // Ottieni tutte le guide dal server
     private void fetchGuidelines() {
 
         Request request = new Request.Builder()
@@ -59,7 +137,9 @@ public class GuideFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e("GUIDES", "Server down", e);
+                Log.e("GUIDES", "Server down, uso cache locale");
+                String localJson = readGuidelinesLocally();
+                showGuidelines(localJson);
             }
 
             @Override
@@ -68,41 +148,67 @@ public class GuideFragment extends Fragment {
 
                 if (!response.isSuccessful()) return;
 
-
                 String resp = response.body() != null ? response.body().string() : "[]";
                 Log.d("response", resp);
+                Log.d("is_admin", String.valueOf(isAdmin));
+                saveGuidelinesLocally(resp);
+                showGuidelines(resp);
 
-                try {
-                    JSONArray arr = new JSONArray(resp);
 
-                    if (isAdded()) {
-                        requireActivity().runOnUiThread(() -> {
-                            for (int i = 0; i < arr.length(); i++) {
-                                JSONObject obj = null;
-                                try {
-                                    obj = arr.getJSONObject(i);
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                try {
-                                    createGuideCard(
-                                            obj.getString("emergency_type"),
-                                            obj.getString("message")
-                                    );
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-                        });
-                    }
-
-                } catch (Exception e) {
-                    Log.e("GUIDES", "Parse error", e);
-                }
             }
         });
     }
 
+    private void showGuidelines(String json) {
+        try {
+            JSONArray arr = new JSONArray(json);
+
+            if (isAdded()) {
+                requireActivity().runOnUiThread(() -> {
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = null;
+                        try {
+                            obj = arr.getJSONObject(i);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        try {
+                            createGuideCard(
+                                    obj.getString("emergency_type"),
+                                    obj.getString("message")
+                            );
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+            }
+
+        } catch (Exception e) {
+            Log.e("GUIDES", "Parse error", e);
+        }
+    }
+
+    private void saveGuidelinesLocally(String json) {
+        try (FileOutputStream fos = requireContext().openFileOutput("guidelines.json", Context.MODE_PRIVATE)) {
+            fos.write(json.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("GUIDES", "Errore nel salvare le guide localmente", e);
+        }
+    }
+    private String readGuidelinesLocally() {
+        try (FileInputStream fis = requireContext().openFileInput("guidelines.json")) {
+            int size = fis.available();
+            byte[] buffer = new byte[size];
+            fis.read(buffer);
+            return new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("GUIDES", "Errore nel leggere le guide localmente", e);
+            return "[]"; // ritorna array vuoto se non esiste il file
+        }
+    }
 
     // Crea una card per la guida segue un layout dinamico
     private void createGuideCard(String emergencyType, String message) {
@@ -112,7 +218,7 @@ public class GuideFragment extends Fragment {
 
         card.setRadius(20*density);
         card.setCardElevation(8f);
-        int ldp = (int) (370 * getResources().getDisplayMetrics().density); 
+        int ldp = (int) (370 * getResources().getDisplayMetrics().density);
 
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 ldp,
@@ -197,6 +303,40 @@ public class GuideFragment extends Fragment {
         container.addView(header);
         container.addView(divider);
         container.addView(content);
+
+
+        if(isAdmin) {
+            LinearLayout adminButtons = new LinearLayout(requireContext());
+            adminButtons.setOrientation(LinearLayout.HORIZONTAL);
+            adminButtons.setGravity(Gravity.END);
+            adminButtons.setPadding(0,10,0,0);
+
+            TextView editBtn = new TextView(requireContext());
+            editBtn.setText("Modifica");
+            editBtn.setTextColor(getResources().getColor(R.color.title_color, null));
+            editBtn.setPadding(20,0,20,0);
+            editBtn.setOnClickListener(v ->
+                    showGuideDialog(
+                            titleTv.getText().toString(),
+                            content.getText().toString(),
+                            titleTv,
+                            content
+                    )
+            );
+
+            TextView deleteBtn = new TextView(requireContext());
+            deleteBtn.setText("Elimina");
+            deleteBtn.setTextColor(getResources().getColor(R.color.title_color, null));
+            deleteBtn.setPadding(20,0,20,0);
+            deleteBtn.setOnClickListener(v -> {
+                // TODO: chiamata DELETE al server
+            });
+
+            adminButtons.addView(editBtn);
+            adminButtons.addView(deleteBtn);
+
+            container.addView(adminButtons);
+        }
 
         // Aggiungi container alla card
         card.addView(container);

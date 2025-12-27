@@ -7,4 +7,6 @@ pyjwt
 sqlalchemy
 psycopg2-binary
 requests
+datetime
+python-crontab
 firebase-admin

@@ -45,6 +45,7 @@ def add_guideline():
 Ritorna la lista delle guidelines per mostrarle tutte insieme
 all'utente.
 '''
+'''
 @guidelines_route.route('/guidelines', methods=['GET'])
 def show_guidelines():
   try:
@@ -60,7 +61,35 @@ def show_guidelines():
       }
       for r in rows
   ])
+'''
+@guidelines_route.route('/guidelines', methods=['GET'])
+def show_guidelines():
+    try:
+        # Guide fittizie con messaggi più lunghi
+        fake_guides = [
+            {
+                "emergency_type": "Allagamento",
+                "message": "In caso di allagamento, evita di camminare o guidare in acque allagate. Mantieni oggetti importanti e documenti in posti elevati. Segui le indicazioni delle autorità locali e resta aggiornato sulle previsioni."
+            },
+            {
+                "emergency_type": "Alluvione",
+                "message": "Durante un'alluvione, cerca rifugio in zone elevate e sicure. Non attraversare mai corsi d'acqua in piena a piedi o in auto. Tieni pronto un kit di emergenza con cibo, acqua, medicine e torce."
+            },
+            {
+                "emergency_type": "Grandinata",
+                "message": "Se è prevista grandinata, rimani al coperto e proteggi veicoli e finestre. Evita di uscire all'aperto fino a quando il fenomeno non termina, poiché i chicchi di grandine possono provocare gravi danni."
+            },
+            {
+                "emergency_type": "Tromba d'aria",
+                "message": "Durante una tromba d'aria, trova subito un riparo sicuro lontano da finestre e oggetti che potrebbero volare. Se sei all'aperto, cerca rifugio in un edificio robusto o in un vano interrato."
+            }
+        ]
 
+        return jsonify(fake_guides)
+
+    except Exception as e:
+        current_app.logger.debug(e)
+        return {"error": True, "message": "Server error"}, 500
 
 
 '''

@@ -38,7 +38,7 @@ class DBUser(db.Model, PasswordInterface):
     __table__ = db.metadata.tables['users']
 
     user_id: Mapped[int]
-    caregiver_id: Mapped[int]
+    #caregiver_id: Mapped[int]
     email: Mapped[str]
     fullname: Mapped[str]
     phone_number: Mapped[str]
@@ -56,7 +56,7 @@ class DBUser(db.Model, PasswordInterface):
         fullname,
         phone_number,
         password,
-        caregiver_id = None,
+        #caregiver_id = None,
         status = user_status.FINE,
         status_time = None,
         last_location = None,
@@ -64,7 +64,7 @@ class DBUser(db.Model, PasswordInterface):
         is_admin = False,
         firebase_token = None
     ):
-        self.caregiver_id = caregiver_id
+        #self.caregiver_id = caregiver_id
         self.email = email
         self.fullname = fullname
         self.phone_number = phone_number
@@ -77,7 +77,7 @@ class DBUser(db.Model, PasswordInterface):
         self.set_password(password)
 
     def __repr__(self):
-        return f"DBUser(user_id={self.user_id}, caregiver_id={self.caregiver_id}, " \
+        return f"DBUser(user_id={self.user_id}, " \
             f"email={self.email}, fullname={self.fullname}, phone_number={self.phone_number}, " \
             f"status={self.status}, status_time={self.status_time}, " \
             f"last_location={self.last_location}, last_location_time={self.last_location_time}, " \
@@ -87,7 +87,7 @@ class DBUser(db.Model, PasswordInterface):
     def to_dict(self):
         return {
             "user_id": self.user_id,
-            "caregiver_id": self.caregiver_id,
+            #"caregiver_id": self.caregiver_id,
             "email": self.email,
             "fullname": self.fullname,
             "phone_number": self.phone_number,
@@ -162,6 +162,54 @@ class DBGuidelines(db.Model):
         return {
             "emergency_type": self.emergency_type,
             "message": self.message,
+        }
+
+class DBCaregivers(db.Model):
+    __table__ = db.metadata.tables['caregivers']
+
+    caregiver_id: Mapped[int]
+    email: Mapped[str]
+    phone_number: Mapped[str]
+    alias: Mapped[str]
+    user_id: Mapped[int]
+    authenticated: Mapped[bool]
+
+    def __init__(
+        self,
+        email,
+        phone_number,
+        alias,
+        user_id, 
+        authenticated,
+        auth_code,
+        date_added
+    ):
+        self.email=email
+        self.phone_number=phone_number
+        self.alias=alias
+        self.user_id=user_id
+        self.authenticated=False
+        self.auth_code=auth_code
+        self.date_added=date_added
+
+    def __repr__(self):
+        return {
+            f"DBCaregivers(caregiver_id={self.caregiver_id}, " \
+            f"email={self.email}, phone_number={self.phone_number}, " \
+            f"alias={self.alias}, user_id={self.user_id}, authenticated={self.authenticated}, " \
+            f"auth_code={self.auth_code}, date_added={self.date_added})"
+        }
+    
+    def to_dict(self):
+        return {
+            "caregiver_id": self.caregiver_id,
+            "email": self.email,
+            "phone_number": self.phone_number,
+            "alias": self.alias,
+            "user_id": self.user_id,
+            "authenticated": self.authenticated,
+            "auth_code": self.auth_code,
+            "date_added": self.date_added
         }
 
 class DBPasswordResetTokens(db.Model):

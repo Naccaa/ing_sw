@@ -32,3 +32,9 @@ Accedere dal browser a localhost:8080 e selezionare:
 - Database: postgres
 
 una volta che si ha effettuato l'accesso è possibile selezionare lo schema ing_sw
+
+## Come usare firebase
+Ho seguito le istruzioni su https://firebase.google.com/docs/admin/setup?authuser=0&hl=it
+1. Accedere a https://console.firebase.google.com/u/0/project/ing-sw-636e2/settings/serviceaccounts/adminsdk con una mail autorizzata, se il link non funziona provare a sostituire lo 0 con la posizione con cui l'account è salvato sul browser. Dovrebbe comparire una pagina con titolo "Impostazioni progetto", aperta nella sezione "Account di servizio"
+2. Cliccare "Genera nuova chiave privata".
+3. Rinominare il file in "firebase-adminsdk.json" e spostarlo in "server/app/firebase-adminsdk.json", assicurarsi che sia ignorato da git.
