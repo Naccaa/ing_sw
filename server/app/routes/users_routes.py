@@ -91,7 +91,7 @@ def get_user(userId):
         "last_location_time": user.last_location_time,
         "is_admin": user.is_admin
     }
-    return response_data, 200
+    return {'error':False,"Message":"Ok","data":response_data}, 200
 
        
 

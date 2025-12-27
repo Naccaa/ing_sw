@@ -72,9 +72,25 @@ def home():
         for method in list(rule.methods):
             endpoints.append(method + " " + rule.rule)
     return jsonify({
+        "error": False,
         "version": "1.0",
         "endpoints": endpoints
     })
+
+
+@app.after_request
+def check_response_format(response):
+    if response.content_type != 'application/json':
+        app.logger.warning("Response is not JSON")
+        return response
+    
+    json = response.get_json() 
+    if 'error' not in json:
+        app.logger.warning("Response missing 'error' key")
+        return response
+        
+    return response
+
 
 
 if __name__ == "__main__":
