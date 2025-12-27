@@ -131,7 +131,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final var userId = getSharedPreferences("app_prefs", MODE_PRIVATE)
+            .getString("user_id", "");
 
+        if (!userId.isEmpty()) {
+            send_firebase_token(userId);
+        }
+
+        requestNotificationPermission();
+        var channelId = "0";
+        createNotificationChannel(channelId);
+        postNotification(channelId, 0);
+    }
+
+    public static void send_firebase_token(String userId) {
         FirebaseMessaging.getInstance().getToken()
             .addOnCompleteListener(new OnCompleteListener<String>() {
                 @Override
@@ -145,12 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d(TAG, token);
                     Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
-                    final var userId = getSharedPreferences("app_prefs", MODE_PRIVATE)
-                        .getString("user_id", "1");
-
-                    if (userId.isEmpty()) {
-                        return;
-                    }
 
                     OkHttpClient client = new OkHttpClient();
 
@@ -172,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     Request request = new Request.Builder()
                             .url(Constants.BASE_URL + "/users/" + userId) // per testare uso l'IP locale della macchina che hosta il backend
                             .patch(body)
-                            .header("Authorization", 
+                            .header("Authorization",
                                     "Bearer " + getSharedPreferences("app_prefs", MODE_PRIVATE).getString("session_token", null))
                             .build();
 
@@ -195,11 +202,5 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             });
-
-
-        requestNotificationPermission();
-        var channelId = "0";
-        createNotificationChannel(channelId);
-        postNotification(channelId, 0);
     }
 }
