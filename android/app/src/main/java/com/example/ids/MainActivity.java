@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_alert,
                 R.id.navigation_guide,
-                R.id.navigation_settings,
+                R.id.navigation_profile,
                 R.id.navigation_login,
                 R.id.navigation_forgotPassword,
                 R.id.navigation_registration

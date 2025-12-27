@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,12 +7,45 @@
     android:background="@color/glass_bg">
 
     <LinearLayout
-        android:id="@+id/guidelinesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:layout_marginTop="10dp">
 
+
+
+        <LinearLayout
+            android:id="@+id/guidelinesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"/>
+
+
+        <!-- Pulsante Aggiungi guida -->
+        <Button
+            android:id="@+id/addGuideButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_button"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="Aggiungi guida"
+            android:visibility="gone"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+
+
+
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="100dp" />
+
     </LinearLayout>
+
+
 </ScrollView>
