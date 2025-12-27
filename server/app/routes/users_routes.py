@@ -46,7 +46,7 @@ def add_user():
 
     auth_data = get_jwt()
     if "is_admin" in auth_data and auth_data["is_admin"]:
-        new_user.is_admin = data["is_admin"]
+        user.is_admin = data["is_admin"]
 
     try:
       db.session.add(user)

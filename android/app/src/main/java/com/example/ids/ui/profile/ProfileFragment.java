@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.example.ids.databinding.FragmentProfileBinding;
@@ -492,8 +493,11 @@ public class ProfileFragment extends Fragment {
         // Redirect user to the login page
         getActivity().runOnUiThread(() -> {
             // Redirect user to the login page
-            NavController navController = Navigation.findNavController(getView());
-            navController.navigate(R.id.action_navigation_profile_to_navigation_login);
+            NavController navController = Navigation.findNavController(requireView());
+            NavOptions navOptions = new NavOptions.Builder()
+                    .setPopUpTo(R.id.mobile_navigation, true)
+                    .build();
+            navController.navigate(R.id.navigation_login, null, navOptions);
         });
     }
 }
