@@ -2,6 +2,7 @@ package com.example.ids.ui.login;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import com.example.ids.MainActivity;
 import com.example.ids.R;
 import com.example.ids.constants.Constants;
 
@@ -143,6 +144,9 @@ public class LoginFragment extends Fragment {
                                     .edit()
                                     .putString("user_id", user_id)
                                     .apply();
+
+                            MainActivity.send_firebase_token(token, user_id);
+                            
                             // Salvataggio del ruolo dell'utente (evita di doverlo ricavare ogni volta dal JWT)
                             boolean is_admin = jwt.getClaim("is_admin").asBoolean();
                             requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)

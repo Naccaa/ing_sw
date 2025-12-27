@@ -131,20 +131,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final var sessionToken = getSharedPreferences("app_prefs", MODE_PRIVATE)
+                .getString("session_token", null);
+
         final var userId = getSharedPreferences("app_prefs", MODE_PRIVATE)
             .getString("user_id", "");
 
-        if (!userId.isEmpty()) {
-            send_firebase_token(userId);
+        if (sessionToken != null && !userId.isEmpty()) {
+            send_firebase_token(sessionToken, userId);
         }
 
         requestNotificationPermission();
         var channelId = "0";
         createNotificationChannel(channelId);
-        postNotification(channelId, 0);
+        // postNotification(channelId, 0);
     }
 
-    public static void send_firebase_token(String userId) {
+    public static void send_firebase_token(String sessionToken, String userId) {
         FirebaseMessaging.getInstance().getToken()
             .addOnCompleteListener(new OnCompleteListener<String>() {
                 @Override
@@ -157,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
                     String token = task.getResult();
 
                     Log.d(TAG, token);
-                    Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
 
                     OkHttpClient client = new OkHttpClient();
 
@@ -180,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                             .url(Constants.BASE_URL + "/users/" + userId) // per testare uso l'IP locale della macchina che hosta il backend
                             .patch(body)
                             .header("Authorization",
-                                    "Bearer " + getSharedPreferences("app_prefs", MODE_PRIVATE).getString("session_token", null))
+                                    "Bearer " + sessionToken)
                             .build();
 
                     client.newCall(request).enqueue(new Callback() {
