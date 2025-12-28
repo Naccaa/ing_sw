@@ -77,7 +77,6 @@ def home():
         "endpoints": endpoints
     })
 
-
 @app.after_request
 def check_response_format(response):
     if response.content_type != 'application/json':
@@ -90,7 +89,6 @@ def check_response_format(response):
         return response
         
     return response
-
 
 
 if __name__ == "__main__":

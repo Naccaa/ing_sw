@@ -11,14 +11,24 @@ seed(1234)
 def is_response_success(status_code):
     return 200 <= status_code < 300
 
+def random_email():
+    return f"m{randrange(2**64)}"
+
 response_status_code_unauthorized = 401
 protocol = 'http'
 host = 'dev_server'
 port = 5000
 base_url = f"{protocol}://{host}:{port}"
 
+def login(email, password):
+    token = loads(post(f"{base_url}/sessions",json={"email":email,"password":password}).text)['data']['session_token']
+    s = Session()
+    s.headers={"Authorization": f"Bearer {token}"}
+    return s
+
+
 def login_as_not_admin():
-    email = f"m{randrange(2**64)}"
+    email = random_email()
     res = post(f"{base_url}/users", json={"email": email, "fullname": "f", "phone_number": "1", "password":"p"})
     # print(f'{res.text = }')
     token = loads(post(f"{base_url}/sessions",json={"email":email,"password":"p"}).text)['data']['session_token']
@@ -41,24 +51,32 @@ class TestEndpoints(unittest.TestCase):
         self.assertTrue(is_response_success(res.status_code), res.text)
 
     def test_add_user(self):
-        email = f"m{randrange(2**64)}"
+        email = random_email()
         res = post(f"{base_url}/users", json={"email": email, "fullname": "f", "phone_number": "1", "password":"p"})
         self.assertTrue(is_response_success(res.status_code), res.text)
 
     def test_add_user(self):
-        email = f"m{randrange(2**64)}"
+        email = random_email()
         user_json = {"email": email, "fullname": "f", "phone_number": "1", "password":"p"}
         post_res = post(f"{base_url}/users", json=user_json)
         user_id = loads(post_res.text)['data']['user_id']
-        token = loads(post(f"{base_url}/sessions",json={"email":email,"password":"p"}).text)['data']['session_token']
-        s = Session()
-        s.headers={"Authorization": f"Bearer {token}"}
+        s = login(email, "p")
         get_res = s.get(f"{base_url}/users/{user_id}")
         # print(f'{get_res.text = }')
         get_res_json = loads(get_res.text)['data']
         keys = ['email', 'fullname', 'phone_number']
         self.assertListEqual([user_json[k] for k in keys], [get_res_json[k] for k in keys])
 
+    def test_delete_user(self):
+        email = random_email()
+        user_json = {"email": email, "fullname": "f", "phone_number": "1", "password":"p"}
+        post_res = post(f"{base_url}/users", json=user_json)
+        user_id = loads(post_res.text)['data']['user_id']
+        s = login(email, "p")
+        delete_res = s.delete(f"{base_url}/users/{user_id}")
+        # print(f'{get_res.text = }')
+        self.assertTrue(is_response_success(delete_res.status_code), delete_res.text)
+        
 
 if __name__ == "__main__":
     unittest.main()

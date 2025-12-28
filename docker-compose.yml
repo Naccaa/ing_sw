@@ -51,8 +51,8 @@ services:
             - .git/
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:5000/" ]
-      start_period: 1s
-      interval: 10s
+      start_period: 2s
+      interval: 60s
       retries: 5
     depends_on:
       db:
