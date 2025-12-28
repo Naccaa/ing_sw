@@ -10,10 +10,15 @@ services:
       - server_db_network
       - adminer_db_network
     env_file: ./.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 1s
+      timeout: 5s
+      retries: 25
     profiles:
       - all
       - dev_all
-  
+
   server:
     ports:
       - 5000:5000
@@ -23,7 +28,8 @@ services:
     profiles:
       - all
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - server_db_network
 
@@ -37,30 +43,48 @@ services:
       - dev_all
     develop:
       watch:
-      - path: ./server/app
-        action: sync+restart
-        target: /app
-        ignore:
-          - __pycache__/
-          - .git/
+        - path: ./server/app
+          action: sync+restart
+          target: /app
+          ignore:
+            - __pycache__/
+            - .git/
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:5000/" ]
+      start_period: 2s
+      interval: 60s
+      retries: 5
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - server_db_network
 
-# 'http://[::]:8080/?pgsql=db&username=postgres&db=postgres&ns=ing_sw'
+  # 'http://[::]:8080/?pgsql=db&username=postgres&db=postgres&ns=ing_sw'
   adminer:
     image: adminer
     restart: always
-    ports: 
+    ports:
       - 8080:8080
     networks:
       - adminer_db_network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     profiles:
       - all
       - dev_all
+
+  tests:
+    build: ./tests
+    depends_on:
+      dev_server:
+        condition: service_healthy
+    networks:
+      - server_db_network
+    profiles:
+      - dev_all
+
 networks:
   server_db_network: {}
   adminer_db_network: {}

@@ -53,7 +53,6 @@ def add_user():
       db.session.commit()
       response_data = {
         "user_id": user.user_id,
-        "caregiver_id": user.caregiver_id,
         "email": user.email,
         "fullname": user.fullname,
         "phone_number": user.phone_number,
@@ -92,7 +91,7 @@ def get_user(userId):
         "last_location_time": user.last_location_time,
         "is_admin": user.is_admin
     }
-    return response_data, 200
+    return {'error':False,"Message":"Ok","data":response_data}, 200
 
        
 
