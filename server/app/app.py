@@ -75,7 +75,7 @@ def home():
         "error": False,
         "version": "1.0",
         "endpoints": endpoints
-    })
+    }), 200
 
 @app.after_request
 def check_response_format(response):

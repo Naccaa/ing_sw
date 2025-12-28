@@ -2,6 +2,8 @@ package com.example.ids.ui.guide;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static com.example.ids.constants.Constants.BASE_URL;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.ids.R;
+import com.example.ids.data.network.AuthInterceptor;
 import com.example.ids.databinding.FragmentGuideBinding;
 import com.google.android.material.card.MaterialCardView;
 
@@ -69,7 +72,7 @@ public class GuideFragment extends Fragment {
             });
         }
         jwtToken = prefs.getString("session_token", "");
-        client = new OkHttpClient.Builder()
+        client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
                 .connectTimeout(300, TimeUnit.MILLISECONDS)
                 .readTimeout(300, TimeUnit.MILLISECONDS)
                 .build();
@@ -140,7 +143,7 @@ public class GuideFragment extends Fragment {
     private void fetchGuidelines() {
 
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:5000/guidelines")
+                .url(BASE_URL+"/guidelines")
                 .get()
                 .build();
 
@@ -150,6 +153,7 @@ public class GuideFragment extends Fragment {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("GUIDES", "Server down, uso cache locale");
                 String localJson = readGuidelinesLocally();
+                Log.d("localJson", localJson);
                 showGuidelines(localJson);
             }
 
@@ -159,19 +163,24 @@ public class GuideFragment extends Fragment {
 
                 if (!response.isSuccessful()) return;
 
-                String resp = response.body() != null ? response.body().string() : "[]";
-                Log.d("response", resp);
-                Log.d("is_admin", String.valueOf(isAdmin));
-                saveGuidelinesLocally(resp);
-                showGuidelines(resp);
+                try {
+                    JSONObject response_data = new JSONObject(response.body() != null ? response.body().string() : "{\"data\": []}");
+                    String resp = response_data.get("data").toString();
+                    // String resp = response.body() != null ? response.body().string() : "[]";
+                    Log.d("response", resp);
+                    Log.d("is_admin", String.valueOf(isAdmin));
+                    saveGuidelinesLocally(resp);
+                    showGuidelines(resp);
 
-                if (isAdded()) {
-                    requireActivity().runOnUiThread(() -> {
-                        binding.guidelinesContainer.removeAllViews();
-                        showGuidelines(resp);
-                    });
+                    if (isAdded()) {
+                        requireActivity().runOnUiThread(() -> {
+                            binding.guidelinesContainer.removeAllViews();
+                            showGuidelines(resp);
+                        });
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
                 }
-
             }
         });
     }
@@ -383,7 +392,7 @@ public class GuideFragment extends Fragment {
         );
 
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:5000/guidelines")
+                .url(BASE_URL+"/guidelines")
                 .addHeader("Authorization", "Bearer " + jwtToken)
                 .post(body)
                 .build();
@@ -424,7 +433,7 @@ public class GuideFragment extends Fragment {
         Log.d("GUIDES", "PUT body: " + json.toString());
 
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:5000/guidelines/" + type)
+                .url(BASE_URL+"/guidelines/" + type)
                 .addHeader("Authorization", "Bearer " + jwtToken)
                 .put(body)
                 .build();
@@ -452,7 +461,7 @@ public class GuideFragment extends Fragment {
 
     private void deleteGuide(String type) {
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:5000/guidelines/" + type)
+                .url(BASE_URL+"/guidelines/" + type)
                 .addHeader("Authorization", "Bearer " + jwtToken)
                 .delete()
                 .build();

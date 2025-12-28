@@ -7,15 +7,20 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.ids.constants.Constants;
+import com.example.ids.data.network.AuthInterceptor;
+import com.example.ids.data.session.SessionEventBus;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,11 +34,13 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.ids.databinding.ActivityMainBinding;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.example.ids.ui.login.LoginFragment;
 
@@ -53,6 +60,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private Snackbar currentSnackbar;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
 
@@ -135,19 +143,57 @@ public class MainActivity extends AppCompatActivity {
                 .getString("session_token", null);
 
         final var userId = getSharedPreferences("app_prefs", MODE_PRIVATE)
-            .getString("user_id", "");
+                .getString("user_id", "");
 
         if (sessionToken != null && !userId.isEmpty()) {
-            send_firebase_token(sessionToken, userId);
+            send_firebase_token(this, sessionToken, userId);
         }
 
         requestNotificationPermission();
         var channelId = "0";
         createNotificationChannel(channelId);
         // postNotification(channelId, 0);
+
+        // Observe for session expiration
+        SessionEventBus.sessionExpired.observe(this, expired -> {
+            if (Boolean.TRUE.equals(expired)) {
+                Log.d("Session", "Session expired, redirect to login page");
+                // Redirect to login")
+                runOnUiThread(()-> {
+                    try {
+                        // Dismiss any currently showing Snackbar
+                        if (currentSnackbar != null && currentSnackbar.isShown()) {
+                            currentSnackbar.dismiss();
+                        }
+                        // Delay slightly to ensure it appears on top of any fragment Snackbars
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            currentSnackbar = Snackbar.make(
+                                    findViewById(android.R.id.content), // attach to activity root
+                                    "La sessione è scaduta, effettua il login di nuovo",
+                                    Snackbar.LENGTH_LONG
+                            );
+                            currentSnackbar.show();
+                        }, 200); // 200ms delay is enough
+
+                        NavController navController_ =
+                                Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+
+                        navController_.navigate(R.id.navigation_login, null,
+                                new NavOptions.Builder()
+                                        .setPopUpTo(R.id.mobile_navigation, true) // clears back stack
+                                        .build()
+                        );
+                    } catch (IllegalArgumentException | IllegalStateException e) {
+                        Log.e("SessionLogout", "Navigation failed: " + e.getMessage());
+                    }
+                });
+
+                SessionEventBus.sessionExpired.setValue(false);
+            }
+        });
     }
 
-    public static void send_firebase_token(String sessionToken, String userId) {
+    public static void send_firebase_token(Context context, String sessionToken, String userId) {
         FirebaseMessaging.getInstance().getToken()
             .addOnCompleteListener(new OnCompleteListener<String>() {
                 @Override
@@ -161,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d(TAG, token);
 
-                    OkHttpClient client = new OkHttpClient();
+                    OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(context)).build();
 
                     MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
@@ -181,8 +227,6 @@ public class MainActivity extends AppCompatActivity {
                     Request request = new Request.Builder()
                             .url(Constants.BASE_URL + "/users/" + userId) // per testare uso l'IP locale della macchina che hosta il backend
                             .patch(body)
-                            .header("Authorization",
-                                    "Bearer " + sessionToken)
                             .build();
 
                     client.newCall(request).enqueue(new Callback() {

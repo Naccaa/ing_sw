@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 
 import com.example.ids.R;
 import com.example.ids.constants.Constants;
+import com.example.ids.data.network.AuthInterceptor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,7 +82,8 @@ public class RegistrationFragment extends Fragment {
             return;
         }
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
+                .build();
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 

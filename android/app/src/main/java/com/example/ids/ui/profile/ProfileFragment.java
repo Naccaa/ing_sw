@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ids.R;
+import com.example.ids.data.network.AuthInterceptor;
 import com.example.ids.databinding.FragmentProfileBinding;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -109,7 +110,8 @@ public class ProfileFragment extends Fragment {
 
 
         // Client obj used to make requests
-        client = new OkHttpClient();
+        client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
+                .build();
 
         // Update UI showing user info
         ShowUserInfo(view);
@@ -167,7 +169,6 @@ public class ProfileFragment extends Fragment {
         // Get the user information
         Request request = new Request.Builder()
                 .url(Constants.BASE_URL+"/users/"+user_id)
-                .header("Authorization", "Bearer " + jwt)
                 .build();
 
         // Asynchronous request
@@ -193,7 +194,7 @@ public class ProfileFragment extends Fragment {
 
                     // Use JSONObject to parse the response string into a JSON
                     try {
-                        JSONObject response_data = new JSONObject(response_body_str);
+                        JSONObject response_data = (new JSONObject(response_body_str)).getJSONObject("data");
                         final String fullname = (String) response_data.get("fullname");
                         final String phone_number = (String) response_data.get("phone_number");
                         final String email = (String) response_data.get("email");
@@ -234,7 +235,6 @@ public class ProfileFragment extends Fragment {
         // Get the user information
         Request request = new Request.Builder()
                 .url(Constants.BASE_URL+"/users/"+user_id+"/caregivers")
-                .header("Authorization", "Bearer " + jwt)
                 .build();
 
         // Asynchronous request
@@ -260,7 +260,8 @@ public class ProfileFragment extends Fragment {
 
                     // Use JSONArray to parse the response string into a JSON
                     try {
-                        JSONArray response_data = new JSONArray(response_body_str);
+                        JSONObject response_ = new JSONObject(response_body_str);
+                        JSONArray response_data = new JSONArray(response_.get("data").toString());
                         // Add the cards to the container
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -350,7 +351,6 @@ public class ProfileFragment extends Fragment {
                     Request request = new Request.Builder()
                             .url(Constants.BASE_URL+"/users/"+user_id+"/caregivers/"+caregiver_id)
                             .delete()
-                            .header("Authorization", "Bearer " + jwt)
                             .build();
 
                     // Asynchronous request
@@ -407,7 +407,6 @@ public class ProfileFragment extends Fragment {
                 Request request = new Request.Builder()
                 .url(Constants.BASE_URL+"/users/"+user_id)
                 .delete()
-                .header("Authorization", "Bearer " + jwt)
                 .build();
 
                 // Asynchronous request

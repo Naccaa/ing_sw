@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import com.example.ids.MainActivity;
 import com.example.ids.R;
 import com.example.ids.constants.Constants;
+import com.example.ids.data.network.AuthInterceptor;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ public class LoginFragment extends Fragment {
         SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
         String existingToken = prefs.getString("session_token", null);
         if (existingToken != null && !existingToken.isEmpty()) {
+            Log.d("LOGIN", "Token di sessione esistente: " + existingToken);
             // Postpone navigation to avoid crash
             view.post(() -> {
                 NavController navController = Navigation.findNavController(view);
@@ -96,7 +98,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void login(String email, String password) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext())).build();
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String json = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";
@@ -145,7 +147,7 @@ public class LoginFragment extends Fragment {
                                     .putString("user_id", user_id)
                                     .apply();
 
-                            MainActivity.send_firebase_token(token, user_id);
+                            MainActivity.send_firebase_token(requireContext(), token, user_id);
                             
                             // Salvataggio del ruolo dell'utente (evita di doverlo ricavare ogni volta dal JWT)
                             boolean is_admin = jwt.getClaim("is_admin").asBoolean();

@@ -1,5 +1,5 @@
 import datetime
-from flask import Blueprint, current_app, request, jsonify
+from flask import Blueprint, current_app, request
 #from flask_jwt_extended import get_jwt
 #from flask_jwt_extended.view_decorators import jwt_required
 from src.db_types import DBGuidelines, emergency_type
@@ -54,13 +54,14 @@ def show_guidelines():
       current_app.logger.debug(e)
       return {"error": True, "message": "Server error"}, 500
 
-    return jsonify([
+    data_ = [
         {
             "emergency_type": r.emergency_type,
             "message": r.message
         }
         for r in rows
-    ])
+    ]
+    return {"error": False, "message": "Guidelines retrieved successfully", "data": data_}, 200
 
 
 '''
@@ -77,13 +78,14 @@ def show_guideline(id):
       current_app.logger.debug(e)
       return {"error": True, "message": "Server error"}, 500
 
-    return jsonify([
+    data_ = [
         {
             "emergency_type": r.emergency_type,
             "message": r.message
         }
         for r in rows
-    ])
+    ]
+    return {"error": False, "message": "Guideline retrieved successfully", "data": data_}, 200
 
 @guidelines_route.route('/guidelines/<id>', methods=['PUT'])
 @required_admin

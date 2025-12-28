@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 
 import com.example.ids.R;
 import com.example.ids.constants.Constants;
+import com.example.ids.data.network.AuthInterceptor;
 import com.example.ids.databinding.AddAdminBinding;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -127,12 +128,11 @@ public class AddAdmin extends Fragment {
             Request request = new Request.Builder()
                     .url(Constants.BASE_URL + "/users")
                     .post(RequestBody.create(body_str, MediaType.get("application/json; charset=utf-8")))
-                    .header("Authorization", "Bearer " + jwt)
                     .build();
 
             Log.d("Request", request.toString());
             // Asynchronous request
-            OkHttpClient client = new OkHttpClient();
+            OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext())).build();
 
             client.newCall(request).enqueue(new Callback() {
                 @Override

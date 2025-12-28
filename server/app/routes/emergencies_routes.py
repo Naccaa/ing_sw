@@ -1,4 +1,4 @@
-from flask import request, current_app, jsonify, Blueprint
+from flask import request, current_app, Blueprint
 from src.auth_decorators import required_admin
 
 import math
@@ -75,7 +75,7 @@ def get_emergencies():
         return {"error": True, "message": "Server error"}, 500
 
 
-    return jsonify([{
+    data_ = [{
             "id": r.id,
             "emergency_type": str(r.emergency_type) if r.emergency_type is not None else None,
             "message": r.message,
@@ -84,7 +84,9 @@ def get_emergencies():
             "start_time": r.start_time.isoformat() if r.start_time is not None else None,
             "end_time": r.end_time.isoformat() if r.end_time is not None else None,
             "guideline_message": r.guideline_message
-        } for r in rows]), 200
+        } for r in rows]
+
+    return {"error": False, "message": "Emergencies retrieved successfully", "data": data_}, 200
 
 '''
 request body{
