@@ -55,6 +55,12 @@ public class RegistrationFragment extends Fragment {
         CheckBox termsCheckbox = view.findViewById(R.id.termsCheckbox); // Checkbox su termini e condizioni
         Button registerButton = view.findViewById(R.id.registerButton); // Bottone di registrazione
 
+        TextView registerLink = view.findViewById(R.id.loginLink);
+        registerLink.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.navigation_login);
+        });
+
         registerButton.setOnClickListener(v -> {
 
             if (!termsCheckbox.isChecked()) {
