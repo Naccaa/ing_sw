@@ -36,9 +36,10 @@ public class AuthInterceptor implements Interceptor {
 
         String token = prefs.getString("session_token", null);
 
-        Request request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer " + token)
-            .build();
+        Request.Builder builder = chain.request().newBuilder();
+        if(token != null)
+            builder.addHeader("Authorization", "Bearer " + token);
+        Request request = builder.build();
         Response response = chain.proceed(request);
 
         // BACKEND INVALIDATED TOKEN

@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from os import wait
 from flask import Blueprint, current_app, request, jsonify
 from flask_jwt_extended import get_jwt
 from flask_jwt_extended.view_decorators import jwt_required
@@ -28,7 +29,7 @@ users_route = Blueprint('users_route', __name__)
 @jwt_required(optional=True)
 def add_user():
     data = request.get_json()
-
+    current_app.logger.info(data)
     # valida se tutti i campi sono stati inseriti nella richiesta
     if 'email' not in data:
         return {"error": True, "message" : "Request must contain the email of the user"}, 400
@@ -43,11 +44,11 @@ def add_user():
                       fullname=data["fullname"].lstrip().rstrip(), 
                       phone_number=data["phone_number"].lstrip().rstrip(), 
                       password=data["password"])
-
+    
     auth_data = get_jwt()
     if "is_admin" in auth_data and auth_data["is_admin"]:
         user.is_admin = data["is_admin"]
-
+    
     try:
       db.session.add(user)
       db.session.commit()
