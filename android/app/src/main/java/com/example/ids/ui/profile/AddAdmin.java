@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -56,7 +57,11 @@ public class AddAdmin extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Back Button Logic
-        binding.backButton.setOnClickListener(this::redirectUserToProfile);
+        androidx.appcompat.app.ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);  // mostra la freccia
+            actionBar.setTitle("Aggiungi Caregiver");  // titolo pagina
+        }
 
         // Confirm Button Logic
         binding.addButton.setOnClickListener(v -> {

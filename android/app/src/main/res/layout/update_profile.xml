@@ -25,17 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Torna indietro"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="#2F4BA0" />
-
         <TextView
             android:id="@+id/instructions"
             android:layout_width="wrap_content"
@@ -61,7 +50,7 @@
         <EditText
             android:id="@+id/nameInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci nome"
             android:inputType="textPersonName"
@@ -83,7 +72,7 @@
         <EditText
             android:id="@+id/surnameInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci cognome"
             android:inputType="textPersonName"
@@ -105,7 +94,7 @@
         <EditText
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci email"
             android:inputType="textEmailAddress"
@@ -127,7 +116,7 @@
         <EditText
             android:id="@+id/phoneInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci numero di telefono"
             android:inputType="phone"
@@ -149,7 +138,7 @@
         <EditText
             android:id="@+id/passwordInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci password"
             android:inputType="textPassword"
@@ -171,13 +160,14 @@
         <EditText
             android:id="@+id/confirmPasswordInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Ripeti la password"
             android:inputType="textPassword"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="#99FFFFFF"
+            android:layout_marginBottom="20dp"/>
 
         <!-- CONFIRM BUTTON -->
         <Button
