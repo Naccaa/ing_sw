@@ -164,8 +164,36 @@ public class GuideFragment extends Fragment {
                 if (!response.isSuccessful()) return;
 
                 try {
-                    JSONObject response_data = new JSONObject(response.body() != null ? response.body().string() : "{\"data\": []}");
-                    String resp = response_data.get("data").toString();
+                    String body = response.body() != null ? response.body().string() : "[]";
+
+                    JSONArray data;
+                    if (body.startsWith("[")) {
+                        // Caso: [] diretto
+                        data = new JSONArray(body);
+                    } else {
+                        // Caso: { data: [...] }
+                        JSONObject root = new JSONObject(body);
+                        data = root.optJSONArray("data");
+                    }
+
+                    if (data == null || data.length() == 0) {
+                        // Nessuna guida, mostro del testo per comunicarlo all'utente
+                        if (isAdded()) {
+                            requireActivity().runOnUiThread(() -> {
+                                binding.guidelinesContainer.removeAllViews();
+                                binding.emptyGuidelinesText.setVisibility(View.VISIBLE);
+                            });
+                        }
+                        return;
+                    }
+
+                    String resp;
+                    if (body.trim().startsWith("[")) {
+                        resp = new JSONArray(body).toString();
+                    } else {
+                        JSONObject obj = new JSONObject(body);
+                        resp = obj.getJSONArray("data").toString();
+                    }
                     // String resp = response.body() != null ? response.body().string() : "[]";
                     Log.d("response", resp);
                     Log.d("is_admin", String.valueOf(isAdmin));
@@ -377,6 +405,7 @@ public class GuideFragment extends Fragment {
     }
 
     private void postNewGuide(String type, String message) {
+        Log.d("JWT Token", jwtToken);
         JSONObject json = new JSONObject();
         try {
             json.put("emergency_type", type);

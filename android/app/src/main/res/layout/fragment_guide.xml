@@ -13,7 +13,17 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="10dp">
 
-
+        <!-- Testo da mostrare solo se non ci sono guide disponibili -->
+        <TextView
+            android:id="@+id/emptyGuidelinesText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nessuna guida disponibile.\nQuando saranno pubblicate, compariranno in questa sezione."
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:padding="24dp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/guidelinesContainer"

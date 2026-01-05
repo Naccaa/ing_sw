@@ -57,7 +57,7 @@
         <EditText
             android:id="@+id/nameInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci nome"
             android:inputType="textPersonName"
@@ -79,7 +79,7 @@
         <EditText
             android:id="@+id/surnameInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci cognome"
             android:inputType="textPersonName"
@@ -101,7 +101,7 @@
         <EditText
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci email"
             android:inputType="textEmailAddress"
@@ -123,7 +123,7 @@
         <EditText
             android:id="@+id/phoneInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci numero di telefono"
             android:inputType="phone"
@@ -145,7 +145,7 @@
         <EditText
             android:id="@+id/passwordInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci password"
             android:inputType="textPassword"
@@ -167,7 +167,7 @@
         <EditText
             android:id="@+id/confirmPasswordInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Ripeti la password"
             android:inputType="textPassword"

@@ -194,7 +194,14 @@ public class ProfileFragment extends Fragment {
 
                     // Use JSONObject to parse the response string into a JSON
                     try {
-                        JSONObject response_data = (new JSONObject(response_body_str)).getJSONObject("data");
+
+                        String body = response_body_str != null ? response_body_str.trim() : "{}";
+
+                        JSONObject root = new JSONObject(body);
+
+                        JSONObject response_data;
+                        response_data = root;
+
                         final String fullname = (String) response_data.get("fullname");
                         final String phone_number = (String) response_data.get("phone_number");
                         final String email = (String) response_data.get("email");
@@ -325,11 +332,20 @@ public class ProfileFragment extends Fragment {
                         Snackbar.make(view, "Application error, please reopen the application", Snackbar.LENGTH_LONG).show();
                         throw new RuntimeException(e);
                     }
+                } else if (response.code() == 404) {
+                    // Nessun caregiver trovato
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            caregiverContainer.setVisibility(View.GONE);
+                            noCaregiverText.setVisibility(View.VISIBLE);
+                            noCaregiverText.setText("Nessun caregiver associato.\nPremi “Aggiungi Caregiver” per aggiungerne uno.\nI dati del caregiver compariranno qui una volta completata la procedura di associazione.");
+                            Log.d("Caregivers", "No caregivers found (404)");
+                        }
+                    });
                 } else {
-                    // Log an error response code
+                    // Effettivo errore (che è diverso da semplicemente non avere un caregiver associato)
                     Log.e("Error", "Request failed with code " + response.code());
-
-                    // Update the UI to show an error message
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

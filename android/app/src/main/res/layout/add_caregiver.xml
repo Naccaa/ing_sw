@@ -57,7 +57,7 @@
         <EditText
             android:id="@+id/nameInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci nome"
             android:inputType="textPersonName"
@@ -81,7 +81,7 @@
         <EditText
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci email"
             android:inputType="textEmailAddress"
@@ -103,20 +103,20 @@
         <EditText
             android:id="@+id/phoneInput"
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="48dp"
             android:background="@drawable/bg_input"
             android:hint="Inserisci numero di telefono"
             android:inputType="phone"
             android:padding="14dp"
-            android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColor="#000000"
+            android:textColorHint="#99FFFFFF"
+            android:layout_marginBottom="20dp" />
 
         <!-- CONFIRM BUTTON -->
         <Button
             android:id="@+id/confirmButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
             android:background="@drawable/bg_button"
             android:text="Conferma"
             android:textAllCaps="false"
