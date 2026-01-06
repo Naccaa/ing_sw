@@ -194,13 +194,7 @@ public class ProfileFragment extends Fragment {
 
                     // Use JSONObject to parse the response string into a JSON
                     try {
-
-                        String body = response_body_str != null ? response_body_str.trim() : "{}";
-
-                        JSONObject root = new JSONObject(body);
-
-                        JSONObject response_data;
-                        response_data = root;
+                        JSONObject response_data = (new JSONObject(response_body_str)).getJSONObject("data");
 
                         final String fullname = (String) response_data.get("fullname");
                         final String phone_number = (String) response_data.get("phone_number");
