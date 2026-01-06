@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Nascondi BottomNavigationView sul LoginFragment
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword || destination.getId() == R.id.navigation_registration) {
+            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword || destination.getId() == R.id.navigation_registration || destination.getId() == R.id.termsFragment) {
                 binding.navView.setVisibility(View.GONE);
             } else {
                 binding.navView.setVisibility(View.VISIBLE);

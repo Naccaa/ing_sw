@@ -75,4 +75,8 @@
         android:name="com.example.ids.ui.registration.RegistrationFragment"
         android:label="Registration"
         tools:layout="@layout/signup" />
+    <fragment
+        android:id="@+id/termsFragment"
+        android:name="com.example.ids.ui.terms.TermsFragment"
+        android:label="Termini e Condizioni" />
 </navigation>

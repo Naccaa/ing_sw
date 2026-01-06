@@ -174,15 +174,26 @@
                 android:textColorHint="#8A000000" />
 
             <!-- TERMS CHECKBOX -->
-            <CheckBox
-                android:id="@+id/termsCheckbox"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:letterSpacing="0.02"
-                android:text="Accetto i termini e le condizioni"
-                android:textColor="#2F4BA0"
-                android:textSize="14sp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <CheckBox
+                    android:id="@+id/termsCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/termsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#2F4BA0"
+                    android:layout_marginStart="-14dp"
+                    android:paddingStart="4dp"/>
+            </LinearLayout>
 
             <!-- REGISTRA BUTTON -->
             <Button

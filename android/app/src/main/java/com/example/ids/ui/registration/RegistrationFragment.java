@@ -2,7 +2,13 @@ package com.example.ids.ui.registration;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +19,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.ids.R;
 import com.example.ids.constants.Constants;
@@ -53,6 +62,30 @@ public class RegistrationFragment extends Fragment {
         EditText confirmPasswordInput = view.findViewById(R.id.confirmPasswordInput);
 
         CheckBox termsCheckbox = view.findViewById(R.id.termsCheckbox); // Checkbox su termini e condizioni
+
+        TextView termsText = view.findViewById(R.id.termsText);
+
+        String fullText = "Accetto termini e condizioni d'uso";
+        SpannableString spannable = new SpannableString(fullText);
+
+        int start = fullText.indexOf("termini");
+        int end = fullText.length();
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                NavController navController =
+                        NavHostFragment.findNavController(requireParentFragment());
+                navController.navigate(R.id.termsFragment);
+            }
+        };
+
+        spannable.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        termsText.setText(spannable);
+        termsText.setMovementMethod(LinkMovementMethod.getInstance());
+        termsText.setHighlightColor(Color.TRANSPARENT);
+
         Button registerButton = view.findViewById(R.id.registerButton); // Bottone di registrazione
 
         TextView registerLink = view.findViewById(R.id.loginLink);
@@ -140,6 +173,14 @@ public class RegistrationFragment extends Fragment {
             }
 
         });
+    }
+
+    private void showTermsAndConditions() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Termini e Condizioni")
+                .setMessage("Qui inserisci i tuoi termini...")
+                .setPositiveButton("Chiudi", null)
+                .show();
     }
 
 }
