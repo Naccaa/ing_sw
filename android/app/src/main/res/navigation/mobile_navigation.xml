@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_add_admin"
             app:destination="@id/add_admin" />
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_onboarding"
+            app:destination="@id/navigation_onboarding" />
     </fragment>
     <fragment
         android:id="@+id/navigation_login"
@@ -75,4 +78,9 @@
         android:name="com.example.ids.ui.registration.RegistrationFragment"
         android:label="Registration"
         tools:layout="@layout/signup" />
+    <fragment
+        android:id="@+id/navigation_onboarding"
+        android:name="com.example.ids.ui.onboarding.OnboardingFragment"
+        android:label="Onboarding"
+        tools:layout="@layout/fragment_onboarding" />
 </navigation>

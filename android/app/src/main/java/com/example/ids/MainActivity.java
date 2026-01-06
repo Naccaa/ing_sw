@@ -132,12 +132,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Nascondi BottomNavigationView sul LoginFragment
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword || destination.getId() == R.id.navigation_registration) {
+            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword || destination.getId() == R.id.navigation_registration || destination.getId() == R.id.navigation_onboarding) {
                 binding.navView.setVisibility(View.GONE);
             } else {
                 binding.navView.setVisibility(View.VISIBLE);
             }
         });
+
+        // Check onboarding
+        final var onboardingCompleted = getSharedPreferences("app_prefs", MODE_PRIVATE)
+                .getBoolean("onboarding_completed", false);
+
+        if (!onboardingCompleted) {
+            navController.navigate(R.id.navigation_onboarding);
+        }
 
         final var sessionToken = getSharedPreferences("app_prefs", MODE_PRIVATE)
                 .getString("session_token", null);

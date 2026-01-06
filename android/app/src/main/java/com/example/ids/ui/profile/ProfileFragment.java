@@ -63,6 +63,7 @@ public class ProfileFragment extends Fragment {
     // Other buttons
     private Button btnEliminaProfilo;
     private Button btnLogout;
+    private Button btnOnboarding;
 
     private String jwt;
     private String user_id;
@@ -101,6 +102,7 @@ public class ProfileFragment extends Fragment {
         // Other buttons
         btnEliminaProfilo = binding.btnEliminaProfilo;
         btnLogout = binding.btnLogout;
+        btnOnboarding = binding.btnOnboarding;
 
         // Retrieve authentication token from shared preferences
         jwt = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).getString("session_token", null);
@@ -156,6 +158,11 @@ public class ProfileFragment extends Fragment {
         btnEliminaProfilo.setOnClickListener(this::DeleteUserCallback);
 
         btnLogout.setOnClickListener(this::LogoutCallback);
+
+        btnOnboarding.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(getView());
+            navController.navigate(R.id.action_navigation_profile_to_navigation_onboarding);
+        });
     }
 
     @Override
