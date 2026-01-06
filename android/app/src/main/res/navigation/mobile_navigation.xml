@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_add_admin"
             app:destination="@id/add_admin" />
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_onboarding"
+            app:destination="@id/navigation_onboarding" />
     </fragment>
     <fragment
         android:id="@+id/navigation_login"
@@ -79,4 +82,9 @@
         android:id="@+id/termsFragment"
         android:name="com.example.ids.ui.terms.TermsFragment"
         android:label="Termini e Condizioni" />
+    <fragment
+        android:id="@+id/navigation_onboarding"
+        android:name="com.example.ids.ui.onboarding.OnboardingFragment"
+        android:label="Onboarding"
+        tools:layout="@layout/fragment_onboarding" />
 </navigation>

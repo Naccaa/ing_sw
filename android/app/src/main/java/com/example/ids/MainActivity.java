@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
 
-    private void requestNotificationPermission() {
+    public void requestNotificationPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         ) {
@@ -132,12 +132,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Nascondi BottomNavigationView sul LoginFragment
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword || destination.getId() == R.id.navigation_registration || destination.getId() == R.id.termsFragment) {
+            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword || destination.getId() == R.id.navigation_registration || destination.getId() == R.id.navigation_onboarding || destination.getId() == R.id.termsFragment) {
                 binding.navView.setVisibility(View.GONE);
             } else {
                 binding.navView.setVisibility(View.VISIBLE);
             }
         });
+
+        // Check onboarding
+        final var onboardingCompleted = getSharedPreferences("app_prefs", MODE_PRIVATE)
+                .getBoolean("onboarding_completed", false);
+
+        if (!onboardingCompleted) {
+            navController.navigate(R.id.navigation_onboarding);
+        }
 
         final var sessionToken = getSharedPreferences("app_prefs", MODE_PRIVATE)
                 .getString("session_token", null);
@@ -148,11 +156,6 @@ public class MainActivity extends AppCompatActivity {
         if (sessionToken != null && !userId.isEmpty()) {
             send_firebase_token(this, sessionToken, userId);
         }
-
-        requestNotificationPermission();
-        var channelId = "0";
-        createNotificationChannel(channelId);
-        // postNotification(channelId, 0);
 
         // Observe for session expiration
         SessionEventBus.sessionExpired.observe(this, expired -> {

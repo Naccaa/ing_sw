@@ -187,6 +187,22 @@
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
+            <!-- ONBOARDING BUTTON -->
+            <Button
+                android:id="@+id/btnOnboarding"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_button"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="Mostra Onboarding"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
