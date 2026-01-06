@@ -203,7 +203,7 @@ public class ProfileFragment extends Fragment {
                     try {
                         JSONObject response_data = (new JSONObject(response_body_str)).getJSONObject("data");
 
-                        final String fullname = (String) response_data.get("fullname");
+                        final String fullname = response_data.optString("name", "") + " " + response_data.optString("surname", "");
                         final String phone_number = (String) response_data.get("phone_number");
                         final String email = (String) response_data.get("email");
 
