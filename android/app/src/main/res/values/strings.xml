@@ -9,7 +9,7 @@
     <string name="profile_info">Informazioni profilo</string>
     <string name="caregiver_info">Informazioni caregiver</string>
     <string name="settings_fullname">Nome: </string>
-    <string name="settings_phone_number_str">Numero: </string>
+    <string name="settings_phone_number_str">Telefono: </string>
     <string name="settings_email_str">Email: </string>
     <string name="modify_str">MODIFICA</string>
     <string name="delete_user_str">ELIMINA PROFILO</string>

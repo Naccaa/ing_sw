@@ -203,7 +203,7 @@ public class ProfileFragment extends Fragment {
                     try {
                         JSONObject response_data = (new JSONObject(response_body_str)).getJSONObject("data");
 
-                        final String fullname = response_data.optString("name", "") + " " + response_data.optString("surname", "");
+                        final String fullname = (String) response_data.get("fullname");
                         final String phone_number = (String) response_data.get("phone_number");
                         final String email = (String) response_data.get("email");
 
@@ -211,9 +211,9 @@ public class ProfileFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                userFullname.append(fullname);
-                                userPhone.append(phone_number);
-                                userEmail.append(email);
+                                userFullname.setText(getString(R.string.settings_fullname) + " " + fullname);
+                                userPhone.setText(getString(R.string.settings_phone_number_str) + " " + phone_number);
+                                userEmail.setText(getString(R.string.settings_email_str) + " " + email);
                             }
                         });
                     } catch (JSONException e) {
@@ -312,9 +312,9 @@ public class ProfileFragment extends Fragment {
                                         TextView auth_tv = cardView.findViewById(R.id.authenticated);
                                         Button deleteButton = cardView.findViewById(R.id.btnEliminaCaregiver);
 
-                                        name_tv.append(alias);
-                                        phone_tv.append(phone_number);
-                                        email_tv.append(email);
+                                        name_tv.append(" " + alias);
+                                        phone_tv.append(" " + phone_number);
+                                        email_tv.append(" " + email);
                                         if (!auth)   // if caregiver is not authenticated, show a message
                                             auth_tv.setVisibility(View.VISIBLE);
 

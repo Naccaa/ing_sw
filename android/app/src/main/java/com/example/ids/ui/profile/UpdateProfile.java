@@ -66,7 +66,6 @@ public class UpdateProfile extends Fragment {
         androidx.appcompat.app.ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);  // mostra la freccia
-            actionBar.setTitle("Aggiungi Caregiver");  // titolo pagina
         }
 
         // Confirm Button Logic

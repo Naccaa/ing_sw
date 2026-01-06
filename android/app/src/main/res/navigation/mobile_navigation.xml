@@ -8,17 +8,17 @@
     <fragment
         android:id="@+id/navigation_alert"
         android:name="com.example.ids.ui.alert.AlertFragment"
-        android:label="Alert"
+        android:label="Allerte"
         tools:layout="@layout/fragment_alert" />
     <fragment
         android:id="@+id/navigation_guide"
         android:name="com.example.ids.ui.guide.GuideFragment"
-        android:label="Guide"
+        android:label="Guide linea"
         tools:layout="@layout/fragment_guide" />
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.ids.ui.profile.ProfileFragment"
-        android:label="Profilo"
+        android:label="Impostazioni profilo"
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_navigation_profile_to_add_caregiver"
@@ -44,7 +44,7 @@
     <fragment
         android:id="@+id/update_profile"
         android:name="com.example.ids.ui.profile.UpdateProfile"
-        android:label="Aggiorna il profilo"
+        android:label="Modifica profilo"
         tools:layout="@layout/update_profile" >
         <action
             android:id="@+id/action_update_profile_to_navigation_profile"
@@ -71,12 +71,12 @@
     <fragment
         android:id="@+id/navigation_forgotPassword"
         android:name="com.example.ids.ui.login.ForgotPasswordFragment"
-        android:label="Forgot Password"
+        android:label="Reset password"
         tools:layout="@layout/fragment_forgot_password" />
     <fragment
         android:id="@+id/navigation_registration"
         android:name="com.example.ids.ui.registration.RegistrationFragment"
-        android:label="Registration"
+        android:label="Registrazione"
         tools:layout="@layout/signup" />
     <fragment
         android:id="@+id/termsFragment"
