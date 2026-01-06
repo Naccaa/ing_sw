@@ -126,4 +126,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="28dp" />
 
+    <!-- Link onboarding -->
+    <TextView
+        android:id="@+id/onboardingLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mostra Onboarding"
+        android:textSize="15sp"
+        android:textColor="#2F4BA0"
+        android:alpha="0.9"
+        app:layout_constraintTop_toBottomOf="@id/registerLink"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

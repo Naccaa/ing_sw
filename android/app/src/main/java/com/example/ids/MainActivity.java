@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
 
-    private void requestNotificationPermission() {
+    public void requestNotificationPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         ) {
@@ -156,11 +156,6 @@ public class MainActivity extends AppCompatActivity {
         if (sessionToken != null && !userId.isEmpty()) {
             send_firebase_token(this, sessionToken, userId);
         }
-
-        requestNotificationPermission();
-        var channelId = "0";
-        createNotificationChannel(channelId);
-        // postNotification(channelId, 0);
 
         // Observe for session expiration
         SessionEventBus.sessionExpired.observe(this, expired -> {

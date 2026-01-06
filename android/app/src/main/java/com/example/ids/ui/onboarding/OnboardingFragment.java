@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
+import com.example.ids.MainActivity;
 import com.example.ids.R;
 
 public class OnboardingFragment extends Fragment {
@@ -36,10 +38,10 @@ public class OnboardingFragment extends Fragment {
     };
 
     private int[] images = {
-        R.mipmap.ic_launcher,
-        R.mipmap.ic_launcher,
-        R.mipmap.ic_launcher,
-        R.mipmap.ic_launcher
+        R.drawable.ic_profile,
+        R.drawable.ic_alert,
+        R.drawable.ic_setting,
+        R.drawable.ic_guide
     };
 
     @Nullable
@@ -88,6 +90,10 @@ public class OnboardingFragment extends Fragment {
         boolean wasCompleted = prefs.getBoolean("onboarding_completed", false);
         if (!wasCompleted) {
             prefs.edit().putBoolean("onboarding_completed", true).apply();
+            // Request notification permission after onboarding
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).requestNotificationPermission();
+            }
             Navigation.findNavController(requireView()).navigate(R.id.navigation_login);
         } else {
             Navigation.findNavController(requireView()).popBackStack();

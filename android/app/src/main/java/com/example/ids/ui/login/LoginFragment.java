@@ -70,6 +70,7 @@ public class LoginFragment extends Fragment {
         Button btnLogin = view.findViewById(R.id.loginButton);
         TextView forgotPassword = view.findViewById(R.id.forgotPassword);
         TextView registerLink = view.findViewById(R.id.registerLink);
+        TextView onboardingLink = view.findViewById(R.id.onboardingLink);
 
         btnLogin.setOnClickListener(v -> {
             String e = email.getText().toString();
@@ -89,6 +90,12 @@ public class LoginFragment extends Fragment {
         registerLink.setOnClickListener(v -> {
             Log.d("LOGIN", "Reindirizzamento verso pagina di registrazione...");
             registerLink();
+        });
+
+        onboardingLink.setOnClickListener(v -> {
+            Log.d("LOGIN", "Reindirizzamento verso onboarding...");
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.navigation_onboarding);
         });
 
 
