@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:alpha="0.9"
-            android:text="Verrà inviata una mail al caregiver che dovrà accettare questo incarico per diventare un caregiver attivo."
+            android:text="Una volta inseriti i dati, invieremo un'email al caregiver. L'associazione diventerà effettiva solo dopo la sua conferma via email."
             android:textColor="#2F4BA0"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"

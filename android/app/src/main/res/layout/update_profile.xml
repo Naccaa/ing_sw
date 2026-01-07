@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="49dp"
             android:alpha="0.9"
-            android:text="Inserire solo le informazioni nei campi che si vogliono modificare."
+            android:text="Inserire solo le informazioni dei campi che si vogliono modificare."
             android:textColor="#2F4BA0"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"

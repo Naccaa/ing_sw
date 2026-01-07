@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="8dp">
 
         <!-- Testo da mostrare solo se non ci sono guide disponibili -->
         <TextView

@@ -422,7 +422,7 @@ public class GuideFragment extends Fragment {
 
         Request request = new Request.Builder()
                 .url(BASE_URL+"/guidelines")
-                .addHeader("Authorization", "Bearer " + jwtToken)
+                //.addHeader("Authorization", "Bearer " + jwtToken)
                 .post(body)
                 .build();
 
@@ -437,7 +437,9 @@ public class GuideFragment extends Fragment {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     Log.d("GUIDES", "Guideline created");
-                    fetchGuidelines(); // aggiorna UI
+                    requireActivity().runOnUiThread(() -> {
+                        fetchGuidelines();
+                    });
                 } else {
                     Log.e("GUIDES", "POST error: " + response.code());
                 }
@@ -463,7 +465,7 @@ public class GuideFragment extends Fragment {
 
         Request request = new Request.Builder()
                 .url(BASE_URL+"/guidelines/" + type)
-                .addHeader("Authorization", "Bearer " + jwtToken)
+                //.addHeader("Authorization", "Bearer " + jwtToken)
                 .put(body)
                 .build();
 

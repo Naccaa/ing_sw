@@ -13,7 +13,7 @@
     <fragment
         android:id="@+id/navigation_guide"
         android:name="com.example.ids.ui.guide.GuideFragment"
-        android:label="Guide linea"
+        android:label="Linee guida"
         tools:layout="@layout/fragment_guide" />
     <fragment
         android:id="@+id/navigation_profile"
