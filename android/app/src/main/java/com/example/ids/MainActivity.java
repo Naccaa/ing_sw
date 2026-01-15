@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,6 +45,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.example.ids.ui.login.LoginFragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,12 +59,19 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private Snackbar currentSnackbar;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
+
+    private String mToken;
 
     public void requestNotificationPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
@@ -83,28 +92,6 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         } else {
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-        }
-    }
-
-    private void createNotificationChannel(String channelId) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel(channelId, "Emergenze", NotificationManager.IMPORTANCE_HIGH));
-        }
-    }
-
-    private void postNotification(String channelId, int notificationId) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            NotificationManagerCompat.from(this).notify(notificationId, new NotificationCompat.Builder(this, channelId)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Titolo")
-                    .setContentText("Testo")
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setAutoCancel(true)
-                    .setContentIntent(PendingIntent.getActivity(this, 0,
-                            new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE))
-                    .build());
-
-            Log.d("Notification", "Notification posted successfully.");
         }
     }
 
@@ -194,6 +181,33 @@ public class MainActivity extends AppCompatActivity {
                 SessionEventBus.sessionExpired.setValue(false);
             }
         });
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    100);
+        }
+
+        // per le notifiche
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                mToken = task.getResult();
+                startLocationService();
+            }
+        });
+    }
+
+    private void startLocationService() {
+        Intent serviceIntent = new Intent(this, LocationService.class);
+        serviceIntent.putExtra("firebase_token", mToken);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
     }
 
     public static void send_firebase_token(Context context, String sessionToken, String userId) {

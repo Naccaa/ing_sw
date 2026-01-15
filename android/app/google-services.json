@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "876965993016",
-    "project_id": "ing-sw-636e2",
-    "storage_bucket": "ing-sw-636e2.firebasestorage.app"
+    "project_number": "10008630484",
+    "project_id": "ingegneria-del-software-26d31",
+    "storage_bucket": "ingegneria-del-software-26d31.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:876965993016:android:d4c241f9cd2a4e4085a4cd",
+        "mobilesdk_app_id": "1:10008630484:android:0be26939e62b2de28e5741",
         "android_client_info": {
           "package_name": "com.example.ids"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDlrk9v1LSbENH2hEsIvcsDKqZTsfl2a8Q"
+          "current_key": "AIzaSyBHq25HEpBjhKLWh1H2p1ofj-GU10Rt5bM"
         }
       ],
       "services": {
