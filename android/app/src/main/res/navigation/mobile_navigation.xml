@@ -87,4 +87,24 @@
         android:name="com.example.ids.ui.onboarding.OnboardingFragment"
         android:label="Onboarding"
         tools:layout="@layout/fragment_onboarding" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.example.ids.ui.info.InfoFragment"
+        android:label="Info"
+        tools:layout="@layout/fragment_info" >
+        <action
+            android:id="@+id/action_info_to_terms"
+            app:destination="@id/termsFragment" />
+        <action
+            android:id="@+id/action_info_to_licenses"
+            app:destination="@id/licensesFragment" />
+        <action
+            android:id="@+id/action_info_to_onboarding"
+            app:destination="@id/navigation_onboarding" />
+    </fragment>
+    <fragment
+        android:id="@+id/licensesFragment"
+        android:name="com.example.ids.ui.info.LicensesFragment"
+        android:label="Licenze di terze parti"
+        tools:layout="@layout/fragment_licenses" />
 </navigation>

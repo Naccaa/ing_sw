@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="20dp"
+    android:background="@color/glass_bg">
+
+    <!-- App Icon -->
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="App Icon" />
+
+    <!-- App Version -->
+    <TextView
+        android:id="@+id/app_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Versione 1.1"
+        android:textSize="16sp"
+        android:textColor="@color/title_color"
+        android:textStyle="bold" />
+
+    <!-- Terms and Conditions Button -->
+    <Button
+        android:id="@+id/btn_terms"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:text="Termini e Condizioni"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_button" />
+
+    <!-- License Button -->
+    <Button
+        android:id="@+id/btn_license"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:text="Licenza Apache 2.0"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_button" />
+
+    <!-- Third-party Licenses Button -->
+    <Button
+        android:id="@+id/btn_open_source_licenses"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:text="Licenze di terze parti"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_button" />
+
+    <!-- Restart Onboarding Button -->
+    <Button
+        android:id="@+id/btn_restart_onboarding"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="30dp"
+        android:text="Mostra Onboarding"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_button" />
+
+    <!-- Server IP Configuration -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Indirizzo IP Server"
+        android:textSize="14sp"
+        android:textColor="@color/title_color"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp" />
+
+    <EditText
+        android:id="@+id/server_ip_input"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="es: http://192.168.1.50:5000"
+        android:inputType="text"
+        android:padding="10dp"
+        android:background="@drawable/bg_input"
+        android:textColorHint="@android:color/darker_gray"
+        android:layout_marginBottom="20dp" />
+
+</LinearLayout>

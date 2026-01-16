@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -123,12 +125,21 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_profile,
                 R.id.navigation_login,
                 R.id.navigation_forgotPassword,
-                R.id.navigation_registration
+                R.id.navigation_registration,
+                R.id.infoFragment
         ).build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        // Handle bottom nav clicks to pop info fragment if needed
+        binding.navView.setOnItemSelectedListener(item -> {
+            if (navController.getCurrentDestination().getId() == R.id.infoFragment) {
+                navController.popBackStack();
+            }
+            return NavigationUI.onNavDestinationSelected(item, navController) || super.onSupportNavigateUp();
+        });
 
         // Nascondi BottomNavigationView sul LoginFragment
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
@@ -251,6 +262,31 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        
+        if (item.getItemId() == R.id.action_info) {
+            // Check if we're not already on the info screen
+            if (navController.getCurrentDestination().getId() != R.id.infoFragment) {
+                navController.navigate(R.id.infoFragment);
+                return true;
+            } else {
+                // If already on info, pop back to the previous destination
+                navController.popBackStack();
+                return true;
+            }
+        }
+        
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
