@@ -10,3 +10,5 @@ requests
 datetime
 python-crontab
 firebase-admin
+numpy
+apscheduler

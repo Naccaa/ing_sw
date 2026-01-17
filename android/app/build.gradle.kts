@@ -51,8 +51,14 @@ dependencies {
     implementation(libs.commons.validator)
     implementation("com.google.code.gson:gson:2.8.8")
     implementation(libs.firebase.messaging)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("com.google.firebase:firebase-messaging:23.4.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("androidx.work:work-runtime:2.8.1")
+
 }

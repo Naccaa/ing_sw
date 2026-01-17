@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -105,7 +106,12 @@ public class LoginFragment extends Fragment {
     }
 
     private void login(String email, String password) {
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext())).build();
+        OkHttpClient client;
+
+        client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
+                .connectTimeout(300, TimeUnit.MILLISECONDS)
+                .readTimeout(300, TimeUnit.MILLISECONDS)
+                .build();
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String json = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";

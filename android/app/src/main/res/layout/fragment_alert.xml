@@ -1,114 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="16dp"
-    android:background="@color/glass_bg"
-    android:fillViewport="true">
+    android:background="@color/glass_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_marginTop="8dp">
 
-        <!--<TextView
-            android:id="@+id/alertSectionTitle"
+        <!-- Testo da mostrare solo se non ci sono guide disponibili -->
+        <TextView
+            android:id="@+id/emptyAlertsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nessuna allerta.\nQuando saranno pubblicate, compariranno in questa sezione."
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:padding="24dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/allertContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"/>
+
+
+        <!-- Pulsante gestione allerte -->
+        <Button
+            android:id="@+id/manageAlertButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_button"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="Gestione allete"
+            android:visibility="gone"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+
+
+
+
+        <Space
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|start"
-            android:layout_marginTop="16dp"
-            android:text="Allerte"
-            android:textColor="#2F4BA0"
-            android:textSize="22sp"
-            android:textStyle="bold" />-->
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <!-- Header con icona e titolo card -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_alert"
-                        app:tint="#2F4BA0" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_weight="1"
-                        android:text="Allerta Meteo: Acqua Alta"
-                        android:textColor="#2F4BA0"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="#33FFFFFF" />
-
-                <!-- Descrizione -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="2dp"
-                    android:text="Oggi prevista marea eccezionale fino a 140 cm. Rischio allagamenti in centro storico. Seguire le indicazioni della Protezione Civile."
-                    android:textColor="#121214"
-                    android:textSize="14sp" />
-
-                <!-- Data e ora -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="10dp"
-                    android:text="Validità: 29/11/2025, 18:00 - 23:00"
-                    android:textColor="#121214"
-                    android:textSize="12sp" />
-
-                <!-- Pulsante azione -->
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="9dp"
-                    android:background="@drawable/bg_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:elevation="4dp"
-                    android:padding="0dp"
-                    android:text="Vedi Dettagli"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            android:layout_height="100dp" />
 
     </LinearLayout>
 
-</FrameLayout>
 
+</ScrollView>

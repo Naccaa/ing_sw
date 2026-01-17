@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -121,7 +122,11 @@ public class RegistrationFragment extends Fragment {
             return;
         }
 
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
+        OkHttpClient client;
+
+        client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
+                .connectTimeout(300, TimeUnit.MILLISECONDS)
+                .readTimeout(300, TimeUnit.MILLISECONDS)
                 .build();
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -152,7 +157,7 @@ public class RegistrationFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 requireActivity().runOnUiThread(() -> {
-                    Log.e("Registration", "Errore di rete", e);
+                    Log.e("Registration", "Errore di rete");
                 });
             }
 

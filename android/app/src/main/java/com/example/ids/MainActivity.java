@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.ids.constants.Constants;
 import com.example.ids.data.network.AuthInterceptor;
+import com.example.ids.data.network.PingServerWorker;
 import com.example.ids.data.session.SessionEventBus;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,6 +39,11 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.ids.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -48,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -56,6 +63,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -111,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        schedulePingWorker();
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -194,6 +205,31 @@ public class MainActivity extends AppCompatActivity {
                 SessionEventBus.sessionExpired.setValue(false);
             }
         });
+    }
+
+    private void schedulePingWorker() {
+
+        Log.d("APP", "schedulePingWorker avviata");
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        PeriodicWorkRequest workRequest =
+                new PeriodicWorkRequest.Builder(
+                        PingServerWorker.class,
+                        15,
+                        TimeUnit.MINUTES
+                )
+                        .setConstraints(constraints)
+                        .build();
+
+        WorkManager.getInstance(this)
+                .enqueueUniquePeriodicWork(
+                        "ping_server_worker",
+                        ExistingPeriodicWorkPolicy.KEEP,
+                        workRequest
+                );
     }
 
     public static void send_firebase_token(Context context, String sessionToken, String userId) {

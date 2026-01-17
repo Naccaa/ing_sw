@@ -19,4 +19,6 @@
     <string name="no_caregiver_assigned_str">Non hai nessun caregiver associato</string>
     <string name="caregiver_not_authenticated_str">In attesa della conferma del caregiver.</string>
     <string name="logout_str">LOGOUT</string>
+    <string name="title_alert">Allerta Meteo: </string>
+
 </resources>

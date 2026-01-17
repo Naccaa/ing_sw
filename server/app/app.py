@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import datetime
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
@@ -8,6 +8,7 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from db import db
 from auto_cleaner.auto_cleaner_setup import auto_cleaner_setup
+from weather_data.get_weather import start_weather_monitor
 import firebase_admin
 from firebase_admin import credentials
 
@@ -29,6 +30,8 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(hours=1) # può esse
 db.init_app(app)
 jwt = JWTManager(app)
 CORS(app)
+
+background_jobs_started = False
 
 with app.app_context():
     db.reflect()
@@ -90,7 +93,89 @@ def check_response_format(response):
         
     return response
 
+# Start background jobs once
+@app.before_request # before_first_request non worka ho dovuto creare un flag 
+def start_background_jobs_once():
+    global background_jobs_started
+    if not background_jobs_started:
+        start_weather_monitor(app)
+        background_jobs_started = True
+
+
+# dummy route to test emergencies insertion
+@app.route("/test-emergency")
+def test_emergency():
+    from src.db_types import DBEmergencies
+    from sqlalchemy import func, select
+    existing = db.session.execute(
+        select(DBEmergencies).where(
+            DBEmergencies.emergency_type == "alluvione",
+            DBEmergencies.location.op("<->")(func.point(0, 0))==0,
+            DBEmergencies.end_time.is_(None)
+        )
+    ).first()
+    
+    if existing:
+        return jsonify({
+            "error": False,
+            "message": "already present",
+        }), 200
+    else:
+        e = DBEmergencies(
+            emergency_type="alluvione",
+            message="prepare to meet God you fuckers",
+            location=func.point(37.4219983, -122.084),
+            radius=10000,
+            start_time=datetime.datetime.now(datetime.timezone.utc),
+            end_time=None
+        )
+
+        db.session.add(e)
+        db.session.commit()
+        return jsonify({
+            "error": False,
+            "message": "ok",
+        }), 200
+    
+
+
+# dummy route to test guidelines insertion
+@app.route("/test-guide")
+def test_guide():
+    from src.db_types import DBGuidelines
+    from sqlalchemy import func, select
+
+    e = DBGuidelines(
+        emergency_type="alluvione",
+        message="prepare to meet God you fuckers"
+        )
+    db.session.add(e)
+    db.session.commit()
+    return jsonify({
+        "error": False,
+        "message": "ok",
+    }), 200
+
+@app.route("/test-guide1")
+def test_guide1():
+    from src.db_types import DBGuidelines
+    from sqlalchemy import func, select
+
+    e = DBGuidelines(
+        emergency_type="grandinata",
+        message="prepare to meet God you fuckers"
+        )
+    db.session.add(e)
+    db.session.commit()
+    return jsonify({
+        "error": False,
+        "message": "ok",
+    }), 200
+
+
+
+
 
 if __name__ == "__main__":
     auto_cleaner_setup()
-    app.run()
+    app.run(debug=True, use_reloader=False)

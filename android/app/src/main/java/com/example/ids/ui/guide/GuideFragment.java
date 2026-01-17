@@ -186,6 +186,10 @@ public class GuideFragment extends Fragment {
                         }
                         return;
                     }
+                    else {
+                        binding.emptyGuidelinesText.setVisibility(View.GONE);
+                    }
+
 
                     String resp;
                     if (body.trim().startsWith("[")) {
@@ -227,6 +231,7 @@ public class GuideFragment extends Fragment {
                             throw new RuntimeException(e);
                         }
                         try {
+
                             createGuideCard(
                                     obj.getString("emergency_type"),
                                     obj.getString("message")
@@ -386,7 +391,7 @@ public class GuideFragment extends Fragment {
                 new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                         .setTitle("Conferma")
                         .setMessage("Vuoi eliminare questa guida?")
-                        .setPositiveButton("Sì", (dialog, which) -> deleteGuide(emergencyType))
+                        .setPositiveButton("Sì", (dialog, which) -> deleteGuide(emergencyType.toLowerCase()))
                         .setNegativeButton("No", null)
                         .show();
             });
