@@ -52,6 +52,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.8")
     implementation(libs.firebase.messaging)
     implementation(libs.play.services.location)
+    implementation(libs.work.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

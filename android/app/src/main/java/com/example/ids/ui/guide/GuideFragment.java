@@ -129,7 +129,7 @@ public class GuideFragment extends Fragment {
             // Crea guida
             else {
                 createGuideCard(type, message);
-                postNewGuide(type, message);
+                postNewGuide(type.toLowerCase(), message);
             }
 
             dialog.dismiss();
@@ -436,6 +436,9 @@ public class GuideFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("GUIDES", "POST failed", e);
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), "Errore rete o sessione scaduta", Toast.LENGTH_SHORT).show();
+                });
             }
 
             @Override
@@ -478,6 +481,10 @@ public class GuideFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("GUIDES", "PUT failed", e);
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), "Errore rete o sessione scaduta", Toast.LENGTH_SHORT).show();
+                });
+
             }
 
             @Override
@@ -498,7 +505,7 @@ public class GuideFragment extends Fragment {
     private void deleteGuide(String type) {
         Request request = new Request.Builder()
                 .url(BASE_URL+"/guidelines/" + type)
-                .addHeader("Authorization", "Bearer " + jwtToken)
+                //.addHeader("Authorization", "Bearer " + jwtToken)
                 .delete()
                 .build();
 
@@ -506,6 +513,9 @@ public class GuideFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("GUIDES", "DELETE failed", e);
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), "Errore rete o sessione scaduta", Toast.LENGTH_SHORT).show();
+                });
             }
 
             @Override

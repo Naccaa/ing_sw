@@ -128,13 +128,7 @@
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/alertLevel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Allerta ROSSA – Marea prevista: 145 cm"
-                            android:textSize="14sp"
-                            android:textColor="#B00020" />
+
 
                         <TextView
                             android:id="@+id/alertDate"
@@ -173,7 +167,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/alertTips"
+                            android:id="@+id/guideline_message"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="• Evitare zone lagunari e calli allagate.\n• Utilizzare passerelle dove disponibili.\n• Limitare gli spostamenti non essenziali.\n• Proteggere oggetti ed elettrodomestici a livello terra.\n• Indossare stivali e mantelle impermeabili.\n• Seguire gli aggiornamenti della Protezione Civile."

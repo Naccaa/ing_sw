@@ -31,7 +31,7 @@
     <EditText
         android:id="@+id/inputMessage"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="250dp"
         android:hint="Messaggio"
         android:padding="16dp"
         android:textSize="15dp"

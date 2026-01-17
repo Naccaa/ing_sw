@@ -4,13 +4,11 @@ import static android.content.ContentValues.TAG;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.ids.constants.Constants;
 import com.example.ids.data.network.AuthInterceptor;
-import com.example.ids.data.network.PingServerWorker;
+
 import com.example.ids.data.session.SessionEventBus;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,31 +32,23 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
+
 
 import com.example.ids.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.example.ids.ui.login.LoginFragment;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -103,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        schedulePingWorker();
+        //schedulePingWorker();
 
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -225,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             startService(serviceIntent);
         }
     }
-
+/*
     private void schedulePingWorker() {
 
         Log.d("APP", "schedulePingWorker avviata");
@@ -249,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                         ExistingPeriodicWorkPolicy.KEEP,
                         workRequest
                 );
-    }
+    }*/
 
     public static void send_firebase_token(Context context, String sessionToken, String userId) {
         FirebaseMessaging.getInstance().getToken()

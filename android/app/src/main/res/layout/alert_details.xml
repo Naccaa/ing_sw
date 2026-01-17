@@ -1,79 +1,96 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="3dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal">
-
-    <TextView
-        android:id="@+id/titleDialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nuova Guida"
-        android:textColor="@color/title_color"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
-
-    <EditText
-        android:id="@+id/inputType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/bg_input"
-        android:hint="Tipo emergenza"
-        android:padding="12dp"
-        android:textSize="15dp"
-        android:textColor="@color/title_color" />
-
-    <EditText
-        android:id="@+id/inputMessage"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:hint="Messaggio"
-        android:padding="16dp"
-        android:textSize="15dp"
-        android:background="@drawable/bg_input"
-        android:textColor="@color/title_color"
-        android:gravity="top|start"
-        android:inputType="textMultiLine"
-        android:scrollbars="vertical"
-        android:layout_marginBottom="12dp"/>
+    android:layout_height="440dp"
+    android:padding="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end">
+        android:orientation="vertical"
+        android:paddingStart="9dp"
+        android:paddingEnd="9dp">
 
-        <Button
-            android:id="@+id/btnCancelGuide"
-            android:layout_width="wrap_content"
+        <!-- TITOLO -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_button"
-            android:text="Annulla"
-            android:textColor="@android:color/white"
-            android:textSize="15sp"/>
+            android:text="ALLAGAMENTO"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/title_color"
+            android:layout_marginBottom="12dp" />
 
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btnCreateGuide"
-            android:layout_width="wrap_content"
+        <!-- VALIDITÀ -->
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_button"
-            android:text="Crea"
-            android:backgroundTint="@color/purple_500"
-            android:textColor="@android:color/white"
-            android:textSize="15sp"/>
+            android:text="Validità:"
+            android:textColor="#2F4BA0"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginBottom="4dp" />
 
+        <TextView
+            android:id="@+id/alertDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- MESSAGGIO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descrizione:"
+            android:textColor="#2F4BA0"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/alertMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- CITTÀ INVOLTE -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Zone a rischio:"
+            android:textColor="#2F4BA0"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/alertZones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- RACCOMANDAZIONI -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Raccomandazioni:"
+            android:textColor="#2F4BA0"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/guidelineMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- CITTÀ COINVOLTE -->
 
 
     </LinearLayout>
-
-
-
-</LinearLayout>
+</ScrollView>
