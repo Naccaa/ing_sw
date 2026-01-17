@@ -1,4 +1,7 @@
 # ing_sw
+
+![icon](android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp)
+
 ## Stato avanzamento
 Funzionalità completate 
 - Implementata la struttura di navigazione con BottomNavigationView e NavController.

@@ -170,20 +170,6 @@
                     android:text="@string/logout_str"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp" />
-
-                <Button
-                    android:id="@+id/btnOnboarding"
-                    android:layout_width="370dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
-                    android:text="Mostra Onboarding"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp" />
             </LinearLayout>
 
             <!-- Pulsante per aggiungere un nuovo admin -->
