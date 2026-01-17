@@ -226,7 +226,7 @@ def get_caregivers(userId):
     #if user.caregiver_id == None:
     #    response_data = {}
     else:
-        caregivers = DBCaregivers.query.filter(DBCaregivers.user_id==userId).all()
+        caregivers = DBCaregivers.query.filter(DBCaregivers.user_id==userId, DBCaregivers.authenticated==True).all()
         response_data = [
             {
                 "caregiver_id": c.caregiver_id,

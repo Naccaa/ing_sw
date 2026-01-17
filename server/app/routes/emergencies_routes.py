@@ -5,6 +5,8 @@ import math
 from sqlalchemy import exc, text
 from src.db_types import DBEmergencies, DBGuidelines, emergency_type
 
+from src.notifications import send_emergency_notification
+
 from db import db
 
 emergencies_route = Blueprint('emergencies_route', __name__)
@@ -20,6 +22,14 @@ def get_emergencies():
 
     # TODO: decidere un formato standard per i punti geografici (es. "x,y" o "(x,y)") e poi togliere da queste 2 funzioni gli if che non servono
     
+    # TODO: 
+    # - aggiornare nel database la location, lo stato dell'utente ('fine' o 'emergency') e i vari timestamp
+    # - aggiungere alle richieste partite dal client verso questo endpoint il timestamp dell'ultima rilevazione della posizione (si può anche fare lato server ???) e ottenere il timestamp dell'ultimo cambio di stato
+    # - lato client cambiare la durata dei vari timer (timer di invio di richieste a questo endpoint e timer per l'attesa della verifica dello stato dell'utente)
+    # - lato client cambiare la grafica della schermata di notifica
+    # - lato client aggiungere una lista di emergenze già ricevute per evitare di mandare notifiche duplicate (ha anche senso non fare ciò, dato che un utente potrebbe non aver visto la notifica precedente (se mettiamo dei timer abbastanza grandi) ???)
+    # - fare in modo che il client faccia le richieste all'endpoint solo se loggato
+
     def parse_point(s):
         if s is None:
             return None
@@ -85,6 +95,12 @@ def get_emergencies():
             "end_time": r.end_time.isoformat() if r.end_time is not None else None,
             "guideline_message": r.guideline_message
         } for r in rows]
+
+    if request.args.get("firebase_token"):
+        firebase_token = request.args.get("firebase_token")
+        send_emergency_notification(firebase_token, data_)
+        #current_app.logger.debug("A"*50)
+    #current_app.logger.debug(data_)
 
     return {"error": False, "message": "Emergencies retrieved successfully", "data": data_}, 200
 
