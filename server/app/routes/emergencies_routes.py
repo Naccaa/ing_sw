@@ -76,7 +76,7 @@ def get_emergencies():
                 return {"error": True, "message": f"Invalid near parameter: {ve}"}, 400
             
             q = q.filter(
-                text("((location[0] - :nx)*(location[0] - :nx) + (location[1] - :ny)*(location[1] - :ny)) <= (radius * radius)")
+                text("((location[0] - :nx)*(location[0] - :nx) + (location[1] - :ny)*(location[1] - :ny)) <= (radius * 0.009) * (radius * 0.009)")
             ).params(nx=nx, ny=ny)
 
         rows = q.all()

@@ -1,61 +1,51 @@
-<ScrollView
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/glass_bg"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <!-- Testo da mostrare solo se non ci sono guide disponibili -->
-        <TextView
-            android:id="@+id/emptyAlertsText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nessuna allerta.\nQuando saranno pubblicate, compariranno in questa sezione."
-            android:textAlignment="center"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:padding="24dp"
-            android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="@color/glass_bg"
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/allertContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <!-- Testo da mostrare solo se non ci sono guide disponibili -->
+            <TextView
+                android:id="@+id/emptyAlertsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nessuna allerta.\nQuando saranno pubblicate, compariranno in questa sezione."
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:padding="24dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/allertContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"/>
 
 
-        <!-- Pulsante gestione allerte -->
-        <Button
-            android:id="@+id/manageAlertButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_button"
-            android:foreground="?attr/selectableItemBackground"
-            android:text="Gestione allete"
-            android:visibility="gone"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="100dp" />
+
+        </LinearLayout>
 
 
+    </ScrollView>
 
-
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="100dp" />
-
-    </LinearLayout>
-
-
-</ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

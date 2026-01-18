@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -49,9 +50,8 @@ public class GuideFragment extends Fragment {
     private FragmentGuideBinding binding;
     private OkHttpClient client;
     private String jwtToken = "";
-
-
     private boolean isAdmin = false;
+    private String lastGuidelinesJson = "[]";
 
     @Override
     public View onCreateView(
@@ -64,6 +64,10 @@ public class GuideFragment extends Fragment {
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
         isAdmin = prefs.getBoolean("is_admin", false);
+        jwtToken = prefs.getString("session_token", "");
+        if (jwtToken.isEmpty()) {
+            Log.e("GUIDES_DEBUG", "ATTENZIONE: Il token è vuoto!");
+        }
 
         if (isAdmin) {
             binding.addGuideButton.setVisibility(View.VISIBLE);
@@ -71,16 +75,30 @@ public class GuideFragment extends Fragment {
                 showGuideDialog(null, null, null, null);
             });
         }
-        jwtToken = prefs.getString("session_token", "");
+
         client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
                 .connectTimeout(300, TimeUnit.MILLISECONDS)
                 .readTimeout(300, TimeUnit.MILLISECONDS)
                 .build();
 
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            binding.guidelinesContainer.removeAllViews();
+            fetchGuidelines();
+        });
+
         fetchGuidelines();
         return binding.getRoot();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Salviamo su disco solo quando l'utente "esce" o mette in pausa il fragment
+        if (lastGuidelinesJson != null && !lastGuidelinesJson.equals("[]")) {
+            saveGuidelinesLocally(lastGuidelinesJson);
+            Log.d("GUIDES", "Salvataggio su disco eseguito in onPause");
+        }
+    }
     private void showGuideDialog(
             String initialType,
             String initialMessage,
@@ -97,7 +115,7 @@ public class GuideFragment extends Fragment {
                         .create();
 
         dialog.show();
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_card);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.bg_card);
 
         android.widget.EditText inputType = dialogView.findViewById(R.id.inputType);
         android.widget.EditText inputMessage = dialogView.findViewById(R.id.inputMessage);
@@ -152,14 +170,25 @@ public class GuideFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("GUIDES", "Server down, uso cache locale");
-                String localJson = readGuidelinesLocally();
-                Log.d("localJson", localJson);
-                showGuidelines(localJson);
+                if(isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
+                        binding.swipeRefreshLayout.setRefreshing(false);
+                        String localJson = readGuidelinesLocally();
+                        if (!localJson.isEmpty()) {
+                            showGuidelines(localJson);
+                        } else {
+                            binding.guidelinesContainer.removeAllViews();
+                            binding.emptyGuidelinesText.setText("Server non raggiungibile e nessuna cache disponibile.");
+                            binding.emptyGuidelinesText.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response)
                     throws IOException {
+                requireActivity().runOnUiThread(() -> binding.swipeRefreshLayout.setRefreshing(false));
 
                 if (!response.isSuccessful()) return;
 
@@ -168,10 +197,8 @@ public class GuideFragment extends Fragment {
 
                     JSONArray data;
                     if (body.startsWith("[")) {
-                        // Caso: [] diretto
                         data = new JSONArray(body);
                     } else {
-                        // Caso: { data: [...] }
                         JSONObject root = new JSONObject(body);
                         data = root.optJSONArray("data");
                     }
@@ -199,9 +226,11 @@ public class GuideFragment extends Fragment {
                         resp = obj.getJSONArray("data").toString();
                     }
                     // String resp = response.body() != null ? response.body().string() : "[]";
-                    Log.d("response", resp);
-                    Log.d("is_admin", String.valueOf(isAdmin));
-                    saveGuidelinesLocally(resp);
+                    //Log.d("response", resp);
+                    //Log.d("is_admin", String.valueOf(isAdmin));
+                    lastGuidelinesJson = resp;
+
+                    //saveGuidelinesLocally(resp);
                     showGuidelines(resp);
 
                     if (isAdded()) {
@@ -249,11 +278,13 @@ public class GuideFragment extends Fragment {
     }
 
     private void saveGuidelinesLocally(String json) {
-        try (FileOutputStream fos = requireContext().openFileOutput("guidelines.json", Context.MODE_PRIVATE)) {
-            fos.write(json.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("GUIDES", "Errore nel salvare le guide localmente", e);
+        if (json != null && !json.equals("[]")) {
+            try (FileOutputStream fos = requireContext().openFileOutput("guidelines.json", Context.MODE_PRIVATE)) {
+                fos.write(json.getBytes());
+                Log.d("GUIDES", "Cache salvata localmente con successo");
+            } catch (IOException e) {
+                Log.e("GUIDES", "Errore nella scrittura della cache", e);
+            }
         }
     }
     private String readGuidelinesLocally() {
@@ -427,7 +458,7 @@ public class GuideFragment extends Fragment {
 
         Request request = new Request.Builder()
                 .url(BASE_URL+"/guidelines")
-                //.addHeader("Authorization", "Bearer " + jwtToken)
+                .addHeader("Authorization", "Bearer" + jwtToken)
                 .post(body)
                 .build();
 
@@ -436,9 +467,11 @@ public class GuideFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("GUIDES", "POST failed", e);
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "Errore rete o sessione scaduta", Toast.LENGTH_SHORT).show();
-                });
+                if (isAdded() && getActivity() != null) {
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(), "Errore rete: server non raggiungibile", Toast.LENGTH_SHORT).show();
+                    });
+                }
             }
 
             @Override
@@ -473,7 +506,7 @@ public class GuideFragment extends Fragment {
 
         Request request = new Request.Builder()
                 .url(BASE_URL+"/guidelines/" + type)
-                //.addHeader("Authorization", "Bearer " + jwtToken)
+                .addHeader("Authorization", "Bearer" + jwtToken)
                 .put(body)
                 .build();
 
@@ -505,7 +538,7 @@ public class GuideFragment extends Fragment {
     private void deleteGuide(String type) {
         Request request = new Request.Builder()
                 .url(BASE_URL+"/guidelines/" + type)
-                //.addHeader("Authorization", "Bearer " + jwtToken)
+                .addHeader("Authorization", "Bearer" + jwtToken)
                 .delete()
                 .build();
 

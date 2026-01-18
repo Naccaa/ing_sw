@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:letterSpacing="0.04"
             android:text="Login"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="32sp"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal"
@@ -41,7 +41,7 @@
             android:layout_marginBottom="6dp"
             android:letterSpacing="0.02"
             android:text="Email"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <!-- EMAIL INPUT -->
@@ -56,8 +56,8 @@
             android:paddingEnd="14dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:textColor="#000000"
-            android:textColorHint="#99FFFFFF" />
+            android:textColor="@color/black"
+            android:textColorHint="@color/text_hint" />
 
         <!-- PASSWORD LABEL -->
         <TextView
@@ -67,7 +67,7 @@
             android:layout_marginBottom="6dp"
             android:letterSpacing="0.02"
             android:text="Password"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/text_hint"
             android:textSize="15sp" />
 
         <!-- PASSWORD INPUT -->
@@ -82,8 +82,8 @@
             android:paddingEnd="14dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:textColor="#000000"
-            android:textColorHint="#99FFFFFF" />
+            android:textColor="@color/black"
+            android:textColorHint="@color/text_hint" />
 
         <!-- Password dimenticata -->
         <TextView
@@ -95,7 +95,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="Password dimenticata?"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="13sp" />
 
         <!-- LOGIN BUTTON -->
@@ -107,7 +107,7 @@
             android:background="@drawable/bg_button"
             android:text="Accedi"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="17sp" />
 
     </LinearLayout>

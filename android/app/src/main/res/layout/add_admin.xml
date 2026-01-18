@@ -11,7 +11,6 @@
         android:id="@+id/addAdminCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:background="@drawable/bg_glass"
         android:elevation="8dp"
         android:orientation="vertical"
@@ -22,6 +21,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- Titolo dentro la card -->
+
+        <!-- NOME -->
         <TextView
             android:id="@+id/appTitle"
             android:layout_width="wrap_content"
@@ -30,18 +31,17 @@
             android:layout_marginBottom="24dp"
             android:letterSpacing="0.04"
             android:text="Crea un nuovo amministratore"
-            android:textColor="#2F4BA0"
-            android:textSize="32sp"
+            android:textColor="@color/title_color"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
-        <!-- NOME -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Nome"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -53,7 +53,7 @@
             android:inputType="textPersonName"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint" />
 
         <!-- COGNOME -->
         <TextView
@@ -63,7 +63,7 @@
             android:layout_marginBottom="6dp"
             android:letterSpacing="0.02"
             android:text="Cognome"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -75,7 +75,7 @@
             android:inputType="textPersonName"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint" />
 
         <!-- EMAIL -->
         <TextView
@@ -85,7 +85,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Email"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -97,7 +97,7 @@
             android:inputType="textEmailAddress"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint" />
 
         <!-- TELEFONO -->
         <TextView
@@ -107,7 +107,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Telefono"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -119,7 +119,7 @@
             android:inputType="phone"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint" />
 
         <!-- PASSWORD -->
         <TextView
@@ -129,7 +129,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Password"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -141,7 +141,7 @@
             android:inputType="textPassword"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint" />
 
         <!-- CONFERMA PASSWORD -->
         <TextView
@@ -151,7 +151,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Conferma Password"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -163,7 +163,7 @@
             android:inputType="textPassword"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint" />
 
         <!-- REGISTRA BUTTON -->
         <Button

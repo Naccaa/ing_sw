@@ -108,9 +108,10 @@ def test_emergency():
     from src.db_types import DBEmergencies
     from sqlalchemy import func, select
     existing = db.session.execute(
+        
         select(DBEmergencies).where(
             DBEmergencies.emergency_type == "alluvione",
-            DBEmergencies.location.op("<->")(func.point(0, 0))==0,
+            DBEmergencies.location.op("<->")(func.point(12.27151, 45.47213)) < 0.009,
             DBEmergencies.end_time.is_(None)
         )
     ).first()
@@ -124,8 +125,8 @@ def test_emergency():
         e = DBEmergencies(
             emergency_type="alluvione",
             message="prepare to meet God you fuckers",
-            location=func.point(37.4219983, -122.084),
-            radius=10000,
+            location=func.point(12.27151, 45.47213),
+            radius=30,
             start_time=datetime.datetime.now(datetime.timezone.utc),
             end_time=None
         )
