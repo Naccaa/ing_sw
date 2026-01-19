@@ -4,7 +4,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<<<<<<< HEAD
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+=======
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" android:required="false" />
+>>>>>>> 60f8eb22341265fcd69c027e95e34994025a64fb
 
 
     <application

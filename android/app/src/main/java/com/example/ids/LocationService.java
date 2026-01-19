@@ -29,6 +29,10 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import android.content.pm.ServiceInfo;
+
+
 public class LocationService extends Service {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -67,7 +71,17 @@ public class LocationService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();
 
-        startForeground(12345, notification);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(12345, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
+            } else {
+                startForeground(12345, notification);
+            }
+        } catch (Exception e) {
+            Log.e("LocationService", "ERRORE: Permessi mancanti all'avvio del servizio.");
+            stopSelf();
+            return START_NOT_STICKY;
+        }
 
         requestLocationUpdates();
 
@@ -78,6 +92,14 @@ public class LocationService extends Service {
         LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 20000) // 20 secondi
                 .setMinUpdateIntervalMillis(10000) // da cambiare
                 .build();
+
+        if (androidx.core.app.ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                && androidx.core.app.ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+
+            Log.e("LocationService", "Permessi posizione mancanti.");
+            stopSelf();
+            return;
+        }
 
         try {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
