@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/caregiver_info"
-                android:textColor="#2F4BA0"
+                android:textColor="@color/title_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/settings_fullname"
-                android:textColor="#333"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/settings_phone_number_str"
-                android:textColor="#333"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/settings_email_str"
-                android:textColor="#333"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/caregiver_not_authenticated_str"
-                android:textColor="#333"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:visibility="gone"/>
         </LinearLayout>
@@ -79,7 +79,7 @@
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
             android:text="@string/delete_caregiver_str"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>
 

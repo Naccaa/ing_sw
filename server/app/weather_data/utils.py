@@ -36,24 +36,25 @@ def get_weather(weathercode: int) -> str:
 
 def get_cities():
     """
-    Restituisce una lista di città supportate con le loro coordinate.
+    Restituisce una lista di città supportate con le loro coordinate invertite.
+    Formato: "NomeCittà": (Longitudine, Latitudine)
     """
     return {
-    "Venezia": (45.44, 12.33),
-    "Verona": (45.43, 10.98),
-    "Padova": (45.42, 11.87),
-    "Vicenza": (45.55, 11.54),
-    "Treviso": (45.67, 12.25),
-    "Rovigo": (45.07, 11.79),
-    "Chioggia": (45.23, 12.24),
-    "Bassano del Grappa": (45.77, 11.72),
-    "San Donà di Piave": (45.62, 12.69),
-    "Belluno": (46.14, 12.22),
-    "Schio": (45.73, 11.37),
-    "Conegliano": (45.67, 12.34),
-    "Castelfranco Veneto": (45.68, 11.93),
-    "Montebelluna": (45.78, 12.04),
-    "Oderzo": (45.88, 12.58),
-    "Vittorio Veneto": (45.98, 12.32),
-    "Villafranca di Verona": (45.41, 10.87),
+        "Venezia": (12.33, 45.44),
+        "Verona": (10.98, 45.43),
+        "Padova": (11.87, 45.42),
+        "Vicenza": (11.54, 45.55),
+        "Treviso": (12.25, 45.67),
+        "Rovigo": (11.79, 45.07),
+        "Chioggia": (12.24, 45.23),
+        "Bassano del Grappa": (11.72, 45.77),
+        "San Donà di Piave": (12.69, 45.62),
+        "Belluno": (12.22, 46.14),
+        "Schio": (11.37, 45.73),
+        "Conegliano": (12.34, 45.67),
+        "Castelfranco Veneto": (11.93, 45.68),
+        "Montebelluna": (12.04, 45.78),
+        "Oderzo": (12.58, 45.88),
+        "Vittorio Veneto": (12.32, 45.98),
+        "Villafranca di Verona": (10.87, 45.41),
     }

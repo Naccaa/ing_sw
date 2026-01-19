@@ -16,23 +16,23 @@ public class Constants {
     static {
         Map<String, double[]> map = new HashMap<>();
 
-        map.put("Venezia", new double[]{45.44, 12.33});
-        map.put("Verona", new double[]{45.43, 10.98});
-        map.put("Padova", new double[]{45.42, 11.87});
-        map.put("Vicenza", new double[]{45.55, 11.54});
-        map.put("Treviso", new double[]{45.67, 12.25});
-        map.put("Rovigo", new double[]{45.07, 11.79});
-        map.put("Chioggia", new double[]{45.23, 12.24});
-        map.put("Bassano del Grappa", new double[]{45.77, 11.72});
-        map.put("San Donà di Piave", new double[]{45.62, 12.69});
-        map.put("Belluno", new double[]{46.14, 12.22});
-        map.put("Schio", new double[]{45.73, 11.37});
-        map.put("Conegliano", new double[]{45.67, 12.34});
-        map.put("Castelfranco Veneto", new double[]{45.68, 11.93});
-        map.put("Montebelluna", new double[]{45.78, 12.04});
-        map.put("Oderzo", new double[]{45.88, 12.58});
-        map.put("Vittorio Veneto", new double[]{45.98, 12.32});
-        map.put("Villafranca di Verona", new double[]{45.41, 10.87});
+        map.put("Venezia", new double[]{12.33, 45.44});
+        map.put("Verona", new double[]{10.98, 45.43});
+        map.put("Padova", new double[]{11.87, 45.42});
+        map.put("Vicenza", new double[]{11.54, 45.55});
+        map.put("Treviso", new double[]{12.25, 45.67});
+        map.put("Rovigo", new double[]{11.79, 45.07});
+        map.put("Chioggia", new double[]{12.24, 45.23});
+        map.put("Bassano del Grappa", new double[]{11.72, 45.77});
+        map.put("San Donà di Piave", new double[]{12.69, 45.62});
+        map.put("Belluno", new double[]{12.22, 46.14});
+        map.put("Schio", new double[]{11.37, 45.73});
+        map.put("Conegliano", new double[]{12.34, 45.67});
+        map.put("Castelfranco Veneto", new double[]{11.93, 45.68});
+        map.put("Montebelluna", new double[]{12.04, 45.78});
+        map.put("Oderzo", new double[]{12.58, 45.88});
+        map.put("Vittorio Veneto", new double[]{12.32, 45.98});
+        map.put("Villafranca di Verona", new double[]{10.87, 45.41});
 
         // rende la mappa immutabile (best practice)
         CITIES = Collections.unmodifiableMap(map);

@@ -44,7 +44,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Nome"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -56,7 +56,7 @@
             android:inputType="textPersonName"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint"/>
 
         <!-- COGNOME -->
         <TextView
@@ -66,7 +66,7 @@
             android:layout_marginBottom="6dp"
             android:letterSpacing="0.02"
             android:text="Cognome"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -78,7 +78,7 @@
             android:inputType="textPersonName"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint"/>
 
         <!-- EMAIL -->
         <TextView
@@ -88,7 +88,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Email"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -100,7 +100,7 @@
             android:inputType="textEmailAddress"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint"/>
 
         <!-- TELEFONO -->
         <TextView
@@ -110,7 +110,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Telefono"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -122,7 +122,7 @@
             android:inputType="phone"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint"/>
 
         <!-- PASSWORD -->
         <TextView
@@ -132,7 +132,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Password"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -144,7 +144,7 @@
             android:inputType="textPassword"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF" />
+            android:textColorHint="@color/text_hint"/>
 
         <!-- CONFERMA PASSWORD -->
         <TextView
@@ -154,7 +154,7 @@
             android:layout_marginBottom="4dp"
             android:letterSpacing="0.02"
             android:text="Conferma Password"
-            android:textColor="#2F4BA0"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <EditText
@@ -166,7 +166,7 @@
             android:inputType="textPassword"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textColorHint="#99FFFFFF"
+            android:textColorHint="@color/text_hint"
             android:layout_marginBottom="20dp"/>
 
         <!-- CONFIRM BUTTON -->
@@ -178,7 +178,7 @@
             android:background="@drawable/bg_button"
             android:text="Conferma"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="17sp" />
 
     </LinearLayout>
