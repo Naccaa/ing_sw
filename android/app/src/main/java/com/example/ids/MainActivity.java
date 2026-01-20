@@ -59,7 +59,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-
+    private boolean showInfoButton = true; // Boolean used to show/hide license button
     private ActivityMainBinding binding;
     private Snackbar currentSnackbar;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -107,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_profile,
                 R.id.navigation_login,
                 R.id.navigation_forgotPassword,
-                R.id.navigation_registration,
-                R.id.infoFragment
+                R.id.navigation_registration
         ).build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -125,12 +124,29 @@ public class MainActivity extends AppCompatActivity {
 
         // Nascondi BottomNavigationView sul LoginFragment
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_login || destination.getId() == R.id.navigation_forgotPassword || destination.getId() == R.id.navigation_registration || destination.getId() == R.id.navigation_onboarding || destination.getId() == R.id.termsFragment) {
+
+            boolean isAuthScreen =
+                    destination.getId() == R.id.navigation_login ||
+                            destination.getId() == R.id.navigation_forgotPassword ||
+                            destination.getId() == R.id.navigation_registration ||
+                            destination.getId() == R.id.navigation_onboarding ||
+                            destination.getId() == R.id.termsFragment ||
+                            destination.getId() == R.id.infoFragment;
+
+            // Nascondi bottom bar
+            if (isAuthScreen) {
                 binding.navView.setVisibility(View.GONE);
             } else {
                 binding.navView.setVisibility(View.VISIBLE);
             }
+
+            // Gestione pulsante info top bar
+            showInfoButton = !isAuthScreen;
+
+            // Forza aggiornamento menu
+            invalidateOptionsMenu();
         });
+
 
         // Check onboarding
         final var onboardingCompleted = getSharedPreferences("app_prefs", MODE_PRIVATE)
@@ -330,6 +346,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem infoItem = menu.findItem(R.id.action_info);
+
+        if (infoItem != null) {
+            infoItem.setVisible(showInfoButton);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

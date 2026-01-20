@@ -25,7 +25,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['JWT_COOKIE_SECURE'] = False # HTTP, non HTTPS per semplicità
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(hours=1) # può essere alzato senza problemi
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(hours=24*7) # può essere alzato senza problemi
 
 db.init_app(app)
 jwt = JWTManager(app)
