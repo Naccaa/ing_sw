@@ -42,6 +42,10 @@ import org.json.JSONObject;
 
 import com.example.ids.constants.Constants;
 
+import android.content.Intent;
+import com.example.ids.LocationService;
+import static android.content.Context.MODE_PRIVATE;
+
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
@@ -477,6 +481,13 @@ public class ProfileFragment extends Fragment {
 
     // Actual logout logic
     private void LogoutLogic(View view, String message) {
+
+        // stoppa il servizio di localizzazione per l'utente dato che non è più loggato
+        if (getActivity() != null) {
+            Intent serviceIntent = new Intent(getActivity(), LocationService.class);
+            getActivity().stopService(serviceIntent);
+        }
+
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 

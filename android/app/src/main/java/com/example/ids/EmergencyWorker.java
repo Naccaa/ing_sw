@@ -33,7 +33,8 @@ public class EmergencyWorker extends Worker {
 
         if (!isImmediate) {
             try {
-                for (int i = 0; i < 30; i++) {
+                // quanti secondi l'utente ha per confermare che sta bene: 60 minuti
+                for (int i = 0; i < 60*30; i++) {
                     if (isStopped()) {
                         Log.d("EmergencyWorker", "Lavoro annullato durante il conto alla rovescia.");
                         return Result.success();
@@ -66,7 +67,7 @@ public class EmergencyWorker extends Worker {
                 .get()
                 .build();
 
-        try (Response response = client.newCall(request).execute()) { // .execute() blocca il thread finché non risponde
+        try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 Log.e("EmergencyWorker", "Errore server: " + response.code());
                 return Result.retry();
@@ -110,14 +111,11 @@ public class EmergencyWorker extends Worker {
 
         String link = "https://maps.google.com/?q="+lat+","+lon;
 
-
-
-
         try {
             SmsManager smsManager = SmsManager.getDefault();
             String message = "Please, I need help.";
             if(lat != null && lon != null) {
-                message = "Please, I need help. I am here: " + link + ". (TEST FROM ANDROID APP)";
+                message = "Please, I need help. I am here: " + link + ".";
             }
 
             for (String number : numbers) {

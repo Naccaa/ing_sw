@@ -3,11 +3,13 @@ from src.auth_decorators import required_admin
 
 import math
 from sqlalchemy import exc, text
-from src.db_types import DBEmergencies, DBGuidelines, emergency_type
+from src.db_types import DBEmergencies, DBGuidelines, emergency_type, DBUser
 
 from src.notifications import send_emergency_notification
 
 from db import db
+
+from datetime import datetime, timezone
 
 emergencies_route = Blueprint('emergencies_route', __name__)
 
@@ -54,6 +56,8 @@ def get_emergencies():
             return str(loc)
 
 
+    nx, ny = None, None
+
     try:
         q = DBEmergencies.query.outerjoin(
             DBGuidelines,
@@ -98,6 +102,26 @@ def get_emergencies():
 
     if request.args.get("firebase_token"):
         firebase_token = request.args.get("firebase_token")
+    
+        user = DBUser.query.filter_by(firebase_token=firebase_token).first()
+
+        if user:
+            try:
+                if nx is not None and ny is not None:
+                    user.last_location = f"({nx},{ny})"
+                    user.last_location_time = datetime.now(timezone.utc)
+
+                new_status = 'in danger' if len(rows) > 0 else 'fine'
+                
+                user.status = new_status
+                user.status_time = datetime.now(timezone.utc)
+
+                db.session.commit()
+                
+            except Exception as e:
+                db.session.rollback()
+                current_app.logger.error(f"Errore aggiornamento stato utente: {e}")
+
         send_emergency_notification(firebase_token, data_)
         #current_app.logger.debug("A"*50)
     #current_app.logger.debug(data_)

@@ -89,8 +89,8 @@ public class LocationService extends Service {
     }
 
     private void requestLocationUpdates() {
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 20000) // 20 secondi
-                .setMinUpdateIntervalMillis(10000) // da cambiare
+        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 30*60*1000) // 30 minuti
+                .setMinUpdateIntervalMillis(15*60*1000) // da cambiare
                 .build();
 
         if (androidx.core.app.ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED

@@ -31,6 +31,17 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+
+        android.content.SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        String sessionToken = prefs.getString("session_token", null);
+        String userId = prefs.getString("user_id", null);
+        boolean isAdmin = prefs.getBoolean("is_admin", false);
+
+        if (sessionToken == null || userId == null || userId.isEmpty() || isAdmin) {
+            Log.w("MessagingService", "Utente non loggato o loggato come admin.");
+            return;
+        }
+
         if (remoteMessage.getData().size() > 0) {
 
             String emergency_type = remoteMessage.getData().get("emergency_type");

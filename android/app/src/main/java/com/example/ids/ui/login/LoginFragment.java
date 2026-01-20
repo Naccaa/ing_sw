@@ -168,6 +168,12 @@ public class LoginFragment extends Fragment {
                                     .edit()
                                     .putBoolean("is_admin", is_admin)
                                     .apply();
+
+                            // fa ripartire il servizio di localizzazione
+                            if (getActivity() instanceof MainActivity) {
+                                ((MainActivity) getActivity()).startLocationService();
+                            }
+
                             // Reindirizza l'utente alla "home" dell'applicazione
                             requireActivity().runOnUiThread(() -> {
                                 NavController navController = Navigation.findNavController(requireView());

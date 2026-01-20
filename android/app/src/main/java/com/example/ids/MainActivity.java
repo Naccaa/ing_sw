@@ -208,15 +208,40 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startLocationService() {
+    public void startLocationService() {
+
+        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    100);
+            return;
+        }
+
+        if (mToken == null) {
+            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    mToken = task.getResult();
+                    startLocationService();
+                }
+            });
+            return;
+        }
+
+
         Intent serviceIntent = new Intent(this, LocationService.class);
         serviceIntent.putExtra("firebase_token", mToken);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent);
-        } else {
-            startService(serviceIntent);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent);
+            } else {
+                startService(serviceIntent);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Errore nell'savviare il servizio: " + e.getMessage());
         }
+
     }
 /*
     private void schedulePingWorker() {
