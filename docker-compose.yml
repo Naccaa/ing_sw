@@ -5,7 +5,9 @@ services:
     image: postgres
     volumes:
       - db_data:/var/lib/pgsql/data
+      # i file in /docker-entrypoint-initdb.d/ vengono eseguiti in ordine alfabetico
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./sql/zz-testdata.sql:/docker-entrypoint-initdb.d/zz-testdata.sql
     networks:
       - server_db_network
       - adminer_db_network
