@@ -77,16 +77,6 @@ services:
       - all
       - dev_all
 
-  tests:
-    build: ./tests
-    depends_on:
-      dev_server:
-        condition: service_healthy
-    networks:
-      - server_db_network
-    profiles:
-      - dev_all
-
 networks:
   server_db_network: {}
   adminer_db_network: {}
