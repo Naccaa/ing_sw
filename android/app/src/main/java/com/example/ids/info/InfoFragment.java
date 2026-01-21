@@ -1,4 +1,4 @@
-package com.example.ids.ui.info;
+package com.example.ids.info;
 
 import android.content.Intent;
 import android.net.Uri;

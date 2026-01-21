@@ -10,7 +10,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@color/glass_bg">
 
         <LinearLayout
@@ -18,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="20dp">
 
             <!-- Testo da mostrare solo se non ci sono guide disponibili -->
             <TextView
@@ -43,9 +44,9 @@
             <!-- Pulsante Aggiungi guida -->
             <Button
                 android:id="@+id/addGuideButton"
-                android:layout_width="match_parent"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_button"
                 android:foreground="?attr/selectableItemBackground"

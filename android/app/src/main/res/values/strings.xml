@@ -4,11 +4,62 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
+    <!-- Login -->
+    <string name="login_title">Login</string>
+    <string name="email_hint">Inserisci email</string>
+    <string name="password_hint">Inserisci password</string>
+    <string name="email_title">Email</string>
+    <string name="password_title">Password</string>
+    <string name="forgot_password_str">Password dimenticata?</string>
+    <string name="register_link_str">Non hai un account? Registrati</string>
+    <string name="onboarding_str">Mostra Onboarding</string>
+    <string name="login_button_str">Accedi</string>
+
+    <!-- Register -->
+    <string name="register_title">Registrazione</string>
+    <string name="name_title">Nome</string>
+    <string name="name_hint">Inserisci nome</string>
+    <string name="surname_title">Cognome</string>
+    <string name="surname_hint">Inserisci cognome</string>
+    <string name="telephone_title">Telefono</string>
+    <string name="telephone_hint">Inserisci numero di telefono</string>
+    <string name="password_confirm_title">Conferma password</string>
+    <string name="password_confirm_hint">Ripeti la password</string>
+    <string name="register_button_str">Registrati</string>
+    <string name="login_link_str">Hai già un account? Accedi</string>
+
+    <!-- Allert -->
+    <string name="no_alerts_str">Nessuna allerta.\nQuando saranno pubblicate, compariranno in questa sezione.</string>
+    <string name="manage_alerts_button_str">Gestisci allerte</string>
+    <string name="title_alert">Allerta Meteo: </string>
+    <string name="alert_details_button_str">Vedi dettagli</string>
+    <string name="valid_title">Validità: </string>
+    <string name="description_title">Descrizione:</string>
+    <string name="zone_title">Zone a rischio: </string>
+    <string name="recommendation_title">Raccomandazioni: </string>
+
+    <!-- Guide -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    <!-- Settings -->
     <string name="settings_title">Impostazioni</string>
     <string name="profile_info">Informazioni profilo</string>
     <string name="caregiver_info">Informazioni caregiver</string>
-    <string name="settings_fullname">Nome: </string>
+    <string name="settings_fullname">Username: </string>
     <string name="settings_phone_number_str">Telefono: </string>
     <string name="settings_email_str">Email: </string>
     <string name="modify_str">MODIFICA</string>
@@ -19,6 +70,6 @@
     <string name="no_caregiver_assigned_str">Non hai nessun caregiver associato</string>
     <string name="caregiver_not_authenticated_str">In attesa della conferma del caregiver.</string>
     <string name="logout_str">LOGOUT</string>
-    <string name="title_alert">Allerta Meteo: </string>
+
 
 </resources>

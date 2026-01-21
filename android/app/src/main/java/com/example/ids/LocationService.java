@@ -118,7 +118,7 @@ public class LocationService extends Service {
 
         if (mToken == null) return;
 
-        String position = "(" + location.getLatitude() + "," + location.getLongitude() + ")";
+        String position = "(" + location.getLongitude() + "," + location.getLatitude() + ")";
         String url = Constants.BASE_URL + "/emergencies?near=" + position + "&firebase_token=" + mToken;
 
         OkHttpClient client = new OkHttpClient();

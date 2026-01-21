@@ -64,6 +64,7 @@ public class AlertFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private boolean isAdmin = false;
     private String jwtToken = "";
+    private static boolean showActive = false;
 
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -94,8 +95,25 @@ public class AlertFragment extends Fragment {
         isAdmin = prefs.getBoolean("is_admin", false);
         jwtToken = prefs.getString("session_token", "");
 
+
+        if (isAdmin) {
+            // Mostriamo la card che contiene lo switch
+            binding.switchCard.setVisibility(View.VISIBLE);
+
+            binding.manageAlertsSwitch.setChecked(showActive);
+            binding.manageAlertsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                showActive = isChecked;
+
+                // Feedback aptico (vibrazione leggera) se vuoi un tocco di classe
+                buttonView.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
+
+                binding.alertContainer.removeAllViews();
+                getUserLocationAndFetch();
+            });
+        }
+
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.allertContainer.removeAllViews();
+            binding.alertContainer.removeAllViews();
             getUserLocationAndFetch();
         });
 
@@ -125,6 +143,11 @@ public class AlertFragment extends Fragment {
     }
 
     private void getUserLocationAndFetch() {
+        if(isAdmin && showActive){
+            Log.d("ALERTS", "Fetching all active alerts");
+            fetchAllActiveAlerts();
+            return;
+        }
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.e("ALERTS", "Permesso posizione non presente");
             fetchAlerts(0, 0);
@@ -149,6 +172,40 @@ public class AlertFragment extends Fragment {
                 });
     }
 
+    private void fetchAllActiveAlerts() {
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/emergencies")
+                .get()
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
+                        binding.swipeRefreshLayout.setRefreshing(false);
+                        binding.alertContainer.removeAllViews();
+                        binding.emptyAlertsText.setText("Impossibile collegarsi al server.\nControlla la connessione e riprova.");
+                        binding.emptyAlertsText.setVisibility(View.VISIBLE);
+                        Toast.makeText(requireContext(), "Errore di rete", Toast.LENGTH_SHORT).show();
+                    });
+                }
+
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> binding.swipeRefreshLayout.setRefreshing(false));
+                }
+                try {
+                    String body = response.body() != null ? response.body().string() : "[]";
+                    showAlerts(body,showActive);
+                } catch (Exception e) {
+                    Log.e("All active ALERTS", "Parse error");
+                }
+            }
+        });
+    }
+
     private void fetchAlerts(double lon, double lat) {
         Request request = new Request.Builder()
                 .url(BASE_URL + "/emergencies?near=" + lon + "," + lat)
@@ -161,7 +218,7 @@ public class AlertFragment extends Fragment {
                 if (isAdded()) {
                     requireActivity().runOnUiThread(() -> {
                         binding.swipeRefreshLayout.setRefreshing(false);
-                        binding.allertContainer.removeAllViews();
+                        binding.alertContainer.removeAllViews();
                         binding.emptyAlertsText.setText("Impossibile collegarsi al server.\nControlla la connessione e riprova.");
                         binding.emptyAlertsText.setVisibility(View.VISIBLE);
                         Toast.makeText(requireContext(), "Errore di rete", Toast.LENGTH_SHORT).show();
@@ -176,7 +233,7 @@ public class AlertFragment extends Fragment {
                 }
                 try {
                     String body = response.body() != null ? response.body().string() : "[]";
-                    showAlerts(body);
+                    showAlerts(body, showActive);
                 } catch (Exception e) {
                     Log.e("ALERTS", "Parse error");
                 }
@@ -184,43 +241,72 @@ public class AlertFragment extends Fragment {
         });
     }
 
-    private void showAlerts(String json) {
+    private void showAlerts(String json, boolean showActive) {
         try {
-            JSONArray arr;
             JSONObject root = new JSONObject(json);
-            if (root.has("data")) {
-                arr = root.getJSONArray("data");
-            } else {
-                arr = new JSONArray();
-            }
+            JSONArray arr = root.optJSONArray("data");
+            if (arr == null) arr = new JSONArray();
 
             if (isAdded()) {
+                JSONArray finalArr = arr;
                 requireActivity().runOnUiThread(() -> {
-                    binding.allertContainer.removeAllViews();
-                    binding.emptyAlertsText.setVisibility(arr.length() == 0 ? View.VISIBLE : View.GONE);
+                    binding.alertContainer.removeAllViews();
+                    int displayedCount = 0;
 
-                    for (int i = 0; i < arr.length(); i++) {
+                    // Formato ISO (tronchiamo mentalmente i microsecondi durante il parse)
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+                    Date adesso = new Date();
+
+                    for (int i = 0; i < finalArr.length(); i++) {
                         try {
-                            JSONObject obj = arr.getJSONObject(i);
-                            String endTime = obj.isNull("end_time") ? null : obj.getString("end_time");
-                            createAllertCard(
-                                    getString(R.string.title_alert) + " " + obj.getString("emergency_type"),
-                                    obj.getString("message"),
-                                    obj.getString("start_time"),
-                                    endTime,
-                                    obj.getString("location"),
-                                    obj.getString("guideline_message"),
-                                    obj.getDouble("radius"),
-                                    obj.getInt("id")
-                            );
+                            JSONObject obj = finalArr.getJSONObject(i);
+                            String endTimeStr = obj.isNull("end_time") || obj.getString("end_time").equals("null") ? null : obj.getString("end_time");
+
+                            boolean shouldShow = false;
+
+                            if (endTimeStr == null) {
+                                // Se non c'è end_time, l'allerta è sempre attiva
+                                shouldShow = true;
+                            } else if (!showActive) {
+                                // Se showActive è false, mostriamo anche quelle terminate di recente (max 15 min)
+                                try {
+                                    Date dataFine = sdf.parse(endTimeStr);
+                                    if (dataFine != null) {
+                                        long diffInMs = adesso.getTime() - dataFine.getTime();
+                                        long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(diffInMs);
+
+                                        // Mostra se terminata da meno di 15 minuti
+                                        if (diffInMinutes <= 15) {
+                                            shouldShow = true;
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("ALERTS", "Errore data");
+                                }
+                            }
+
+                            if (shouldShow) {
+                                displayedCount++;
+                                createAllertCard(
+                                        getString(R.string.title_alert) + " " + obj.getString("emergency_type"),
+                                        obj.getString("message"),
+                                        obj.getString("start_time"),
+                                        endTimeStr,
+                                        obj.optString("location", null),
+                                        obj.optString("guideline_message", null),
+                                        obj.optDouble("radius", 0),
+                                        obj.optInt("id", -1)
+                                );
+                            }
                         } catch (JSONException e) {
-                            Log.e("ALERTS", "Errore oggetto JSON", e);
+                            Log.e("ALERTS", "Errore JSON");
                         }
                     }
+                    binding.emptyAlertsText.setVisibility(displayedCount == 0 ? View.VISIBLE : View.GONE);
                 });
             }
         } catch (JSONException e) {
-            Log.e("ALERTS", "Parse error", e);
+            Log.e("ALERTS", "Parse error");
         }
     }
 
@@ -272,6 +358,10 @@ public class AlertFragment extends Fragment {
         messageTv.setText(message);
         messageTv.setTextSize(14f);
         messageTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
+
+        messageTv.setMaxLines(3);
+        messageTv.setEllipsize(TextUtils.TruncateAt.END);
+
         container.addView(messageTv);
 
         TextView dateTv = new TextView(requireContext());
@@ -283,20 +373,20 @@ public class AlertFragment extends Fragment {
         container.addView(dateTv, dateParams);
 
         Button detailsBtn = new Button(requireContext());
-        detailsBtn.setText("Vedi Dettagli");
+        detailsBtn.setText(R.string.alert_details_button_str);
         detailsBtn.setBackgroundResource(R.drawable.bg_button);
         detailsBtn.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
-        LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (50 * density));
-        btnParams.topMargin = (int) (9 * density);
+        LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (55 * density));
+        btnParams.topMargin = (int) (15 * density);
         detailsBtn.setOnClickListener(v -> showAlertDetails(emergencyType, message, start_time, end_time, location, guideline, radius));
         container.addView(detailsBtn, btnParams);
 
-        if (isAdmin && end_time == null) {
+        if (isAdmin && end_time == null && showActive) {
             Button endBtn = new Button(requireContext());
             endBtn.setText("Termina");
             endBtn.setBackgroundResource(R.drawable.bg_button);
             endBtn.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
-            LinearLayout.LayoutParams endParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (50 * density));
+            LinearLayout.LayoutParams endParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (55 * density));
             endParams.topMargin = (int) (9 * density);
             endBtn.setOnClickListener(v -> {
                 endBtn.setEnabled(false);
@@ -313,7 +403,7 @@ public class AlertFragment extends Fragment {
         }
 
         card.addView(container);
-        binding.allertContainer.addView(card);
+        binding.alertContainer.addView(card);
     }
 
     private void showAlertDetails(String emergencyType, String message, String startTime, String endTime, String location, String guidelineMessage, double radius) {
@@ -321,18 +411,27 @@ public class AlertFragment extends Fragment {
         ((TextView) view.findViewById(R.id.tvTitle)).setText(emergencyType.toUpperCase());
         ((TextView) view.findViewById(R.id.alertDate)).setText(formatValidity(startTime, endTime));
         ((TextView) view.findViewById(R.id.alertMessage)).setText(message);
-        ((TextView) view.findViewById(R.id.guidelineMessage)).setText(guidelineMessage != null && !guidelineMessage.isEmpty() ? "• " + guidelineMessage : "Nessuna raccomandazione.");
+        ((TextView) view.findViewById(R.id.guidelineMessage)).setText(!Objects.equals(guidelineMessage, "null") ? "• " + guidelineMessage : "Nessuna raccomandazione.");
 
         List<String> cities = getInvolvedCities(location, radius);
         ((TextView) view.findViewById(R.id.alertZones)).setText(cities.isEmpty() ? "Nessuna città coinvolta" : "• " + TextUtils.join("\n• ", cities));
 
-        Objects.requireNonNull(new AlertDialog.Builder(requireContext()).setView(view).setPositiveButton("Chiudi", null).show()
-                .getWindow()).setBackgroundDrawableResource(R.drawable.bg_card);
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setView(view)
+                .setPositiveButton("Chiudi", null)
+                .create();
+
+        dialog.show();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_card);
+        }
+
     }
 
     private String formatValidity(String start, String end) {
         String formattedStart = formatDate(start);
-        String formattedEnd = end == null || end.equals("null") ? "" : formatTime(end);
+        String formattedEnd = end == null || end.equals("null") ? "in corso" : formatTime(end);
         return formattedEnd.isEmpty() ? "Validità: " + formattedStart : "Validità: " + formattedStart + " - " + formattedEnd;
     }
 

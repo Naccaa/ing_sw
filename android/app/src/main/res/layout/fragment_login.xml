@@ -5,34 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="@drawable/bg_gradient">
+    android:background="@color/glass_bg">
 
     <!-- Card Login -->
+
+    <!-- Link registrazione -->
+
     <LinearLayout
         android:id="@+id/loginCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
         android:background="@drawable/bg_glass"
         android:elevation="8dp"
         android:orientation="vertical"
         android:padding="26dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.187">
 
         <!-- Titolo dentro la card -->
         <TextView
             android:id="@+id/appTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:letterSpacing="0.04"
-            android:text="Login"
-            android:textColor="@color/title_color"
-            android:textSize="32sp"
-            android:textStyle="bold"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
-             />
+            android:letterSpacing="0.04"
+            android:text="@string/login_title"
+            android:textColor="@color/title_color"
+            android:textSize="32sp"
+            android:textStyle="bold" />
 
         <!-- EMAIL LABEL -->
         <TextView
@@ -40,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:letterSpacing="0.02"
-            android:text="Email"
+            android:text="@string/email_title"
             android:textColor="@color/title_color"
             android:textSize="15sp" />
 
@@ -50,11 +55,11 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/bg_input"
-            android:hint="Inserisci email"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
             android:paddingStart="14dp"
-            android:paddingEnd="14dp"
             android:paddingTop="10dp"
+            android:paddingEnd="14dp"
             android:paddingBottom="10dp"
             android:textColor="@color/black"
             android:textColorHint="@color/text_hint" />
@@ -66,8 +71,8 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="6dp"
             android:letterSpacing="0.02"
-            android:text="Password"
-            android:textColor="@color/text_hint"
+            android:text="@string/password_title"
+            android:textColor="@color/title_color"
             android:textSize="15sp" />
 
         <!-- PASSWORD INPUT -->
@@ -76,11 +81,11 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/bg_input"
-            android:hint="Inserisci password"
+            android:hint="@string/password_hint"
             android:inputType="textPassword"
             android:paddingStart="14dp"
-            android:paddingEnd="14dp"
             android:paddingTop="10dp"
+            android:paddingEnd="14dp"
             android:paddingBottom="10dp"
             android:textColor="@color/black"
             android:textColorHint="@color/text_hint" />
@@ -94,7 +99,7 @@
             android:layout_marginTop="8dp"
             android:clickable="true"
             android:focusable="true"
-            android:text="Password dimenticata?"
+            android:text="@string/forgot_password_str"
             android:textColor="@color/title_color"
             android:textSize="13sp" />
 
@@ -105,21 +110,20 @@
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/bg_button"
-            android:text="Accedi"
+            android:text="@string/login_button_str"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="17sp" />
 
     </LinearLayout>
 
-    <!-- Link registrazione -->
     <TextView
         android:id="@+id/registerLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Non hai un account? Registrati"
+        android:text="@string/register_link_str"
         android:textSize="15sp"
-        android:textColor="#2F4BA0"
+        android:textColor="@color/title_color"
         android:alpha="0.9"
         app:layout_constraintTop_toBottomOf="@id/loginCard"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,9 +135,9 @@
         android:id="@+id/onboardingLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mostra Onboarding"
+        android:text="@string/onboarding_str"
         android:textSize="15sp"
-        android:textColor="#2F4BA0"
+        android:textColor="@color/title_color"
         android:alpha="0.9"
         app:layout_constraintTop_toBottomOf="@id/registerLink"
         app:layout_constraintStart_toStartOf="parent"

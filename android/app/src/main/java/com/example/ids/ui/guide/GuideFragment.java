@@ -32,6 +32,9 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -249,24 +252,33 @@ public class GuideFragment extends Fragment {
     private void showGuidelines(String json) {
         try {
             JSONArray arr = new JSONArray(json);
+            List<JSONObject> list = new ArrayList<>();
+
+            for (int i = 0; i < arr.length(); i++) {
+                list.add(arr.getJSONObject(i));
+            }
+            list.sort((a, b) -> {
+                try {
+                    String typeA = a.getString("emergency_type").toLowerCase();
+                    String typeB = b.getString("emergency_type").toLowerCase();
+                    return typeA.compareTo(typeB);
+                } catch (JSONException e) {
+                    return 0;
+                }
+            });
 
             if (isAdded()) {
                 requireActivity().runOnUiThread(() -> {
-                    for (int i = 0; i < arr.length(); i++) {
-                        JSONObject obj = null;
-                        try {
-                            obj = arr.getJSONObject(i);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                        try {
+                    binding.guidelinesContainer.removeAllViews();
 
+                    for (JSONObject obj : list) {
+                        try {
                             createGuideCard(
                                     obj.getString("emergency_type"),
                                     obj.getString("message")
                             );
                         } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                            Log.e("GUIDES", "Errore nel creare la card", e);
                         }
                     }
                 });

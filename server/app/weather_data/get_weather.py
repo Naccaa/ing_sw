@@ -131,7 +131,7 @@ def save_emergency_db(emergency_type, message, lat, lon, radius):
 
     tolerance = radius * 0.009
 
-    # Controllo di prossimità spaziale per evitare duplicati
+    
     existing = db.session.execute(
         select(DBEmergencies).where(
             DBEmergencies.emergency_type == emergency_type,

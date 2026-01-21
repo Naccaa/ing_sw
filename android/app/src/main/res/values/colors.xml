@@ -7,8 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="glass_bg">#66FFFFFF</color>
+    <color name="glass_bg">#5DE5E6FF</color>
     <color name="title_color">#2F4BA0</color>
     <color name="text_hint">#8A000000</color>
+    <color name="cancel_button">#FF000000</color>
+    "
 "
 </resources>

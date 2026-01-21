@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@drawable/bg_gradient">
+    android:background="@color/glass_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
                 android:letterSpacing="0.04"
-                android:text="Sign up"
+                android:text="@string/register_title"
                 android:textColor="@color/title_color"
                 android:textSize="32sp"
                 android:textStyle="bold" />
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:letterSpacing="0.02"
-                android:text="Nome"
+                android:text="@string/name_title"
                 android:textColor="@color/title_color"
                 android:textSize="15sp" />
 
@@ -57,10 +57,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_input"
-                android:hint="Inserisci nome"
+                android:hint="@string/name_hint"
                 android:inputType="textPersonName"
                 android:padding="14dp"
-                android:textColor="@color/title_color"
+                android:textColor="@color/black"
                 android:textColorHint="@color/text_hint" />
 
             <!-- COGNOME -->
@@ -70,7 +70,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="6dp"
                 android:letterSpacing="0.02"
-                android:text="Cognome"
+                android:text="@string/surname_title"
                 android:textColor="@color/title_color"
                 android:textSize="15sp" />
 
@@ -79,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_input"
-                android:hint="Inserisci cognome"
+                android:hint="@string/surname_hint"
                 android:inputType="textPersonName"
                 android:padding="14dp"
                 android:textColor="@color/black"
@@ -92,7 +92,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="4dp"
                 android:letterSpacing="0.02"
-                android:text="Email"
+                android:text="@string/email_title"
                 android:textColor="@color/title_color"
                 android:textSize="15sp" />
 
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_input"
-                android:hint="Inserisci email"
+                android:hint="@string/email_hint"
                 android:inputType="textEmailAddress"
                 android:padding="14dp"
                 android:textColor="@color/black"
@@ -114,8 +114,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="4dp"
                 android:letterSpacing="0.02"
-                android:text="Telefono"
-                android:textColor="@color/black"
+                android:text="@string/telephone_title"
+                android:textColor="@color/title_color"
                 android:textSize="15sp" />
 
             <EditText
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_input"
-                android:hint="Inserisci numero di telefono"
+                android:hint="@string/telephone_hint"
                 android:inputType="phone"
                 android:padding="14dp"
                 android:textColor="@color/black"
@@ -136,7 +136,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="4dp"
                 android:letterSpacing="0.02"
-                android:text="Password"
+                android:text="@string/password_title"
                 android:textColor="@color/title_color"
                 android:textSize="15sp" />
 
@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_input"
-                android:hint="Inserisci password"
+                android:hint="@string/password_hint"
                 android:inputType="textPassword"
                 android:padding="14dp"
                 android:textColor="@color/black"
@@ -158,7 +158,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="4dp"
                 android:letterSpacing="0.02"
-                android:text="Conferma Password"
+                android:text="@string/password_confirm_title"
                 android:textColor="@color/title_color"
                 android:textSize="15sp" />
 
@@ -167,7 +167,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_input"
-                android:hint="Ripeti la password"
+                android:hint="@string/password_confirm_hint"
                 android:inputType="textPassword"
                 android:padding="14dp"
                 android:textColor="@color/black"
@@ -192,7 +192,8 @@
                     android:textSize="14sp"
                     android:textColor="@color/title_color"
                     android:layout_marginStart="-14dp"
-                    android:paddingStart="4dp"/>
+                    android:paddingStart="4dp"
+                    android:paddingEnd="0dp"/>
             </LinearLayout>
 
             <!-- REGISTRA BUTTON -->
@@ -202,7 +203,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_button"
-                android:text="Registrati"
+                android:text="@string/register_button_str"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
@@ -216,8 +217,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Hai già un account? Accedi"
-            android:textColor="#2F4BA0"
+            android:text="@string/login_link_str"
+            android:textColor="@color/title_color"
             android:textSize="15sp"
             app:layout_constraintTop_toBottomOf="@id/signupCard"
             app:layout_constraintStart_toStartOf="parent"

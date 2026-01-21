@@ -85,6 +85,7 @@
         android:layout_height="50dp"
         android:hint="es: http://192.168.1.50:5000"
         android:inputType="text"
+        android:gravity="center"
         android:padding="10dp"
         android:background="@drawable/bg_input"
         android:textColorHint="@android:color/darker_gray"

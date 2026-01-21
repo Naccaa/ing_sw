@@ -1,36 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp"
-    android:background="@color/glass_bg"
-    android:fillViewport="true">
+
 
     <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="112dp"
-        android:clipToPadding="false"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp">
+        android:layout_height="wrap_content"
+        android:background="@color/glass_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp">
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp">
 
             <!-- CARD PROFILO UTENTE -->
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="8dp">
 
@@ -105,6 +94,9 @@
                 android:id="@+id/caregiverSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:layout_marginTop="2dp"
                 android:orientation="vertical">
 
@@ -119,10 +111,10 @@
                 <!-- Testo da mostrare quando non ci sono caregiver -->
                 <TextView
                     android:id="@+id/noCaregiverText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:layout_marginBottom="12dp"
-                    android:gravity="center"
                     android:text="Nessun caregiver associato.\nPremi “Aggiungi Caregiver” per aggiungerne uno.\nI suoi dati appariranno qui una volta completata la procedura di associazione."
                     android:textColor="@color/material_grey_600"
                     android:textSize="15sp"
@@ -134,11 +126,8 @@
                     android:id="@+id/btnAggiungiCaregiver"
                     android:layout_width="370dp"
                     android:layout_height="56dp"
-                    android:layout_marginEnd="10dp"
                     android:background="@drawable/bg_button"
                     android:foreground="?attr/selectableItemBackground"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
                     android:text="@string/add_caregiver_str"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
@@ -148,11 +137,8 @@
                     android:layout_width="370dp"
                     android:layout_height="56dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="10dp"
                     android:background="@drawable/bg_button"
                     android:foreground="?attr/selectableItemBackground"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
                     android:text="@string/delete_user_str"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
@@ -162,38 +148,26 @@
                     android:layout_width="370dp"
                     android:layout_height="56dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="10dp"
                     android:background="@drawable/bg_button"
                     android:foreground="?attr/selectableItemBackground"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
                     android:text="@string/logout_str"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
+
+                <!-- Pulsante per aggiungere un nuovo admin -->
+                <Button
+                    android:id="@+id/btnAggiungiAdmin"
+                    android:layout_width="370dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:text="@string/add_admin_str"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
             </LinearLayout>
-
-            <!-- Pulsante per aggiungere un nuovo admin -->
-            <Button
-                android:id="@+id/btnAggiungiAdmin"
-                android:layout_width="370dp"
-                android:layout_height="56dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_button"
-                android:foreground="?attr/selectableItemBackground"
-                android:paddingLeft="18dp"
-                android:paddingRight="18dp"
-                android:text="@string/add_admin_str"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
-            <!-- DELETE USER BUTTON -->
-
-            <!-- LOGOUT BUTTON -->
-
-            <!-- ONBOARDING BUTTON -->
 
         </LinearLayout>
     </ScrollView>
-</FrameLayout>
+

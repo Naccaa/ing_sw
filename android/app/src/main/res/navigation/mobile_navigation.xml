@@ -89,7 +89,7 @@
         tools:layout="@layout/fragment_onboarding" />
     <fragment
         android:id="@+id/infoFragment"
-        android:name="com.example.ids.ui.info.InfoFragment"
+        android:name="com.example.ids.info.InfoFragment"
         android:label="Info"
         tools:layout="@layout/fragment_info" >
         <action
@@ -104,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/licensesFragment"
-        android:name="com.example.ids.ui.info.LicensesFragment"
+        android:name="com.example.ids.info.LicensesFragment"
         android:label="Licenze di terze parti"
         tools:layout="@layout/fragment_licenses" />
 </navigation>
