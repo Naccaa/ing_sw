@@ -133,15 +133,15 @@ public class MainActivity extends AppCompatActivity {
                             destination.getId() == R.id.termsFragment ||
                             destination.getId() == R.id.infoFragment;
 
-            /*
+
             boolean isAuthScreen =
                     //destination.getId() == R.id.navigation_login ||
-                            destination.getId() == R.id.navigation_forgotPassword ||
-                            destination.getId() == R.id.navigation_registration ||
-                            destination.getId() == R.id.navigation_onboarding ||
-                            destination.getId() == R.id.termsFragment ||
+                            //destination.getId() == R.id.navigation_forgotPassword ||
+                            //destination.getId() == R.id.navigation_registration ||
+                            //destination.getId() == R.id.navigation_onboarding ||
+                            //destination.getId() == R.id.termsFragment ||
                             destination.getId() == R.id.infoFragment;
-            */
+
 
             // Nascondi bottom bar
             if (noBottomBarScreen) {
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Gestione pulsante info top bar
-            //showInfoButton = !isAuthScreen;
+            showInfoButton = !isAuthScreen;
 
             // Forza aggiornamento menu
             invalidateOptionsMenu();
