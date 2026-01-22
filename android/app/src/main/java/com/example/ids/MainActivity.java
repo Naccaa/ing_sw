@@ -125,23 +125,33 @@ public class MainActivity extends AppCompatActivity {
         // Nascondi BottomNavigationView sul LoginFragment
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
 
-            boolean isAuthScreen =
+            boolean noBottomBarScreen =
                     destination.getId() == R.id.navigation_login ||
-                            destination.getId() == R.id.navigation_forgotPassword ||
+                    destination.getId() == R.id.navigation_forgotPassword ||
                             destination.getId() == R.id.navigation_registration ||
                             destination.getId() == R.id.navigation_onboarding ||
                             destination.getId() == R.id.termsFragment ||
                             destination.getId() == R.id.infoFragment;
 
+            /*
+            boolean isAuthScreen =
+                    //destination.getId() == R.id.navigation_login ||
+                            destination.getId() == R.id.navigation_forgotPassword ||
+                            destination.getId() == R.id.navigation_registration ||
+                            destination.getId() == R.id.navigation_onboarding ||
+                            destination.getId() == R.id.termsFragment ||
+                            destination.getId() == R.id.infoFragment;
+            */
+
             // Nascondi bottom bar
-            if (isAuthScreen) {
+            if (noBottomBarScreen) {
                 binding.navView.setVisibility(View.GONE);
             } else {
                 binding.navView.setVisibility(View.VISIBLE);
             }
 
             // Gestione pulsante info top bar
-            showInfoButton = !isAuthScreen;
+            //showInfoButton = !isAuthScreen;
 
             // Forza aggiornamento menu
             invalidateOptionsMenu();
