@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                             destination.getId() == R.id.navigation_registration ||
                             destination.getId() == R.id.navigation_onboarding ||
                             destination.getId() == R.id.termsFragment ||
+                            destination.getId() == R.id.privacyFragment ||
                             destination.getId() == R.id.infoFragment;
 
 

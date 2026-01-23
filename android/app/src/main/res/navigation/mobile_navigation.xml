@@ -83,6 +83,10 @@
         android:name="com.example.ids.ui.terms.TermsFragment"
         android:label="Termini e Condizioni" />
     <fragment
+        android:id="@+id/privacyFragment"
+        android:name="com.example.ids.info.PrivacyFragment"
+        android:label="TODO: Informativa sulla Privacy" />
+    <fragment
         android:id="@+id/navigation_onboarding"
         android:name="com.example.ids.ui.onboarding.OnboardingFragment"
         android:label="Onboarding"
@@ -95,6 +99,9 @@
         <action
             android:id="@+id/action_info_to_terms"
             app:destination="@id/termsFragment" />
+        <action
+            android:id="@+id/action_info_to_privacy"
+            app:destination="@id/privacyFragment" />
         <action
             android:id="@+id/action_info_to_licenses"
             app:destination="@id/licensesFragment" />

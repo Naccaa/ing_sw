@@ -39,6 +39,16 @@
         android:textColor="@android:color/white"
         android:background="@drawable/bg_button" />
 
+    <!-- Privacy Policy Button -->
+    <Button
+        android:id="@+id/btn_privacy"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:text="TODO: Informativa sulla Privacy"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_button" />
+        
     <!-- License Button -->
     <Button
         android:id="@+id/btn_license"

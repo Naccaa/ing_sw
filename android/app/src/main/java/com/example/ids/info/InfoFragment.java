@@ -20,7 +20,7 @@ import com.example.ids.constants.Constants;
 public class InfoFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+            ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_info, container, false);
 
         // Set up button listeners
@@ -57,6 +57,7 @@ public class InfoFragment extends Fragment {
         Constants.BASE_URL = ip;
         Toast.makeText(getContext(), "Indirizzo IP del server aggiornato: " + Constants.BASE_URL, Toast.LENGTH_SHORT).show();
     }
+
     private boolean isValidIP(String ip) {
         // Basic validation
         return ip.startsWith("http://") && ip.contains(":");
@@ -68,6 +69,14 @@ public class InfoFragment extends Fragment {
         if (termsButton != null) {
             termsButton.setOnClickListener(v -> {
                 Navigation.findNavController(v).navigate(R.id.termsFragment);
+            });
+        }
+
+        // Privacy Policy button
+        Button privacyButton = root.findViewById(R.id.btn_privacy);
+        if (privacyButton != null) {
+            privacyButton.setOnClickListener(v -> {
+                Navigation.findNavController(v).navigate(R.id.privacyFragment);
             });
         }
 
