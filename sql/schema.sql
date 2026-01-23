@@ -79,6 +79,3 @@ CREATE TABLE ing_sw.password_reset_tokens (
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     used boolean DEFAULT FALSE
 );
-
-INSERT INTO ing_sw.emergencies (emergency_type, message, location, radius, start_time) VALUES
-('allagamento', 'Allagamento in corso, evitare di uscire di casa.', point(37.4219983, -122.084), 500.0, CURRENT_TIMESTAMP);
