@@ -14,7 +14,7 @@ INSERT INTO ing_sw.Emergencies (emergency_type, message, location, radius, start
 ('allagamento', 'Allagamento in corso, evitare di uscire di casa.', point(37.4219983, -122.084), 500.0, CURRENT_TIMESTAMP);
 
 INSERT INTO ing_sw.Guidelines (emergency_type, message) VALUES
-('allagamento', 'Rimanere in casa, evitare di uscire. Se necessario evacuare allora dirigersi verso zone più elevate.'),
+('allagamento', 'Rimanere in casa, evitare di uscire. Se è necessario evacuare allora dirigersi verso zone più elevate.'),
 ('alluvione', 'Allontanarsi da fiumi, torrenti e corsi d''acqua. Raggiungere immediatamente zone più alte e rimanere lontano dai ponti.'),
 ('grandinata', 'Cercare riparo in casa o in un luogo al coperto. Non uscire fino al termine del fenomeno meteorologico.'),
 ('tromba d''aria', 'Cercare riparo in un luogo chiuso e protetto. Allontanarsi da finestre e rimanere lontano da edifici alti se all''aperto.');

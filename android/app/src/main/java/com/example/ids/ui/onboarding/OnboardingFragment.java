@@ -31,10 +31,10 @@ public class OnboardingFragment extends Fragment {
     };
 
     private String[] descriptions = {
-        "Per accedere a tutte le funzionalità dell'app, come ricevere avvisi di emergenza e gestire il tuo profilo, è necessario registrarsi. La registrazione garantisce che solo gli utenti autorizzati possano accedere alle informazioni sensibili e personalizzate.",
-        "L'app richiede il permesso per la posizione per fornirti avvisi locali sulle emergenze climatiche. Le notifiche sono essenziali per ricevere aggiornamenti in tempo reale su eventi critici. Questi permessi aiutano a proteggere te e la tua comunità.",
-        "I caregiver sono persone di fiducia che possono accedere al tuo profilo in caso di emergenza. Puoi designare familiari o amici come caregiver per garantire che ricevano notifiche e possano agire per tuo conto se necessario.",
-        "• Avvisi: Ricevi e visualizza le emergenze climatiche in corso.\n• Linee Guida: Leggi consigli e procedure per affrontare situazioni di emergenza.\n• Profilo: Gestisci le tue informazioni personali, caregiver e impostazioni."
+        "Per accedere a tutte le funzionalità dell'app, come ricevere avvisi di emergenza e gestire il tuo profilo, è necessario registrarsi. La registrazione garantisce che solo gli utenti autorizzati possano accedere alle informazioni sensibili.",
+        "L'app richiede il permesso per la posizione per fornirti avvisi locali sulle emergenze climatiche. Le notifiche permettono di ricevere aggiornamenti in tempo reale su eventi critici.",
+        "I caregiver sono persone di fiducia che vengono avvisate in caso di emergenza vicino a te. Puoi aggiungere familiari o amici come caregiver per garantire che ricevano notifiche se necessario.",
+        "• Allerte: Ricevi e visualizza le emergenze climatiche in corso.\n• Linee Guida: Leggi consigli e procedure per affrontare situazioni di emergenza.\n• Profilo: Gestisci le tue informazioni personali e i tuoi caregiver."
     };
 
     private int[] images = {
