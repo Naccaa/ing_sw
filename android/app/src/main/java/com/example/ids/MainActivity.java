@@ -63,7 +63,15 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private Snackbar currentSnackbar;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            100);
+                }
+            });
 
     private String mToken;
 
@@ -215,13 +223,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    100);
-        }
 
         // per le notifiche
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
