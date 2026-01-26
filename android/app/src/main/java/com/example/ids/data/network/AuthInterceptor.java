@@ -47,9 +47,9 @@ public class AuthInterceptor implements Interceptor {
             logout();
 
             // Close response body to avoid leaks
-            response.close();
+            //response.close();
 
-            throw new IOException("SESSION_EXPIRED");
+            //throw new IOException("SESSION_EXPIRED");
         }
 
         // AFTER REQUEST
@@ -72,16 +72,34 @@ public class AuthInterceptor implements Interceptor {
     }
 
     private void logout() {
+        Log.d("AuthInterceptor", "Logout");
         SharedPreferences prefs =
                 appContext.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+        if (prefs == null){
+            return;
+        }
 
-        prefs.edit()
-                .remove("session_token")
-                .remove("user_id")
-                .remove("is_admin")
-                .apply();
+        String token = prefs.getString("session_token", null);
+        String user_id = prefs.getString("user_id", null);
+        String is_admin = prefs.getString("is_admin", null);
+        boolean activate = false;
+        SharedPreferences.Editor editor = prefs.edit();
+        if(token!=null && !token.isEmpty()) {
+            editor = editor.remove("session_token");
+            activate = true;
+        }
+        if(user_id!=null && !user_id.isEmpty()) {
+            editor = editor.remove("user_id");
+            activate = true;
+        }
+        if(is_admin!=null && !is_admin.isEmpty()){
+            editor = editor.remove("is_admin");
+            activate = true;
+        }
+        editor.apply();
 
         // Notify observers
-        SessionEventBus.sessionExpired.postValue(true);
+        if (activate)
+            SessionEventBus.sessionExpired.postValue(true);
     }
 }

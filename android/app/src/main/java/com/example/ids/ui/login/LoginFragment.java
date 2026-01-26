@@ -116,6 +116,7 @@ public class LoginFragment extends Fragment {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 final String respBody = response.body() != null ? response.body().string() : "";
 
+                Log.d("response", respBody);
                 safeUiUpdate(() -> {
                     if (response.isSuccessful()) {
                         handleLoginSuccess(respBody);
