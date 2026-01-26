@@ -298,7 +298,7 @@ public class GuideFragment extends Fragment {
                 fos.write(json.getBytes());
                 Log.d("GUIDES", "Cache salvata localmente con successo");
             } catch (IOException e) {
-                Log.e("GUIDES", "Errore nella scrittura della cache", e);
+                Log.e("GUIDES", "Errore nella scrittura della cache");
             }
         }
     }
@@ -310,7 +310,7 @@ public class GuideFragment extends Fragment {
             return new String(buffer);
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("GUIDES", "Errore nel leggere le guide localmente", e);
+            Log.e("GUIDES", "Errore nel leggere le guide localmente");
             return "[]"; // ritorna array vuoto se non esiste il file
         }
     }
@@ -481,7 +481,7 @@ public class GuideFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e("GUIDES", "POST failed", e);
+                Log.e("GUIDES", "POST failed");
                 if (isAdded() && getActivity() != null) {
                     requireActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Errore rete: server non raggiungibile", Toast.LENGTH_SHORT).show();
@@ -528,7 +528,7 @@ public class GuideFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e("GUIDES", "PUT failed", e);
+                Log.e("GUIDES", "PUT failed");
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(requireContext(), "Errore rete o sessione scaduta", Toast.LENGTH_SHORT).show();
                 });
@@ -560,7 +560,7 @@ public class GuideFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e("GUIDES", "DELETE failed", e);
+                Log.e("GUIDES", "DELETE failed");
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(requireContext(), "Errore rete o sessione scaduta", Toast.LENGTH_SHORT).show();
                 });

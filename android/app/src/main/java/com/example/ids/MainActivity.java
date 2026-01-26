@@ -147,8 +147,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //schedulePingWorker();
-
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -191,11 +189,6 @@ public class MainActivity extends AppCompatActivity {
 
 
             boolean isAuthScreen =
-                    //destination.getId() == R.id.navigation_login ||
-                            //destination.getId() == R.id.navigation_forgotPassword ||
-                            //destination.getId() == R.id.navigation_registration ||
-                            //destination.getId() == R.id.navigation_onboarding ||
-                            //destination.getId() == R.id.termsFragment ||
                             destination.getId() == R.id.infoFragment;
 
 
@@ -321,32 +314,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-/*
-    private void schedulePingWorker() {
-
-        Log.d("APP", "schedulePingWorker avviata");
-
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-        PeriodicWorkRequest workRequest =
-                new PeriodicWorkRequest.Builder(
-                        PingServerWorker.class,
-                        15,
-                        TimeUnit.MINUTES
-                )
-                        .setConstraints(constraints)
-                        .build();
-
-        WorkManager.getInstance(this)
-                .enqueueUniquePeriodicWork(
-                        "ping_server_worker",
-                        ExistingPeriodicWorkPolicy.KEEP,
-                        workRequest
-                );
-    }*/
-
     public static void send_firebase_token(Context context, String sessionToken, String userId) {
         FirebaseMessaging.getInstance().getToken()
             .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -386,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
                     client.newCall(request).enqueue(new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-                                Log.e("Registration", "Errore di rete", e);
+                                Log.e("Firebase", "Errore di rete");
                         }
 
                         @Override
