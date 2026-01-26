@@ -97,14 +97,65 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+    private void checkPermissionsAndStart() {
+        boolean everythingGranted = true;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            everythingGranted = false;
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            everythingGranted = false;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                everythingGranted = false;
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                everythingGranted = false;
+            }
+        }
+
+        if (everythingGranted) {
+            startLocationService();
+        } else {
+            requestAllPermissions();
+        }
+    }
+
     private void askBackgroundPermission() {
+        // 1. Controllo di sicurezza per Android 10+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            startLocationService();
+            return;
+        }
+
+        if (getSharedPreferences("app_prefs", MODE_PRIVATE)
+                .getBoolean("background_dialog_shown", false)) {
+            startLocationService();
+            return;
+        }
+
+        getSharedPreferences("app_prefs", MODE_PRIVATE)
+                .edit()
+                .putBoolean("background_dialog_shown", true)
+                .apply();
+
         new AlertDialog.Builder(this)
                 .setTitle("Posizione in Background")
                 .setMessage("Necessaria per ottenere le emergenze climatiche anche ad app chiusa.")
-                .setPositiveButton("OK", (dialog, which) -> {
+                .setPositiveButton("Si", (dialog, which) -> {
                     backgroundLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
                 })
-                .setNegativeButton("No", (dialog, which) -> startLocationService())
+                .setNegativeButton("No", (dialog, which) -> {
+                    startLocationService();
+                    dialog.dismiss();
+                })
+                .setCancelable(false)
                 .show();
     }
 
@@ -221,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
         if (!onboardingCompleted) {
             navController.navigate(R.id.navigation_onboarding);
         } else {
-            requestAllPermissions();
+            checkPermissionsAndStart();
         }
 
         final var sessionToken = getSharedPreferences("app_prefs", MODE_PRIVATE)
