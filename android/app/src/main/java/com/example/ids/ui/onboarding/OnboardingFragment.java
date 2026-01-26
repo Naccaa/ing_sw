@@ -73,6 +73,15 @@ public class OnboardingFragment extends Fragment {
             }
         });
 
+
+        // gestiamo il caso del tornare indietro tramite tasto di android o gesture
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finishOnboarding();
+            }
+        });
+
         return view;
     }
 

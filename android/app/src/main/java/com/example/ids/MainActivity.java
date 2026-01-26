@@ -220,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (!onboardingCompleted) {
             navController.navigate(R.id.navigation_onboarding);
+        } else {
+            requestAllPermissions();
         }
 
         final var sessionToken = getSharedPreferences("app_prefs", MODE_PRIVATE)
@@ -442,6 +444,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+
+        // necessario per chiedere i permessi a onboarding skippato
+        if (navController.getCurrentDestination() != null &&
+                navController.getCurrentDestination().getId() == R.id.navigation_onboarding) {
+
+            getSharedPreferences("app_prefs", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("onboarding_completed", true)
+                    .apply();
+
+            requestAllPermissions();
+        }
+
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
 
