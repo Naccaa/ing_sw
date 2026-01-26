@@ -29,6 +29,7 @@ import androidx.navigation.Navigation;
 import com.example.ids.databinding.FragmentProfileBinding;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -115,6 +116,8 @@ public class ProfileFragment extends Fragment {
 
         // Client obj used to make requests
         client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
+                .connectTimeout(15, TimeUnit.MINUTES)
+                .readTimeout(15, TimeUnit.MINUTES)
                 .build();
 
         // Update UI showing user info
@@ -168,66 +171,68 @@ public class ProfileFragment extends Fragment {
         binding = null;
     }
 
-    private void ShowUserInfo(View view){
+    private void ShowUserInfo(View view) {
+        // 1. LEGGI I DATI SALVATI AL LOGIN (Cache Locale)
+        SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
+        String cachedFullname = prefs.getString("fullname", "N/D");
+        String cachedPhone = prefs.getString("phone_number", "N/D");
+        String cachedEmail = prefs.getString("email", "N/D");
 
-        // Get the user information
+        // 2. MOSTRALI SUBITO (L'utente non aspetta il server)
+        userFullname.setText(getString(R.string.settings_fullname) + " " + cachedFullname);
+        userPhone.setText(getString(R.string.settings_phone_number_str) + " " + cachedPhone);
+        userEmail.setText(getString(R.string.settings_email_str) + " " + cachedEmail);
+
+        // 3. ORA PROVA A CONTATTARE IL SERVER PER AGGIORNARE
         Request request = new Request.Builder()
-                .url(Constants.BASE_URL+"/users/"+user_id)
+                .url(Constants.BASE_URL + "/users/" + user_id)
                 .build();
 
-        // Asynchronous request
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("Error", "Request failed", e);
-                // Update the UI to show an error message
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Snackbar.make(view, "Error connecting to server", Snackbar.LENGTH_LONG).show();
-                    }
-                });
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("Profile", "Request failed");
+
+                // 1. Recuperiamo l'activity in una variabile
+                androidx.fragment.app.FragmentActivity activity = getActivity();
+
+                // 2. Controlliamo se l'activity esiste e se il fragment è ancora attivo
+                if (activity != null && isAdded()) {
+                    activity.runOnUiThread(() -> {
+                        // Ora siamo al sicuro: l'activity esiste
+                        Snackbar.make(binding.getRoot(), "Server non raggiungibile", Snackbar.LENGTH_LONG).show();
+                    });
+                }
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                // Check if the response is successful
-                if (response.isSuccessful()) {
-                    String response_body_str = response.body().string();
-                    Log.d("Response str", response_body_str);
-
-                    // Use JSONObject to parse the response string into a JSON
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && getActivity() != null) {
+                    String responseBodyStr = response.body().string();
                     try {
-                        JSONObject response_data = (new JSONObject(response_body_str)).getJSONObject("data");
+                        JSONObject data = new JSONObject(responseBodyStr).getJSONObject("data");
 
-                        final String fullname = (String) response_data.get("fullname");
-                        final String phone_number = (String) response_data.get("phone_number");
-                        final String email = (String) response_data.get("email");
+                        String updatedName = data.optString("fullname", cachedFullname);
+                        String updatedPhone = data.optString("phone_number", cachedPhone);
+                        String updatedEmail = data.optString("email", cachedEmail);
 
-                        // Update UI with user info
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                userFullname.setText(getString(R.string.settings_fullname) + " " + fullname);
-                                userPhone.setText(getString(R.string.settings_phone_number_str) + " " + phone_number);
-                                userEmail.setText(getString(R.string.settings_email_str) + " " + email);
+                        // Aggiorna anche le SharedPreferences con i dati freschi
+                        prefs.edit()
+                                .putString("fullname", updatedName)
+                                .putString("phone_number", updatedPhone)
+                                .putString("email", updatedEmail)
+                                .apply();
+
+                        getActivity().runOnUiThread(() -> {
+                            if (isAdded() && binding != null) {
+                                userFullname.setText(getString(R.string.settings_fullname) + " " + updatedName);
+                                userPhone.setText(getString(R.string.settings_phone_number_str) + " " + updatedPhone);
+                                userEmail.setText(getString(R.string.settings_email_str) + " " + updatedEmail);
                             }
                         });
                     } catch (JSONException e) {
-                        Snackbar.make(view, "Application error, please reopen the application", Snackbar.LENGTH_LONG).show();
-                        throw new RuntimeException(e);
+                        Log.e("Profile", "Errore parsing dati aggiornati", e);
                     }
-               } else {
-                    // Log an error response code
-                    Log.e("Error", "Request failed with code " + response.code());
-
-                    // Update the UI to show an error message
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Snackbar.make(view, "Error loading user data.", Snackbar.LENGTH_LONG).show();
-                        }
-                    });
                 }
             }
         });
@@ -246,13 +251,10 @@ public class ProfileFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("Error", "Request failed", e);
-                // Update the UI to show an error message
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Snackbar.make(view, "Error connecting to server", Snackbar.LENGTH_LONG).show();
-                    }
+                if (getActivity() == null || !isAdded()) return;
+
+                getActivity().runOnUiThread(() -> {
+                    Snackbar.make(binding.getRoot(), "Impossibile aggiornare i caregiver (Offline)", Snackbar.LENGTH_LONG).show();
                 });
             }
 
@@ -495,6 +497,10 @@ public class ProfileFragment extends Fragment {
         editor.remove("session_token");
         editor.remove("user_id");
         editor.remove("is_admin");
+        editor.remove("fullname");
+        editor.remove("email");
+        editor.remove("phone_number");
+
 
         // Set local variables to null
         user_id = jwt = null;

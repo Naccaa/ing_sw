@@ -127,7 +127,7 @@ public class LocationService extends Service {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("LocationService", "Errore invio posizione", e);
+                Log.e("LocationService", "Errore invio posizione");
             }
 
             @Override

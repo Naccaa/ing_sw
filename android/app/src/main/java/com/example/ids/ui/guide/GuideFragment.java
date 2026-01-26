@@ -173,6 +173,7 @@ public class GuideFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("GUIDES", "Server down, uso cache locale");
+
                 if(isAdded()) {
                     requireActivity().runOnUiThread(() -> {
                         binding.swipeRefreshLayout.setRefreshing(false);
@@ -184,8 +185,10 @@ public class GuideFragment extends Fragment {
                             binding.emptyGuidelinesText.setText("Server non raggiungibile e nessuna cache disponibile.");
                             binding.emptyGuidelinesText.setVisibility(View.VISIBLE);
                         }
+                        Toast.makeText(requireContext(), "Server down, uso cache locale", Toast.LENGTH_SHORT).show();
                     });
                 }
+
             }
 
             @Override
