@@ -94,12 +94,14 @@ def check_response_format(response):
     return response
 
 # Start background jobs once
-@app.before_request # before_first_request non worka ho dovuto creare un flag 
+@app.before_request
 def start_background_jobs_once():
     global background_jobs_started
     if not background_jobs_started:
         start_weather_monitor(app)
         background_jobs_started = True
+
+
 
 
 # dummy route to test emergencies insertion
@@ -124,7 +126,7 @@ def test_emergency():
     else:
         e = DBEmergencies(
             emergency_type="alluvione",
-            message="prepare to meet God you fuckers",
+            message="TEST SISTEMA: Monitoraggio meteo avviato correttamente. Questa è un'allerta fittizia.",
             location=func.point(12.27151, 45.47213),
             radius=30,
             start_time=datetime.datetime.now(datetime.timezone.utc),
@@ -138,43 +140,6 @@ def test_emergency():
             "message": "ok",
         }), 200
     
-
-
-# dummy route to test guidelines insertion
-@app.route("/test-guide")
-def test_guide():
-    from src.db_types import DBGuidelines
-    from sqlalchemy import func, select
-
-    e = DBGuidelines(
-        emergency_type="alluvione",
-        message="prepare to meet God you fuckers"
-        )
-    db.session.add(e)
-    db.session.commit()
-    return jsonify({
-        "error": False,
-        "message": "ok",
-    }), 200
-
-@app.route("/test-guide1")
-def test_guide1():
-    from src.db_types import DBGuidelines
-    from sqlalchemy import func, select
-
-    e = DBGuidelines(
-        emergency_type="grandinata",
-        message="prepare to meet God you fuckers"
-        )
-    db.session.add(e)
-    db.session.commit()
-    return jsonify({
-        "error": False,
-        "message": "ok",
-    }), 200
-
-
-
 
 
 if __name__ == "__main__":

@@ -186,7 +186,7 @@ public class AlertFragment extends Fragment {
                         binding.alertContainer.removeAllViews();
                         binding.emptyAlertsText.setText("Impossibile collegarsi al server.\nControlla la connessione e riprova.");
                         binding.emptyAlertsText.setVisibility(View.VISIBLE);
-                        Toast.makeText(requireContext(), "Errore di rete", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Server non raggiungibile", Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -221,7 +221,7 @@ public class AlertFragment extends Fragment {
                         binding.alertContainer.removeAllViews();
                         binding.emptyAlertsText.setText("Impossibile collegarsi al server.\nControlla la connessione e riprova.");
                         binding.emptyAlertsText.setVisibility(View.VISIBLE);
-                        Toast.makeText(requireContext(), "Errore di rete", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Server non raggiungibile", Toast.LENGTH_SHORT).show();
                     });
                 }
             }

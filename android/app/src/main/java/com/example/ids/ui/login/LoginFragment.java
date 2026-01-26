@@ -2,27 +2,27 @@ package com.example.ids.ui.login;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import com.example.ids.MainActivity;
-import com.example.ids.R;
-import com.example.ids.constants.Constants;
-import com.example.ids.data.network.AuthInterceptor;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+
+import com.auth0.android.jwt.JWT;
+import com.example.ids.MainActivity;
+import com.example.ids.R;
+import com.example.ids.constants.Constants;
+import com.example.ids.data.network.AuthInterceptor;
+import com.example.ids.databinding.FragmentLoginBinding;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,173 +38,139 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import com.auth0.android.jwt.JWT;
-
-
 public class LoginFragment extends Fragment {
 
+    private FragmentLoginBinding binding;
+
     @Override
-    public View onCreateView(
-
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-
-        SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
-        String existingToken = prefs.getString("session_token", null);
-        if (existingToken != null && !existingToken.isEmpty()) {
-            Log.d("LOGIN", "Token di sessione esistente: " + existingToken);
-            // Postpone navigation to avoid crash
-            view.post(() -> {
-                NavController navController = Navigation.findNavController(view);
-                navController.navigate(R.id.navigation_alert);
-            });
-            return view;
-        }
-
-
-
-
-        EditText email = view.findViewById(R.id.emailInput);
-        EditText password = view.findViewById(R.id.passwordInput);
-        Button btnLogin = view.findViewById(R.id.loginButton);
-        TextView forgotPassword = view.findViewById(R.id.forgotPassword);
-        TextView registerLink = view.findViewById(R.id.registerLink);
-        TextView onboardingLink = view.findViewById(R.id.onboardingLink);
-
-        btnLogin.setOnClickListener(v -> {
-            String e = email.getText().toString();
-            String p = password.getText().toString();
-            if (e.isEmpty() || p.isEmpty()) {
-                Toast.makeText(requireContext(), "Inserisci email e password", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            login(e, p);
-        });
-
-        forgotPassword.setOnClickListener(v -> {
-            Log.d("LOGIN", "Password dimenticata cliccata");
-            forgotPass();
-        });
-
-        registerLink.setOnClickListener(v -> {
-            Log.d("LOGIN", "Reindirizzamento verso pagina di registrazione...");
-            registerLink();
-        });
-
-        onboardingLink.setOnClickListener(v -> {
-            Log.d("LOGIN", "Reindirizzamento verso onboarding...");
-            NavController navController = Navigation.findNavController(requireView());
-            navController.navigate(R.id.navigation_onboarding);
-        });
-
-
-
-
-        return view;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
-    private void login(String email, String password) {
-        OkHttpClient client;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        client = new OkHttpClient.Builder().addInterceptor(new AuthInterceptor(requireContext()))
-                .connectTimeout(300, TimeUnit.MILLISECONDS)
-                .readTimeout(300, TimeUnit.MILLISECONDS)
+        checkExistingSession();
+        setupListeners();
+    }
+
+    private void checkExistingSession() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE);
+        String token = prefs.getString("session_token", null);
+
+        if (token != null && !token.isEmpty()) {
+            binding.getRoot().post(() -> {
+                if (isAdded()) {
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.navigation_alert);
+                }
+            });
+        }
+    }
+
+    private void setupListeners() {
+        binding.loginButton.setOnClickListener(v -> {
+            String email = binding.emailInput.getText().toString().trim();
+            String password = binding.passwordInput.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getContext(), "Compila tutti i campi", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            performLogin(email, password);
+        });
+
+        binding.forgotPassword.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.navigation_forgotPassword));
+
+        binding.registerLink.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.navigation_registration));
+
+        binding.onboardingLink.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.navigation_onboarding));
+    }
+
+    private void performLogin(String email, String password) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new AuthInterceptor(requireContext()))
+                .connectTimeout(10, TimeUnit.SECONDS)
                 .build();
 
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
-        String json = "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}";
-        RequestBody body = RequestBody.create(json, JSON);
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("email", email);
+            payload.put("password", password);
+        } catch (JSONException e) { e.printStackTrace(); }
 
-        Request request = new Request.Builder()
-                .url(Constants.BASE_URL + "/sessions") // per testare uso l'IP locale della macchina che hosta il backend
-                .post(body)
-                .build();
+        RequestBody body = RequestBody.create(payload.toString(), MediaType.get("application/json; charset=utf-8"));
+        Request request = new Request.Builder().url(Constants.BASE_URL + "/sessions").post(body).build();
 
-        // Se il login fallisce
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                requireActivity().runOnUiThread(() -> {
-                    Log.e("Login", "Errore di rete", e);
-                });
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                safeUiUpdate(() -> Toast.makeText(getContext(), "Server offline", Toast.LENGTH_SHORT).show());
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String respBody = response.body().string();
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                final String respBody = response.body() != null ? response.body().string() : "";
 
-                requireActivity().runOnUiThread(() -> {
+                safeUiUpdate(() -> {
                     if (response.isSuccessful()) {
-                        Log.d("Login", "Login effettuato: " + respBody);
-
-                        try {
-                            JSONObject obj = new JSONObject(respBody);
-
-                            // Estrazione del token dalla risposta HTTP
-                            JSONObject data = obj.getJSONObject("data");
-                            String token = data.getString("session_token");
-
-                            // Salvataggio del token di sessione
-                            requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
-                                    .edit()
-                                    .putString("session_token", token)
-                                    .apply();
-
-                            // Salvataggio dell'user_id dell'utente autenticato (evita di doverlo ricavare ogni volta dal JWT)
-                            JWT jwt = new JWT(token);  // Decode il JWT
-                            String user_id = jwt.getClaim("sub").asString();
-                            requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
-                                    .edit()
-                                    .putString("user_id", user_id)
-                                    .apply();
-
-                            MainActivity.send_firebase_token(requireContext(), token, user_id);
-                            
-                            // Salvataggio del ruolo dell'utente (evita di doverlo ricavare ogni volta dal JWT)
-                            boolean is_admin = jwt.getClaim("is_admin").asBoolean();
-                            requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE)
-                                    .edit()
-                                    .putBoolean("is_admin", is_admin)
-                                    .apply();
-
-                            // fa ripartire il servizio di localizzazione
-                            if (getActivity() instanceof MainActivity) {
-                                ((MainActivity) getActivity()).startLocationService();
-                            }
-
-                            // Reindirizza l'utente alla "home" dell'applicazione
-                            requireActivity().runOnUiThread(() -> {
-                                NavController navController = Navigation.findNavController(requireView());
-                                NavOptions navOptions = new NavOptions.Builder()
-                                        .setPopUpTo(R.id.navigation_login, true)
-                                        .build();
-                                navController.navigate(R.id.navigation_alert, null, navOptions);
-                            });
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        handleLoginSuccess(respBody);
 
                     } else {
-                        Log.e("Login", "Errore login: " + respBody);
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Login fallito", Toast.LENGTH_SHORT).show();
-                        });
+                        Toast.makeText(getContext(), "Credenziali errate", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
     }
 
-    private void forgotPass() {
-        NavController navController = Navigation.findNavController(requireView());
-        navController.navigate(R.id.navigation_forgotPassword);
+    private void handleLoginSuccess(String responseBody) {
+        try {
+            JSONObject data = new JSONObject(responseBody).getJSONObject("data");
+            String token = data.getString("session_token");
+
+            JWT jwt = new JWT(token);
+            String userId = jwt.getClaim("sub").asString();
+            boolean isAdmin = jwt.getClaim("is_admin").asBoolean();
+
+
+            requireActivity().getSharedPreferences("app_prefs", MODE_PRIVATE).edit()
+                    .putString("session_token", token)
+                    .putString("user_id", userId)
+                    .putString("fullname", data.optString("fullname", ""))
+                    .putString("email", data.optString("email", ""))
+                    .putString("phone_number", data.optString("phone_number", ""))
+                    .putBoolean("is_admin", isAdmin)
+                    .apply();
+
+            MainActivity.send_firebase_token(requireContext(), token, userId);
+
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).startLocationService();
+            }
+
+            NavController navController = Navigation.findNavController(binding.getRoot());
+            navController.navigate(R.id.navigation_alert, null,
+                    new NavOptions.Builder().setPopUpTo(R.id.navigation_login, true).build());
+
+        } catch (JSONException e) {
+            Log.e("Login", "Parsing error", e);
+        }
     }
 
-    private void registerLink() {
-        NavController navController = Navigation.findNavController(requireView());
-        navController.navigate(R.id.navigation_registration);
+    private void safeUiUpdate(Runnable runnable) {
+        if (getActivity() != null && isAdded() && binding != null) {
+            getActivity().runOnUiThread(runnable);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

@@ -93,19 +93,13 @@
             android:layout_marginBottom="4dp" />
 
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:background="@drawable/bg_input"
-            android:padding="5dp"
-            android:layout_height="300dp">
+         <TextView
+             android:id="@+id/guidelineMessage"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:textSize="14sp"
+             android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:id="@+id/guidelineMessage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_marginBottom="16dp" />
-        </ScrollView>
 
 
     </LinearLayout>

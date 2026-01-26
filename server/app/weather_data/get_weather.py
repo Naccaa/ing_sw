@@ -156,25 +156,10 @@ def save_emergency_db(emergency_type, message, lat, lon, radius):
 _scheduler_started = False
 
 def start_weather_monitor(app):
+    from weather_data.utils import get_cities
     global _scheduler_started
     if _scheduler_started: return
     _scheduler_started = True
-
-    with app.app_context():
-        try:
-            logger.info("[Weather Monitor] Inserimento emergenza fittizia di test...")
-            save_emergency_db(
-                emergency_type="alluvione",
-                message="TEST SISTEMA: Monitoraggio meteo avviato correttamente. Questa è un'allerta fittizia.",
-                lat=0.0,
-                lon=0.0,
-                radius=1.0
-            )
-            logger.info("[Weather Monitor] Emergenza dummy inserita con successo.")
-        except Exception as e:
-            logger.error(f"[Weather Monitor] Errore nell'inserimento della dummy: {e}")
-
-    from weather_data.utils import get_cities
     CITIES = get_cities()
 
     def job():
@@ -183,9 +168,6 @@ def start_weather_monitor(app):
             for city, (lat, lon) in CITIES.items():
                 w_data, f_data = fetch_weather_and_flood(lat, lon)
                 if not w_data: continue
-
-                # Log console per ogni città
-                #print(f"[{city.upper()}] R:{w_data['hourly']['precipitation'][0]}mm | W:{w_data['hourly']['windspeed_10m'][0]}km/h | Code:{w_data['hourly']['weathercode'][0]}", flush=True)
 
                 alerts = compute_alert_types(w_data, f_data)
                 for a in alerts:

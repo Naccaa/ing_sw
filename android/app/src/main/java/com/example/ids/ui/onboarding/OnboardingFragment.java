@@ -32,9 +32,9 @@ public class OnboardingFragment extends Fragment {
 
     private String[] descriptions = {
         "Per accedere a tutte le funzionalità dell'app, come ricevere avvisi di emergenza e gestire il tuo profilo, è necessario registrarsi. La registrazione garantisce che solo gli utenti autorizzati possano accedere alle informazioni sensibili.",
-        "L'app richiede il permesso per la posizione per fornirti avvisi locali sulle emergenze climatiche. Le notifiche permettono di ricevere aggiornamenti in tempo reale su eventi critici.",
-        "I caregiver sono persone di fiducia che vengono avvisate in caso di emergenza vicino a te. Puoi aggiungere familiari o amici come caregiver per garantire che ricevano notifiche se necessario.",
-        "• Allerte: Ricevi e visualizza le emergenze climatiche in corso.\n• Linee Guida: Leggi consigli e procedure per affrontare situazioni di emergenza.\n• Profilo: Gestisci le tue informazioni personali e i tuoi caregiver."
+        "L'app richiede il permesso per la posizione per fornirti avvisi locali sulle emergenze climatiche. Le notifiche permettono di ricevere aggiornamenti in tempo reale su eventi critici. Gli SMS permettono di avvisare i tuoi caregiver in caso di emergenza.",
+        "I caregiver sono persone di fiducia che vengono avvisate in caso di emergenza vicino a te. Puoi aggiungere familiari o amici come caregiver per garantire che ricevano SMS se necessario.",
+        "• Allerte: Ricevi e visualizza le emergenze climatiche in corso.\n• Linee Guida: Leggi consigli e procedure per affrontare situazioni di emergenza. Le informazioni provengono dal sito della protezione civile\n• Profilo: Gestisci le tue informazioni personali e i tuoi caregiver."
     };
 
     private int[] images = {
@@ -72,7 +72,6 @@ public class OnboardingFragment extends Fragment {
                 finishOnboarding();
             }
         });
-
 
         // gestiamo il caso del tornare indietro tramite tasto di android o gesture
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new androidx.activity.OnBackPressedCallback(true) {
