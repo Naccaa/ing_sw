@@ -45,7 +45,7 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="15dp"
-        android:text="TODO: Informativa sulla Privacy"
+        android:text="Informativa sulla Privacy"
         android:textColor="@android:color/white"
         android:background="@drawable/bg_button" />
         

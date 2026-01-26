@@ -85,7 +85,7 @@
     <fragment
         android:id="@+id/privacyFragment"
         android:name="com.example.ids.info.PrivacyFragment"
-        android:label="TODO: Informativa sulla Privacy" />
+        android:label="Informativa sulla Privacy" />
     <fragment
         android:id="@+id/navigation_onboarding"
         android:name="com.example.ids.ui.onboarding.OnboardingFragment"
