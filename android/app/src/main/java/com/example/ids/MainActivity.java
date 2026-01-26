@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean showInfoButton = true; // Boolean used to show/hide license button
     private ActivityMainBinding binding;
     private Snackbar currentSnackbar;
+    private String mToken;
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -73,7 +74,52 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-    private String mToken;
+
+    private final ActivityResultLauncher<String> backgroundLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    startLocationService();
+                } else {
+                    startLocationService();
+                }
+            });
+
+    private final ActivityResultLauncher<String[]> batchLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    if (Boolean.TRUE.equals(result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false))) {
+                        askBackgroundPermission();
+                    } else {
+                        startLocationService();
+                    }
+                } else {
+                    startLocationService();
+                }
+            });
+
+    private void askBackgroundPermission() {
+        new AlertDialog.Builder(this)
+                .setTitle("Posizione in Background")
+                .setMessage("Necessaria per ottenere le emergenze climatiche anche ad app chiusa.")
+                .setPositiveButton("OK", (dialog, which) -> {
+                    backgroundLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+                })
+                .setNegativeButton("No", (dialog, which) -> startLocationService())
+                .show();
+    }
+
+    public void requestAllPermissions() {
+        java.util.List<String> perms = new java.util.ArrayList<>();
+        perms.add(Manifest.permission.SEND_SMS);
+        perms.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        perms.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            perms.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
+
+        batchLauncher.launch(perms.toArray(new String[0]));
+    }
 
     public void requestNotificationPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU

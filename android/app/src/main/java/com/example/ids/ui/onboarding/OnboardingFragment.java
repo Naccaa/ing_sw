@@ -92,7 +92,8 @@ public class OnboardingFragment extends Fragment {
             prefs.edit().putBoolean("onboarding_completed", true).apply();
             // Request notification permission after onboarding
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).requestNotificationPermission();
+                ((MainActivity) getActivity()).requestAllPermissions();
+                //((MainActivity) getActivity()).requestNotificationPermission();
             }
             Navigation.findNavController(requireView()).navigate(R.id.navigation_login);
         } else {
