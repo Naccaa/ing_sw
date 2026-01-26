@@ -14,10 +14,65 @@ INSERT INTO ing_sw.Emergencies (emergency_type, message, location, radius, start
 ('allagamento', 'Allagamento in corso, evitare di uscire di casa.', point(37.4219983, -122.084), 500.0, CURRENT_TIMESTAMP);
 
 INSERT INTO ing_sw.Guidelines (emergency_type, message) VALUES
-('allagamento', 'Rimanere in casa, evitare di uscire. Se è necessario evacuare allora dirigersi verso zone più elevate.'),
-('alluvione', 'Allontanarsi da fiumi, torrenti e corsi d''acqua. Raggiungere immediatamente zone più alte e rimanere lontano dai ponti.'),
-('grandinata', 'Cercare riparo in casa o in un luogo al coperto. Non uscire fino al termine del fenomeno meteorologico.'),
-('tromba d''aria', 'Cercare riparo in un luogo chiuso e protetto. Allontanarsi da finestre e rimanere lontano da edifici alti se all''aperto.');
+('allagamento', 'All''aperto
+
+Per lo svolgimento di attività nelle vicinanze di un corso d’acqua (anche un semplice pic-nic) o per scegliere l''area per un campeggio: scegli una zona a debita distanza dal letto del torrente e adeguatamente rialzata rispetto al livello del torrente stesso, oltre che sufficientemente distante da pendii ripidi o poco stabili: 
+intensi scrosci di pioggia potrebbero attivare improvvisi movimenti del terreno.
+
+In ambiente urbano
+Le criticità più tipiche sono legate all’incapacità della rete fognaria di smaltire quantità d’acqua considerevoli che cadono al suolo in tempi ristretti con conseguenti repentini allagamenti di strade. Per questo: fai attenzione al passaggio in sottovia e sottopassi, c’è il rischio di trovarsi con il veicolo semi-sommerso o sommerso dall’acqua;
+evita di recarti o soffermarti anche gli ambienti come scantinati, piani bassi, garage, sono a forte rischio allagamento durante intensi scrosci di pioggia.
+
+E in particolare se sei alla guida: 
+anche in assenza di allagamenti, l’asfalto reso improvvisamente viscido dalla pioggia rappresenta un insidioso pericolo per chi si trova alla guida di automezzi o motoveicoli, riducendo tanto la tenuta di strada quanto l’efficienza dell’impianto frenante;
+limita la velocità o effettua una sosta, in attesa che la fase più intensa, che difficilmente dura più di mezz’ora, del temporale si attenui. È sufficiente pazientare brevemente in un’area di sosta. Durante la fase più intensa di un rovescio risulta infatti fortemente ridotta la visibilità.
+'),
+('alluvione', 'COSA FARE Durante l''alluvione
+
+Se sei in un luogo chiuso:
+Non scendere in cantine, seminterrati o garage per mettere al sicuro i beni: rischi la vita.
+Non uscire assolutamente per mettere al sicuro l’automobile.
+Se ti trovi in un locale seminterrato o al piano terra, sali ai piani superiori.
+Evita l’ascensore: si può bloccare.
+Aiuta gli anziani e le persone con disabilità che si trovano nell’edificio.
+Chiudi il gas e disattiva l’impianto elettrico.
+Non toccare impianti e apparecchi elettrici con mani o piedi bagnati.
+Non bere acqua dal rubinetto: potrebbe essere contaminata.
+Limita l’uso del cellulare: tenere libere le linee facilita i soccorsi.
+Tieniti informato su come evolve la situazione e segui le indicazioni fornite dalle autorità
+
+Se sei all’aperto:
+Allontanati dalla zona allagata: per la velocità con cui scorre l’acqua, anche pochi centimetri potrebbero farti cadere.
+Raggiungi rapidamente l’area vicina più elevata - o sali ai piani superiori di un edificio - evitando di dirigerti verso pendii o scarpate artificiali che potrebbero franare.
+Fai attenzione a dove cammini: potrebbero esserci voragini, buche, tombini aperti ecc.
+Evita di utilizzare l’automobile. Anche pochi centimetri d’acqua potrebbero farti perdere il controllo del veicolo o causarne lo spegnimento: rischi di rimanere intrappolato.
+Evita sottopassi, argini, ponti: sostare o transitare in questi luoghi può essere molto pericoloso.
+Limita l’uso del cellulare: tenere libere le linee facilita i soccorsi.
+Tieniti informato su come evolve la situazione e segui le indicazioni fornite dalle autorità.
+'),
+('grandinata', 'In caso di grandine, valgono le avvertenze per la viabilità già viste per i rovesci di pioggia, riguardo alle conseguenze sullo stato scivoloso del manto stradale e sulle forti riduzioni di visibilità. La durata di una grandinata è tipicamente piuttosto breve.
+'),
+('tromba d''aria', 'All’aperto
+
+- Allontanati rapidamente dalla costa verso zone più elevate e trova riparo in un edificio.
+- Se sei in auto poni particolare attenzione perché le raffiche di vento potrebbero far sbandare il veicolo. Rallenta e raggiungi il luogo sicuro più vicino – preferibilmente un edificio in muratura – evitando di sostare sotto ponti, cavalcavia, strutture e oggetti che potrebbero cadere (come lampioni, impalcature, etc.) .
+- Sono possibili anche distacchi di cavi elettrici. Se sei in auto e vieni colpito rimani all’interno del veicolo e attendi i soccorsi.
+- Limita l’uso del cellulare. Tenere libere le linee facilita i soccorsi.
+
+In casa
+
+- Non uscire assolutamente, neanche per mettere in sicurezza beni o veicoli.
+- Chiudi porte, finestre e imposte.
+- Riparati nella stanza più interna della casa o in corridoio, il più lontano possibile da porte e finestre.
+- Abbandona i piani seminterrati e i piani terra e portati ai piani alti.
+- Se possibile evita di ripararti all’ultimo piano. Le forti raffiche di vento potrebbero danneggiare i tetti degli edifici più vulnerabili.
+- Se possibile poni ulteriori protezioni davanti a finestre e vetrate.
+- Fai entrare in casa gli animali domestici.
+- Chiudi il gas e disattiva il quadro elettrico se gli impianti sono ai piani bassi.
+- Se vivi in una casa mobile (roulotte, prefabbricato, campeggio) cerca riparo in un edificio sicuro.
+- Tieni a portata di mano: documenti, farmaci indispensabili, batterie, torcia elettrica, radio a pile, cellulare, acqua in bottiglia.
+- Limita l’uso del cellulare. Tenere libere le linee facilita i soccorsi.
+- Anche se il fenomeno ti sembra in attenuazione non uscire di casa ma attendi le indicazioni delle autorità.');
 
 INSERT INTO ing_sw.Caregivers (email, phone_number, alias, user_id, authenticated, auth_code, date_added) VALUES 
 ('dmuweuwthghcmqsgju@nespf.com', '+39 412 345 6789', 'utente1.caregiver1', 3, TRUE, '3I8MUNZFGGY7Y7LWPRUZONL9QZKZZ5IE', '2026-01-23 14:20:31.099829'),
